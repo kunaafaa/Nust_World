@@ -17,3 +17,9 @@ desktop.ini
 # raw third-party downloads: not redistributed (reference/ = TopoExport files, photos, screenshots)
 /data/overture/
 /reference/
+
+node_modules/
+.next/
+.env*
+reference/
+*.zip
