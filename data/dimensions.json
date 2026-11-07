@@ -1,0 +1,1946 @@
+{
+ "relation/3489900": {
+  "name": null,
+  "osmId": 3489900,
+  "lengthM": 17.9,
+  "widthM": 17.2,
+  "areaM2": 217.3,
+  "orientationDeg": 165.3,
+  "provisional": false
+ },
+ "relation/16441514": {
+  "name": "NUST Business School",
+  "osmId": 16441514,
+  "lengthM": 125.6,
+  "widthM": 90.1,
+  "areaM2": 4863.4,
+  "orientationDeg": 16.3,
+  "provisional": false
+ },
+ "relation/16441515": {
+  "name": "IESE (Institute of Environmental Sciences and Engineering)",
+  "osmId": 16441515,
+  "lengthM": 76.9,
+  "widthM": 64.8,
+  "areaM2": 2465.7,
+  "orientationDeg": 104.9,
+  "provisional": false
+ },
+ "relation/16442296": {
+  "name": "Ayesha Hostel",
+  "osmId": 16442296,
+  "lengthM": 47.5,
+  "widthM": 46.6,
+  "areaM2": 1196.1,
+  "orientationDeg": 59.3,
+  "provisional": false
+ },
+ "relation/16442297": {
+  "name": null,
+  "osmId": 16442297,
+  "lengthM": 47.9,
+  "widthM": 45.9,
+  "areaM2": 1328.1,
+  "orientationDeg": 58.5,
+  "provisional": false
+ },
+ "relation/16448908": {
+  "name": "Hajveri Hostel",
+  "osmId": 16448908,
+  "lengthM": 69.1,
+  "widthM": 52.3,
+  "areaM2": 2271.4,
+  "orientationDeg": 58.6,
+  "provisional": false
+ },
+ "relation/16448909": {
+  "name": "Zakariya Hostel",
+  "osmId": 16448909,
+  "lengthM": 71.3,
+  "widthM": 53,
+  "areaM2": 2305.8,
+  "orientationDeg": 58,
+  "provisional": false
+ },
+ "relation/16448910": {
+  "name": "NIT",
+  "osmId": 16448910,
+  "lengthM": 84,
+  "widthM": 69.6,
+  "areaM2": 2850.6,
+  "orientationDeg": 145.6,
+  "provisional": false
+ },
+ "relation/16449233": {
+  "name": "Fatima II",
+  "osmId": 16449233,
+  "lengthM": 45.1,
+  "widthM": 45,
+  "areaM2": 1274.9,
+  "orientationDeg": 166.9,
+  "provisional": false
+ },
+ "way/208827279": {
+  "name": "ASAB",
+  "osmId": 208827279,
+  "lengthM": 62.3,
+  "widthM": 61.9,
+  "areaM2": 2490.6,
+  "orientationDeg": 23.5,
+  "provisional": false
+ },
+ "way/208959445": {
+  "name": "NUST Ibrahim Mess",
+  "osmId": 208959445,
+  "lengthM": 32.7,
+  "widthM": 21.1,
+  "areaM2": 415,
+  "orientationDeg": 116.4,
+  "provisional": false
+ },
+ "way/208960114": {
+  "name": "Masjid-e-Rehmat",
+  "osmId": 208960114,
+  "lengthM": 89,
+  "widthM": 45.6,
+  "areaM2": 3445,
+  "orientationDeg": 74.4,
+  "provisional": false
+ },
+ "way/208966637": {
+  "name": "SCME Canteen",
+  "osmId": 208966637,
+  "lengthM": 3.7,
+  "widthM": 3.6,
+  "areaM2": 13.4,
+  "orientationDeg": 178.8,
+  "provisional": false
+ },
+ "way/208966900": {
+  "name": "Concordia-1",
+  "osmId": 208966900,
+  "lengthM": 45.7,
+  "widthM": 44.8,
+  "areaM2": 1256,
+  "orientationDeg": 66.8,
+  "provisional": false
+ },
+ "way/208969441": {
+  "name": "IAEC",
+  "osmId": 208969441,
+  "lengthM": 51.4,
+  "widthM": 21.1,
+  "areaM2": 696.9,
+  "orientationDeg": 112.5,
+  "provisional": false
+ },
+ "way/209141896": {
+  "name": "NUST Main Office",
+  "osmId": 209141896,
+  "lengthM": 78.9,
+  "widthM": 33.8,
+  "areaM2": 1454.6,
+  "orientationDeg": 27.5,
+  "provisional": false
+ },
+ "way/209189592": {
+  "name": "NICE",
+  "osmId": 209189592,
+  "lengthM": 75.2,
+  "widthM": 54.7,
+  "areaM2": 2792.6,
+  "orientationDeg": 59.5,
+  "provisional": false
+ },
+ "way/209650351": {
+  "name": "Concordia 2 (C2)",
+  "osmId": 209650351,
+  "lengthM": 45,
+  "widthM": 31.8,
+  "areaM2": 1010,
+  "orientationDeg": 20.9,
+  "provisional": false
+ },
+ "way/209668231": {
+  "name": "RIMMS",
+  "osmId": 209668231,
+  "lengthM": 50,
+  "widthM": 22.3,
+  "areaM2": 741.1,
+  "orientationDeg": 112.6,
+  "provisional": false
+ },
+ "way/209670519": {
+  "name": "Central Ac Chiller",
+  "osmId": 209670519,
+  "lengthM": 19.5,
+  "widthM": 14.5,
+  "areaM2": 281.7,
+  "orientationDeg": 159.5,
+  "provisional": false
+ },
+ "way/209832719": {
+  "name": "Rumi II",
+  "osmId": 209832719,
+  "lengthM": 50.2,
+  "widthM": 46.9,
+  "areaM2": 1759.8,
+  "orientationDeg": 25.5,
+  "provisional": false
+ },
+ "way/209832837": {
+  "name": "NUST Old Gym",
+  "osmId": 209832837,
+  "lengthM": 51.8,
+  "widthM": 34.4,
+  "areaM2": 1696.4,
+  "orientationDeg": 113,
+  "provisional": false
+ },
+ "way/209835326": {
+  "name": "Zainab Hostel",
+  "osmId": 209835326,
+  "lengthM": 47.9,
+  "widthM": 44.9,
+  "areaM2": 1619.7,
+  "orientationDeg": 58.6,
+  "provisional": false
+ },
+ "way/209836754": {
+  "name": "SEECS Faculty Block",
+  "osmId": 209836754,
+  "lengthM": 72.8,
+  "widthM": 32.9,
+  "areaM2": 1774.5,
+  "orientationDeg": 113.5,
+  "provisional": false
+ },
+ "way/209836876": {
+  "name": "NUST Auditorium",
+  "osmId": 209836876,
+  "lengthM": 54.3,
+  "widthM": 51.3,
+  "areaM2": 2135.5,
+  "orientationDeg": 69.5,
+  "provisional": false
+ },
+ "way/209855639": {
+  "name": null,
+  "osmId": 209855639,
+  "lengthM": 32.4,
+  "widthM": 21.5,
+  "areaM2": 668.4,
+  "orientationDeg": 147.8,
+  "provisional": false
+ },
+ "way/209972583": {
+  "name": "SMME workshop",
+  "osmId": 209972583,
+  "lengthM": 102,
+  "widthM": 27.5,
+  "areaM2": 1934.5,
+  "orientationDeg": 147.6,
+  "provisional": false
+ },
+ "way/209972722": {
+  "name": null,
+  "osmId": 209972722,
+  "lengthM": 12.1,
+  "widthM": 11.5,
+  "areaM2": 139.1,
+  "orientationDeg": 61.4,
+  "provisional": false
+ },
+ "way/209972723": {
+  "name": null,
+  "osmId": 209972723,
+  "lengthM": 37.7,
+  "widthM": 21.2,
+  "areaM2": 707.7,
+  "orientationDeg": 58.2,
+  "provisional": false
+ },
+ "way/209972724": {
+  "name": null,
+  "osmId": 209972724,
+  "lengthM": 29.3,
+  "widthM": 23.6,
+  "areaM2": 689.1,
+  "orientationDeg": 58.2,
+  "provisional": false
+ },
+ "way/209972725": {
+  "name": null,
+  "osmId": 209972725,
+  "lengthM": 90.5,
+  "widthM": 24.2,
+  "areaM2": 1263.2,
+  "orientationDeg": 60,
+  "provisional": false
+ },
+ "way/209972726": {
+  "name": null,
+  "osmId": 209972726,
+  "lengthM": 29.3,
+  "widthM": 10.1,
+  "areaM2": 294.6,
+  "orientationDeg": 61.3,
+  "provisional": false
+ },
+ "way/209972727": {
+  "name": null,
+  "osmId": 209972727,
+  "lengthM": 47.8,
+  "widthM": 20.9,
+  "areaM2": 995.6,
+  "orientationDeg": 58.1,
+  "provisional": false
+ },
+ "way/209972728": {
+  "name": null,
+  "osmId": 209972728,
+  "lengthM": 76.5,
+  "widthM": 17.3,
+  "areaM2": 1322.1,
+  "orientationDeg": 61,
+  "provisional": false
+ },
+ "way/260070652": {
+  "name": "CIE Building",
+  "osmId": 260070652,
+  "lengthM": 57.3,
+  "widthM": 36.6,
+  "areaM2": 1037.2,
+  "orientationDeg": 57.9,
+  "provisional": false
+ },
+ "way/387676863": {
+  "name": "Admin Office",
+  "osmId": 387676863,
+  "lengthM": 27.4,
+  "widthM": 24.9,
+  "areaM2": 488.9,
+  "orientationDeg": 9,
+  "provisional": false
+ },
+ "way/530126713": {
+  "name": "School of Mechanical and Manufacturing Engineering",
+  "osmId": 530126713,
+  "lengthM": 100.8,
+  "widthM": 59.7,
+  "areaM2": 2610.1,
+  "orientationDeg": 103.8,
+  "provisional": false
+ },
+ "way/536942055": {
+  "name": "S3H",
+  "osmId": 536942055,
+  "lengthM": 69.6,
+  "widthM": 36.6,
+  "areaM2": 1858.5,
+  "orientationDeg": 23.6,
+  "provisional": false
+ },
+ "way/567649271": {
+  "name": "Exam center",
+  "osmId": 567649271,
+  "lengthM": 92.5,
+  "widthM": 52.3,
+  "areaM2": 2806,
+  "orientationDeg": 147.1,
+  "provisional": false
+ },
+ "way/661630147": {
+  "name": "SEECS PG Block",
+  "osmId": 661630147,
+  "lengthM": 60.6,
+  "widthM": 28.1,
+  "areaM2": 1033.5,
+  "orientationDeg": 122.9,
+  "provisional": false
+ },
+ "way/661630148": {
+  "name": "SEECS UG Block",
+  "osmId": 661630148,
+  "lengthM": 95.1,
+  "widthM": 49,
+  "areaM2": 2148.7,
+  "orientationDeg": 115.1,
+  "provisional": false
+ },
+ "way/670473305": {
+  "name": "Central Library Cafe",
+  "osmId": 670473305,
+  "lengthM": 27.5,
+  "widthM": 20.2,
+  "areaM2": 490.2,
+  "orientationDeg": 5.7,
+  "provisional": false
+ },
+ "way/670478873": {
+  "name": "RETRO",
+  "osmId": 670478873,
+  "lengthM": 10.7,
+  "widthM": 7,
+  "areaM2": 62.6,
+  "orientationDeg": 59.9,
+  "provisional": false
+ },
+ "way/735197801": {
+  "name": "IGIS Shed",
+  "osmId": 735197801,
+  "lengthM": 7.8,
+  "widthM": 3.7,
+  "areaM2": 28,
+  "orientationDeg": 28.7,
+  "provisional": false
+ },
+ "way/738027653": {
+  "name": "SADA",
+  "osmId": 738027653,
+  "lengthM": 63.4,
+  "widthM": 62.2,
+  "areaM2": 2499.3,
+  "orientationDeg": 24.4,
+  "provisional": false
+ },
+ "way/1035898772": {
+  "name": "USPCAS-E",
+  "osmId": 1035898772,
+  "lengthM": 51.1,
+  "widthM": 47,
+  "areaM2": 2260.4,
+  "orientationDeg": 60.6,
+  "provisional": false
+ },
+ "way/1035938240": {
+  "name": "Fatima III",
+  "osmId": 1035938240,
+  "lengthM": 44.8,
+  "widthM": 44.2,
+  "areaM2": 974.4,
+  "orientationDeg": 166.5,
+  "provisional": false
+ },
+ "way/1035942966": {
+  "name": "School of Chemical and Materials Engineering",
+  "osmId": 1035942966,
+  "lengthM": 104.4,
+  "widthM": 58.6,
+  "areaM2": 2402.8,
+  "orientationDeg": 105.7,
+  "provisional": false
+ },
+ "way/1056118368": {
+  "name": "NUST Central Library",
+  "osmId": 1056118368,
+  "lengthM": 55.8,
+  "widthM": 37.7,
+  "areaM2": 1391.2,
+  "orientationDeg": 83.7,
+  "provisional": false
+ },
+ "way/1056121375": {
+  "name": "NSTP Cafe",
+  "osmId": 1056121375,
+  "lengthM": 31.9,
+  "widthM": 30.7,
+  "areaM2": 613.4,
+  "orientationDeg": 53.7,
+  "provisional": false
+ },
+ "way/1085082352": {
+  "name": "Prayer Area",
+  "osmId": 1085082352,
+  "lengthM": 17.7,
+  "widthM": 8.9,
+  "areaM2": 157.5,
+  "orientationDeg": 62.5,
+  "provisional": false
+ },
+ "way/1149587770": {
+  "name": "Bhittai Mess 1",
+  "osmId": 1149587770,
+  "lengthM": 23.3,
+  "widthM": 18.8,
+  "areaM2": 344,
+  "orientationDeg": 60.1,
+  "provisional": false
+ },
+ "way/1150520234": {
+  "name": "Nust School of Health Sciences",
+  "osmId": 1150520234,
+  "lengthM": 81.8,
+  "widthM": 81.6,
+  "areaM2": 5202.4,
+  "orientationDeg": 125.4,
+  "provisional": false
+ },
+ "way/1152594118": {
+  "name": "Khadija Hostel",
+  "osmId": 1152594118,
+  "lengthM": 48,
+  "widthM": 44,
+  "areaM2": 1523.5,
+  "orientationDeg": 58.2,
+  "provisional": false
+ },
+ "way/1152605115": {
+  "name": "Squash court",
+  "osmId": 1152605115,
+  "lengthM": 24.4,
+  "widthM": 17.2,
+  "areaM2": 385.7,
+  "orientationDeg": 59.3,
+  "provisional": false
+ },
+ "way/1152789399": {
+  "name": "Swimming Pool",
+  "osmId": 1152789399,
+  "lengthM": 87,
+  "widthM": 61.5,
+  "areaM2": 3732.5,
+  "orientationDeg": 127.7,
+  "provisional": false
+ },
+ "way/1152882076": {
+  "name": null,
+  "osmId": 1152882076,
+  "lengthM": 34.2,
+  "widthM": 18.2,
+  "areaM2": 583,
+  "orientationDeg": 56.6,
+  "provisional": false
+ },
+ "way/1152882077": {
+  "name": "CIH - Capital International Hospital",
+  "osmId": 1152882077,
+  "lengthM": 33.1,
+  "widthM": 31.1,
+  "areaM2": 1024.3,
+  "orientationDeg": 146.5,
+  "provisional": false
+ },
+ "way/1153465311": {
+  "name": "Masjid",
+  "osmId": 1153465311,
+  "lengthM": 77.4,
+  "widthM": 61.7,
+  "areaM2": 3907.9,
+  "orientationDeg": 144,
+  "provisional": false
+ },
+ "way/1159109323": {
+  "name": "Landmark III Tower",
+  "osmId": 1159109323,
+  "lengthM": 67.8,
+  "widthM": 18.1,
+  "areaM2": 1228.7,
+  "orientationDeg": 70.9,
+  "provisional": false
+ },
+ "way/1159109324": {
+  "name": null,
+  "osmId": 1159109324,
+  "lengthM": 17,
+  "widthM": 15.8,
+  "areaM2": 268.4,
+  "orientationDeg": 160.4,
+  "provisional": false
+ },
+ "way/1159109325": {
+  "name": null,
+  "osmId": 1159109325,
+  "lengthM": 19.5,
+  "widthM": 11,
+  "areaM2": 183.1,
+  "orientationDeg": 172.2,
+  "provisional": false
+ },
+ "way/1159109326": {
+  "name": "Shangrila Comforts",
+  "osmId": 1159109326,
+  "lengthM": 29.5,
+  "widthM": 26.5,
+  "areaM2": 781.5,
+  "orientationDeg": 146.5,
+  "provisional": false
+ },
+ "way/1159109327": {
+  "name": null,
+  "osmId": 1159109327,
+  "lengthM": 46.2,
+  "widthM": 26.4,
+  "areaM2": 1218.9,
+  "orientationDeg": 101.9,
+  "provisional": false
+ },
+ "way/1159109328": {
+  "name": "KK Residences",
+  "osmId": 1159109328,
+  "lengthM": 63.3,
+  "widthM": 16.9,
+  "areaM2": 1030.1,
+  "orientationDeg": 70.4,
+  "provisional": false
+ },
+ "way/1159109329": {
+  "name": "Sapphire Heights 2",
+  "osmId": 1159109329,
+  "lengthM": 39.8,
+  "widthM": 29,
+  "areaM2": 1083.4,
+  "orientationDeg": 159.8,
+  "provisional": false
+ },
+ "way/1159109330": {
+  "name": null,
+  "osmId": 1159109330,
+  "lengthM": 35.9,
+  "widthM": 32.1,
+  "areaM2": 1153.4,
+  "orientationDeg": 8.8,
+  "provisional": false
+ },
+ "way/1159109331": {
+  "name": null,
+  "osmId": 1159109331,
+  "lengthM": 30.3,
+  "widthM": 13.7,
+  "areaM2": 355.8,
+  "orientationDeg": 101.2,
+  "provisional": false
+ },
+ "way/1159109332": {
+  "name": null,
+  "osmId": 1159109332,
+  "lengthM": 40.8,
+  "widthM": 14.6,
+  "areaM2": 578.4,
+  "orientationDeg": 179,
+  "provisional": false
+ },
+ "way/1159109333": {
+  "name": null,
+  "osmId": 1159109333,
+  "lengthM": 43.9,
+  "widthM": 17.4,
+  "areaM2": 764.9,
+  "orientationDeg": 100.7,
+  "provisional": false
+ },
+ "way/1159186153": {
+  "name": null,
+  "osmId": 1159186153,
+  "lengthM": 19.6,
+  "widthM": 11.3,
+  "areaM2": 220.8,
+  "orientationDeg": 148.1,
+  "provisional": false
+ },
+ "way/1159186154": {
+  "name": null,
+  "osmId": 1159186154,
+  "lengthM": 24.5,
+  "widthM": 19.3,
+  "areaM2": 421.6,
+  "orientationDeg": 147.5,
+  "provisional": false
+ },
+ "way/1159186156": {
+  "name": "Swimming Pool Area",
+  "osmId": 1159186156,
+  "lengthM": 62.7,
+  "widthM": 43.5,
+  "areaM2": 2618.9,
+  "orientationDeg": 145.6,
+  "provisional": false
+ },
+ "way/1159186157": {
+  "name": null,
+  "osmId": 1159186157,
+  "lengthM": 41.1,
+  "widthM": 10.4,
+  "areaM2": 426.1,
+  "orientationDeg": 58.2,
+  "provisional": false
+ },
+ "way/1159186158": {
+  "name": null,
+  "osmId": 1159186158,
+  "lengthM": 94.8,
+  "widthM": 29.7,
+  "areaM2": 2075.8,
+  "orientationDeg": 60.6,
+  "provisional": false
+ },
+ "way/1213411460": {
+  "name": null,
+  "osmId": 1213411460,
+  "lengthM": 13.9,
+  "widthM": 7.3,
+  "areaM2": 79.6,
+  "orientationDeg": 117.3,
+  "provisional": false
+ },
+ "way/1213411462": {
+  "name": null,
+  "osmId": 1213411462,
+  "lengthM": 5,
+  "widthM": 4.8,
+  "areaM2": 24,
+  "orientationDeg": 107.1,
+  "provisional": false
+ },
+ "way/1213411463": {
+  "name": null,
+  "osmId": 1213411463,
+  "lengthM": 34.5,
+  "widthM": 13.1,
+  "areaM2": 309.1,
+  "orientationDeg": 26.6,
+  "provisional": false
+ },
+ "way/1213411464": {
+  "name": "ASAB Greenhouse",
+  "osmId": 1213411464,
+  "lengthM": 22.7,
+  "widthM": 14.1,
+  "areaM2": 291.8,
+  "orientationDeg": 25.7,
+  "provisional": false
+ },
+ "way/1213411465": {
+  "name": null,
+  "osmId": 1213411465,
+  "lengthM": 5.1,
+  "widthM": 4.8,
+  "areaM2": 24.8,
+  "orientationDeg": 130.4,
+  "provisional": false
+ },
+ "way/1213411468": {
+  "name": null,
+  "osmId": 1213411468,
+  "lengthM": 3.7,
+  "widthM": 3.5,
+  "areaM2": 13,
+  "orientationDeg": 157,
+  "provisional": false
+ },
+ "way/1213411469": {
+  "name": null,
+  "osmId": 1213411469,
+  "lengthM": 12,
+  "widthM": 4.6,
+  "areaM2": 54.4,
+  "orientationDeg": 62.7,
+  "provisional": false
+ },
+ "way/1213411470": {
+  "name": null,
+  "osmId": 1213411470,
+  "lengthM": 10.4,
+  "widthM": 4.8,
+  "areaM2": 50.2,
+  "orientationDeg": 57.6,
+  "provisional": false
+ },
+ "way/1213411472": {
+  "name": null,
+  "osmId": 1213411472,
+  "lengthM": 40.8,
+  "widthM": 13.2,
+  "areaM2": 518.3,
+  "orientationDeg": 159.4,
+  "provisional": false
+ },
+ "way/1213411473": {
+  "name": null,
+  "osmId": 1213411473,
+  "lengthM": 20.7,
+  "widthM": 8.8,
+  "areaM2": 153.3,
+  "orientationDeg": 159.1,
+  "provisional": false
+ },
+ "way/1213411478": {
+  "name": null,
+  "osmId": 1213411478,
+  "lengthM": 7.9,
+  "widthM": 7.1,
+  "areaM2": 56.6,
+  "orientationDeg": 69.5,
+  "provisional": false
+ },
+ "way/1213411479": {
+  "name": null,
+  "osmId": 1213411479,
+  "lengthM": 22.5,
+  "widthM": 22.3,
+  "areaM2": 437.1,
+  "orientationDeg": 159.6,
+  "provisional": false
+ },
+ "way/1213411484": {
+  "name": null,
+  "osmId": 1213411484,
+  "lengthM": 46.6,
+  "widthM": 24.7,
+  "areaM2": 657.9,
+  "orientationDeg": 143.9,
+  "provisional": false
+ },
+ "way/1213411488": {
+  "name": null,
+  "osmId": 1213411488,
+  "lengthM": 11.8,
+  "widthM": 4.8,
+  "areaM2": 56.2,
+  "orientationDeg": 58,
+  "provisional": false
+ },
+ "way/1213411489": {
+  "name": null,
+  "osmId": 1213411489,
+  "lengthM": 15.7,
+  "widthM": 8,
+  "areaM2": 125,
+  "orientationDeg": 8.6,
+  "provisional": false
+ },
+ "way/1213411490": {
+  "name": null,
+  "osmId": 1213411490,
+  "lengthM": 86.3,
+  "widthM": 22.7,
+  "areaM2": 1957.9,
+  "orientationDeg": 96.9,
+  "provisional": false
+ },
+ "way/1213411493": {
+  "name": null,
+  "osmId": 1213411493,
+  "lengthM": 14.5,
+  "widthM": 12.3,
+  "areaM2": 146.6,
+  "orientationDeg": 145.6,
+  "provisional": false
+ },
+ "way/1213411496": {
+  "name": null,
+  "osmId": 1213411496,
+  "lengthM": 13.2,
+  "widthM": 7,
+  "areaM2": 91.8,
+  "orientationDeg": 37,
+  "provisional": false
+ },
+ "way/1213411497": {
+  "name": null,
+  "osmId": 1213411497,
+  "lengthM": 10.5,
+  "widthM": 3.8,
+  "areaM2": 40.1,
+  "orientationDeg": 100.9,
+  "provisional": false
+ },
+ "way/1213411498": {
+  "name": null,
+  "osmId": 1213411498,
+  "lengthM": 9,
+  "widthM": 5.4,
+  "areaM2": 48.6,
+  "orientationDeg": 107,
+  "provisional": false
+ },
+ "way/1213411499": {
+  "name": null,
+  "osmId": 1213411499,
+  "lengthM": 34.8,
+  "widthM": 23.1,
+  "areaM2": 503.3,
+  "orientationDeg": 109.2,
+  "provisional": false
+ },
+ "way/1213411500": {
+  "name": null,
+  "osmId": 1213411500,
+  "lengthM": 9.3,
+  "widthM": 5.2,
+  "areaM2": 48.8,
+  "orientationDeg": 63,
+  "provisional": false
+ },
+ "way/1213411501": {
+  "name": null,
+  "osmId": 1213411501,
+  "lengthM": 14.9,
+  "widthM": 13.1,
+  "areaM2": 193.9,
+  "orientationDeg": 37.2,
+  "provisional": false
+ },
+ "way/1213411502": {
+  "name": null,
+  "osmId": 1213411502,
+  "lengthM": 4.1,
+  "widthM": 4,
+  "areaM2": 16.6,
+  "orientationDeg": 21.5,
+  "provisional": false
+ },
+ "way/1213411503": {
+  "name": null,
+  "osmId": 1213411503,
+  "lengthM": 7.9,
+  "widthM": 4.5,
+  "areaM2": 35.8,
+  "orientationDeg": 20.4,
+  "provisional": false
+ },
+ "way/1213411504": {
+  "name": null,
+  "osmId": 1213411504,
+  "lengthM": 24.4,
+  "widthM": 8.5,
+  "areaM2": 206.2,
+  "orientationDeg": 108.3,
+  "provisional": false
+ },
+ "way/1213411505": {
+  "name": null,
+  "osmId": 1213411505,
+  "lengthM": 17.6,
+  "widthM": 10.4,
+  "areaM2": 147,
+  "orientationDeg": 114.2,
+  "provisional": false
+ },
+ "way/1213442924": {
+  "name": null,
+  "osmId": 1213442924,
+  "lengthM": 8.6,
+  "widthM": 7.9,
+  "areaM2": 68.2,
+  "orientationDeg": 125.1,
+  "provisional": false
+ },
+ "way/1213442925": {
+  "name": null,
+  "osmId": 1213442925,
+  "lengthM": 40.1,
+  "widthM": 21.9,
+  "areaM2": 646.6,
+  "orientationDeg": 68.1,
+  "provisional": false
+ },
+ "way/1213442926": {
+  "name": null,
+  "osmId": 1213442926,
+  "lengthM": 10.7,
+  "widthM": 5.6,
+  "areaM2": 60,
+  "orientationDeg": 75.6,
+  "provisional": false
+ },
+ "way/1213442946": {
+  "name": null,
+  "osmId": 1213442946,
+  "lengthM": 38.7,
+  "widthM": 35.2,
+  "areaM2": 694.4,
+  "orientationDeg": 161.6,
+  "provisional": false
+ },
+ "way/1213442953": {
+  "name": null,
+  "osmId": 1213442953,
+  "lengthM": 16.8,
+  "widthM": 9.5,
+  "areaM2": 159.4,
+  "orientationDeg": 115.8,
+  "provisional": false
+ },
+ "way/1213450014": {
+  "name": null,
+  "osmId": 1213450014,
+  "lengthM": 15.1,
+  "widthM": 12.1,
+  "areaM2": 175.9,
+  "orientationDeg": 148.4,
+  "provisional": false
+ },
+ "way/1213450015": {
+  "name": null,
+  "osmId": 1213450015,
+  "lengthM": 22.2,
+  "widthM": 18.2,
+  "areaM2": 403.8,
+  "orientationDeg": 149.7,
+  "provisional": false
+ },
+ "way/1213450016": {
+  "name": null,
+  "osmId": 1213450016,
+  "lengthM": 27,
+  "widthM": 20,
+  "areaM2": 540.9,
+  "orientationDeg": 59.7,
+  "provisional": false
+ },
+ "way/1213450034": {
+  "name": null,
+  "osmId": 1213450034,
+  "lengthM": 26.2,
+  "widthM": 4,
+  "areaM2": 105.9,
+  "orientationDeg": 94.5,
+  "provisional": false
+ },
+ "way/1213450035": {
+  "name": null,
+  "osmId": 1213450035,
+  "lengthM": 28.2,
+  "widthM": 4.3,
+  "areaM2": 120.3,
+  "orientationDeg": 94.5,
+  "provisional": false
+ },
+ "way/1213450036": {
+  "name": null,
+  "osmId": 1213450036,
+  "lengthM": 27.9,
+  "widthM": 5.2,
+  "areaM2": 146.4,
+  "orientationDeg": 94.5,
+  "provisional": false
+ },
+ "way/1213450037": {
+  "name": null,
+  "osmId": 1213450037,
+  "lengthM": 5.1,
+  "widthM": 3.9,
+  "areaM2": 19.8,
+  "orientationDeg": 66.6,
+  "provisional": false
+ },
+ "way/1213450054": {
+  "name": null,
+  "osmId": 1213450054,
+  "lengthM": 11.9,
+  "widthM": 11.1,
+  "areaM2": 132.2,
+  "orientationDeg": 65.1,
+  "provisional": false
+ },
+ "way/1213450055": {
+  "name": null,
+  "osmId": 1213450055,
+  "lengthM": 6.5,
+  "widthM": 6.4,
+  "areaM2": 41.2,
+  "orientationDeg": 162,
+  "provisional": false
+ },
+ "way/1213450056": {
+  "name": null,
+  "osmId": 1213450056,
+  "lengthM": 6.5,
+  "widthM": 6.4,
+  "areaM2": 41.2,
+  "orientationDeg": 162,
+  "provisional": false
+ },
+ "way/1213450057": {
+  "name": null,
+  "osmId": 1213450057,
+  "lengthM": 6.5,
+  "widthM": 6.4,
+  "areaM2": 41.2,
+  "orientationDeg": 162,
+  "provisional": false
+ },
+ "way/1213450058": {
+  "name": null,
+  "osmId": 1213450058,
+  "lengthM": 6.5,
+  "widthM": 6.4,
+  "areaM2": 41.2,
+  "orientationDeg": 162,
+  "provisional": false
+ },
+ "way/1213450059": {
+  "name": null,
+  "osmId": 1213450059,
+  "lengthM": 22.1,
+  "widthM": 10.6,
+  "areaM2": 193.8,
+  "orientationDeg": 152.1,
+  "provisional": false
+ },
+ "way/1213450060": {
+  "name": null,
+  "osmId": 1213450060,
+  "lengthM": 23.7,
+  "widthM": 8.2,
+  "areaM2": 194.3,
+  "orientationDeg": 72.6,
+  "provisional": false
+ },
+ "way/1213450061": {
+  "name": null,
+  "osmId": 1213450061,
+  "lengthM": 32.9,
+  "widthM": 10,
+  "areaM2": 329.4,
+  "orientationDeg": 73.3,
+  "provisional": false
+ },
+ "way/1213450065": {
+  "name": null,
+  "osmId": 1213450065,
+  "lengthM": 10.3,
+  "widthM": 7.2,
+  "areaM2": 74.1,
+  "orientationDeg": 58.9,
+  "provisional": false
+ },
+ "way/1213450066": {
+  "name": null,
+  "osmId": 1213450066,
+  "lengthM": 21.7,
+  "widthM": 11.5,
+  "areaM2": 248.4,
+  "orientationDeg": 58.9,
+  "provisional": false
+ },
+ "way/1213450067": {
+  "name": null,
+  "osmId": 1213450067,
+  "lengthM": 45.4,
+  "widthM": 17.4,
+  "areaM2": 791.1,
+  "orientationDeg": 58.9,
+  "provisional": false
+ },
+ "way/1213450068": {
+  "name": null,
+  "osmId": 1213450068,
+  "lengthM": 16.9,
+  "widthM": 7.8,
+  "areaM2": 131.7,
+  "orientationDeg": 60.9,
+  "provisional": false
+ },
+ "way/1213450069": {
+  "name": null,
+  "osmId": 1213450069,
+  "lengthM": 56.9,
+  "widthM": 7.7,
+  "areaM2": 439,
+  "orientationDeg": 60.9,
+  "provisional": false
+ },
+ "way/1213450070": {
+  "name": null,
+  "osmId": 1213450070,
+  "lengthM": 9.8,
+  "widthM": 6.2,
+  "areaM2": 61,
+  "orientationDeg": 151.3,
+  "provisional": false
+ },
+ "way/1213450076": {
+  "name": null,
+  "osmId": 1213450076,
+  "lengthM": 35.2,
+  "widthM": 20.4,
+  "areaM2": 562.3,
+  "orientationDeg": 146,
+  "provisional": false
+ },
+ "way/1213450079": {
+  "name": null,
+  "osmId": 1213450079,
+  "lengthM": 15.8,
+  "widthM": 11.5,
+  "areaM2": 182.3,
+  "orientationDeg": 150.9,
+  "provisional": false
+ },
+ "way/1213450080": {
+  "name": null,
+  "osmId": 1213450080,
+  "lengthM": 19.2,
+  "widthM": 4.4,
+  "areaM2": 85.5,
+  "orientationDeg": 148.8,
+  "provisional": false
+ },
+ "way/1213450082": {
+  "name": null,
+  "osmId": 1213450082,
+  "lengthM": 9.1,
+  "widthM": 8.5,
+  "areaM2": 62.9,
+  "orientationDeg": 58.1,
+  "provisional": false
+ },
+ "way/1213450083": {
+  "name": null,
+  "osmId": 1213450083,
+  "lengthM": 12.4,
+  "widthM": 7.5,
+  "areaM2": 93.1,
+  "orientationDeg": 148.1,
+  "provisional": false
+ },
+ "way/1213450084": {
+  "name": null,
+  "osmId": 1213450084,
+  "lengthM": 25,
+  "widthM": 11.9,
+  "areaM2": 296.2,
+  "orientationDeg": 38,
+  "provisional": false
+ },
+ "way/1213450085": {
+  "name": null,
+  "osmId": 1213450085,
+  "lengthM": 43.8,
+  "widthM": 24.6,
+  "areaM2": 1078.6,
+  "orientationDeg": 57.8,
+  "provisional": false
+ },
+ "way/1213450086": {
+  "name": null,
+  "osmId": 1213450086,
+  "lengthM": 13.9,
+  "widthM": 10.3,
+  "areaM2": 143.7,
+  "orientationDeg": 165,
+  "provisional": false
+ },
+ "way/1213450087": {
+  "name": null,
+  "osmId": 1213450087,
+  "lengthM": 19,
+  "widthM": 16.9,
+  "areaM2": 321.6,
+  "orientationDeg": 148.8,
+  "provisional": false
+ },
+ "way/1213450089": {
+  "name": null,
+  "osmId": 1213450089,
+  "lengthM": 9.3,
+  "widthM": 8.8,
+  "areaM2": 82,
+  "orientationDeg": 150.2,
+  "provisional": false
+ },
+ "way/1213453948": {
+  "name": "Maryam Mess",
+  "osmId": 1213453948,
+  "lengthM": 25.9,
+  "widthM": 20.6,
+  "areaM2": 404.4,
+  "orientationDeg": 153.4,
+  "provisional": false
+ },
+ "way/1213453953": {
+  "name": null,
+  "osmId": 1213453953,
+  "lengthM": 7.1,
+  "widthM": 5.3,
+  "areaM2": 37.2,
+  "orientationDeg": 55.7,
+  "provisional": false
+ },
+ "way/1213687793": {
+  "name": null,
+  "osmId": 1213687793,
+  "lengthM": 7.2,
+  "widthM": 4.1,
+  "areaM2": 29.5,
+  "orientationDeg": 58.4,
+  "provisional": false
+ },
+ "way/1213687798": {
+  "name": null,
+  "osmId": 1213687798,
+  "lengthM": 7.5,
+  "widthM": 6.1,
+  "areaM2": 45.5,
+  "orientationDeg": 149.2,
+  "provisional": false
+ },
+ "way/1213687799": {
+  "name": null,
+  "osmId": 1213687799,
+  "lengthM": 39.8,
+  "widthM": 19.5,
+  "areaM2": 731.3,
+  "orientationDeg": 148.9,
+  "provisional": false
+ },
+ "way/1213687803": {
+  "name": null,
+  "osmId": 1213687803,
+  "lengthM": 6,
+  "widthM": 3.7,
+  "areaM2": 22.1,
+  "orientationDeg": 153.8,
+  "provisional": false
+ },
+ "way/1213687805": {
+  "name": "Boys salon",
+  "osmId": 1213687805,
+  "lengthM": 9.6,
+  "widthM": 5.8,
+  "areaM2": 56.1,
+  "orientationDeg": 59.7,
+  "provisional": false
+ },
+ "way/1213729183": {
+  "name": null,
+  "osmId": 1213729183,
+  "lengthM": 10.6,
+  "widthM": 9.7,
+  "areaM2": 103.7,
+  "orientationDeg": 113.2,
+  "provisional": false
+ },
+ "way/1213729184": {
+  "name": null,
+  "osmId": 1213729184,
+  "lengthM": 36.7,
+  "widthM": 25.6,
+  "areaM2": 693.8,
+  "orientationDeg": 116.1,
+  "provisional": false
+ },
+ "way/1213729185": {
+  "name": null,
+  "osmId": 1213729185,
+  "lengthM": 23,
+  "widthM": 20.1,
+  "areaM2": 299.8,
+  "orientationDeg": 22.8,
+  "provisional": false
+ },
+ "way/1213729204": {
+  "name": "Fatima I",
+  "osmId": 1213729204,
+  "lengthM": 48.2,
+  "widthM": 46,
+  "areaM2": 1192.8,
+  "orientationDeg": 76.9,
+  "provisional": false
+ },
+ "way/1213729205": {
+  "name": null,
+  "osmId": 1213729205,
+  "lengthM": 18.8,
+  "widthM": 8.5,
+  "areaM2": 158.7,
+  "orientationDeg": 69.1,
+  "provisional": false
+ },
+ "way/1213729206": {
+  "name": null,
+  "osmId": 1213729206,
+  "lengthM": 8.7,
+  "widthM": 4.6,
+  "areaM2": 39.9,
+  "orientationDeg": 64.6,
+  "provisional": false
+ },
+ "way/1213729207": {
+  "name": null,
+  "osmId": 1213729207,
+  "lengthM": 17.8,
+  "widthM": 9.3,
+  "areaM2": 165,
+  "orientationDeg": 148.6,
+  "provisional": false
+ },
+ "way/1213729213": {
+  "name": null,
+  "osmId": 1213729213,
+  "lengthM": 4.5,
+  "widthM": 4.3,
+  "areaM2": 19.3,
+  "orientationDeg": 59.3,
+  "provisional": false
+ },
+ "way/1213729214": {
+  "name": null,
+  "osmId": 1213729214,
+  "lengthM": 4.1,
+  "widthM": 3.1,
+  "areaM2": 12.7,
+  "orientationDeg": 57.2,
+  "provisional": false
+ },
+ "way/1213729215": {
+  "name": null,
+  "osmId": 1213729215,
+  "lengthM": 23.9,
+  "widthM": 11.2,
+  "areaM2": 266.8,
+  "orientationDeg": 41.6,
+  "provisional": false
+ },
+ "way/1213729217": {
+  "name": null,
+  "osmId": 1213729217,
+  "lengthM": 23.4,
+  "widthM": 10.2,
+  "areaM2": 239.6,
+  "orientationDeg": 149.8,
+  "provisional": false
+ },
+ "way/1213729219": {
+  "name": null,
+  "osmId": 1213729219,
+  "lengthM": 11.6,
+  "widthM": 8.3,
+  "areaM2": 96,
+  "orientationDeg": 151.3,
+  "provisional": false
+ },
+ "way/1213729220": {
+  "name": null,
+  "osmId": 1213729220,
+  "lengthM": 17,
+  "widthM": 16.1,
+  "areaM2": 273.7,
+  "orientationDeg": 151.3,
+  "provisional": false
+ },
+ "way/1214392838": {
+  "name": null,
+  "osmId": 1214392838,
+  "lengthM": 13.4,
+  "widthM": 6.1,
+  "areaM2": 76,
+  "orientationDeg": 83.1,
+  "provisional": false
+ },
+ "way/1214392839": {
+  "name": null,
+  "osmId": 1214392839,
+  "lengthM": 16,
+  "widthM": 8.5,
+  "areaM2": 135,
+  "orientationDeg": 152.3,
+  "provisional": false
+ },
+ "way/1214392840": {
+  "name": null,
+  "osmId": 1214392840,
+  "lengthM": 8.4,
+  "widthM": 6.7,
+  "areaM2": 56.1,
+  "orientationDeg": 63.4,
+  "provisional": false
+ },
+ "way/1214392865": {
+  "name": null,
+  "osmId": 1214392865,
+  "lengthM": 11.4,
+  "widthM": 5.6,
+  "areaM2": 64.2,
+  "orientationDeg": 137.8,
+  "provisional": false
+ },
+ "way/1214392866": {
+  "name": null,
+  "osmId": 1214392866,
+  "lengthM": 11.5,
+  "widthM": 6.7,
+  "areaM2": 77.3,
+  "orientationDeg": 140.6,
+  "provisional": false
+ },
+ "way/1253900709": {
+  "name": "IGIS",
+  "osmId": 1253900709,
+  "lengthM": 50.2,
+  "widthM": 21.6,
+  "areaM2": 784.9,
+  "orientationDeg": 114.8,
+  "provisional": false
+ },
+ "way/1256889785": {
+  "name": "South Edge Café",
+  "osmId": 1256889785,
+  "lengthM": 61.9,
+  "widthM": 33.5,
+  "areaM2": 1743,
+  "orientationDeg": 34.3,
+  "provisional": false
+ },
+ "way/1271382357": {
+  "name": "Gehleez Marquee",
+  "osmId": 1271382357,
+  "lengthM": 67.9,
+  "widthM": 62,
+  "areaM2": 3678.1,
+  "orientationDeg": 8.3,
+  "provisional": false
+ },
+ "way/1273471682": {
+  "name": null,
+  "osmId": 1273471682,
+  "lengthM": 18.9,
+  "widthM": 16.8,
+  "areaM2": 266.1,
+  "orientationDeg": 88,
+  "provisional": false
+ },
+ "way/1273471683": {
+  "name": null,
+  "osmId": 1273471683,
+  "lengthM": 19.7,
+  "widthM": 15.3,
+  "areaM2": 301.5,
+  "orientationDeg": 89.6,
+  "provisional": false
+ },
+ "way/1273471684": {
+  "name": null,
+  "osmId": 1273471684,
+  "lengthM": 12.6,
+  "widthM": 11.2,
+  "areaM2": 138.9,
+  "orientationDeg": 92,
+  "provisional": false
+ },
+ "way/1273471685": {
+  "name": null,
+  "osmId": 1273471685,
+  "lengthM": 16.1,
+  "widthM": 10.2,
+  "areaM2": 164.5,
+  "orientationDeg": 90.4,
+  "provisional": false
+ },
+ "way/1273471686": {
+  "name": null,
+  "osmId": 1273471686,
+  "lengthM": 16.1,
+  "widthM": 10.3,
+  "areaM2": 166.6,
+  "orientationDeg": 90.4,
+  "provisional": false
+ },
+ "way/1273471687": {
+  "name": null,
+  "osmId": 1273471687,
+  "lengthM": 16.1,
+  "widthM": 10.1,
+  "areaM2": 162.4,
+  "orientationDeg": 90.4,
+  "provisional": false
+ },
+ "way/1273471688": {
+  "name": null,
+  "osmId": 1273471688,
+  "lengthM": 15.5,
+  "widthM": 6.5,
+  "areaM2": 100.8,
+  "orientationDeg": 90.5,
+  "provisional": false
+ },
+ "way/1273471689": {
+  "name": null,
+  "osmId": 1273471689,
+  "lengthM": 14.4,
+  "widthM": 9.9,
+  "areaM2": 143.2,
+  "orientationDeg": 90.7,
+  "provisional": false
+ },
+ "way/1273471690": {
+  "name": null,
+  "osmId": 1273471690,
+  "lengthM": 14.4,
+  "widthM": 8.5,
+  "areaM2": 122.5,
+  "orientationDeg": 90.6,
+  "provisional": false
+ },
+ "way/1273471691": {
+  "name": null,
+  "osmId": 1273471691,
+  "lengthM": 14.4,
+  "widthM": 7.5,
+  "areaM2": 107.5,
+  "orientationDeg": 90.6,
+  "provisional": false
+ },
+ "way/1273471692": {
+  "name": null,
+  "osmId": 1273471692,
+  "lengthM": 14.4,
+  "widthM": 7.6,
+  "areaM2": 109.6,
+  "orientationDeg": 90.7,
+  "provisional": false
+ },
+ "way/1273471693": {
+  "name": null,
+  "osmId": 1273471693,
+  "lengthM": 14.4,
+  "widthM": 7.8,
+  "areaM2": 110.8,
+  "orientationDeg": 90.6,
+  "provisional": false
+ },
+ "way/1273471694": {
+  "name": null,
+  "osmId": 1273471694,
+  "lengthM": 15,
+  "widthM": 14.3,
+  "areaM2": 170.9,
+  "orientationDeg": 7.6,
+  "provisional": false
+ },
+ "way/1273471695": {
+  "name": null,
+  "osmId": 1273471695,
+  "lengthM": 14.8,
+  "widthM": 7.3,
+  "areaM2": 107.3,
+  "orientationDeg": 88.5,
+  "provisional": false
+ },
+ "way/1273471696": {
+  "name": null,
+  "osmId": 1273471696,
+  "lengthM": 15.4,
+  "widthM": 8.3,
+  "areaM2": 120.4,
+  "orientationDeg": 91.7,
+  "provisional": false
+ },
+ "way/1273471697": {
+  "name": null,
+  "osmId": 1273471697,
+  "lengthM": 15.4,
+  "widthM": 11.1,
+  "areaM2": 169.5,
+  "orientationDeg": 94.6,
+  "provisional": false
+ },
+ "way/1276963569": {
+  "name": null,
+  "osmId": 1276963569,
+  "lengthM": 15.3,
+  "widthM": 9.2,
+  "areaM2": 141.5,
+  "orientationDeg": 1.2,
+  "provisional": false
+ },
+ "way/1276963570": {
+  "name": null,
+  "osmId": 1276963570,
+  "lengthM": 14.4,
+  "widthM": 8.3,
+  "areaM2": 119.7,
+  "orientationDeg": 87.9,
+  "provisional": false
+ },
+ "way/1276963571": {
+  "name": null,
+  "osmId": 1276963571,
+  "lengthM": 14.3,
+  "widthM": 6.2,
+  "areaM2": 88.7,
+  "orientationDeg": 88.8,
+  "provisional": false
+ },
+ "way/1276963572": {
+  "name": null,
+  "osmId": 1276963572,
+  "lengthM": 14.6,
+  "widthM": 7.9,
+  "areaM2": 112.9,
+  "orientationDeg": 88.5,
+  "provisional": false
+ },
+ "way/1276963573": {
+  "name": null,
+  "osmId": 1276963573,
+  "lengthM": 10,
+  "widthM": 8.5,
+  "areaM2": 85.3,
+  "orientationDeg": 89.8,
+  "provisional": false
+ },
+ "way/1276963574": {
+  "name": null,
+  "osmId": 1276963574,
+  "lengthM": 10.2,
+  "widthM": 7,
+  "areaM2": 71.1,
+  "orientationDeg": 90.3,
+  "provisional": false
+ },
+ "way/1276963575": {
+  "name": null,
+  "osmId": 1276963575,
+  "lengthM": 15.8,
+  "widthM": 12.1,
+  "areaM2": 170.9,
+  "orientationDeg": 91,
+  "provisional": false
+ },
+ "way/1276963576": {
+  "name": null,
+  "osmId": 1276963576,
+  "lengthM": 15.5,
+  "widthM": 15.1,
+  "areaM2": 233.7,
+  "orientationDeg": 89.6,
+  "provisional": false
+ },
+ "way/1276963577": {
+  "name": null,
+  "osmId": 1276963577,
+  "lengthM": 14.9,
+  "widthM": 7.7,
+  "areaM2": 114.8,
+  "orientationDeg": 90.3,
+  "provisional": false
+ },
+ "way/1276963578": {
+  "name": null,
+  "osmId": 1276963578,
+  "lengthM": 14.4,
+  "widthM": 8,
+  "areaM2": 115.2,
+  "orientationDeg": 90.7,
+  "provisional": false
+ },
+ "way/1276963579": {
+  "name": null,
+  "osmId": 1276963579,
+  "lengthM": 10.5,
+  "widthM": 8.9,
+  "areaM2": 94,
+  "orientationDeg": 89.9,
+  "provisional": false
+ },
+ "way/1276963580": {
+  "name": null,
+  "osmId": 1276963580,
+  "lengthM": 15.7,
+  "widthM": 8.2,
+  "areaM2": 128,
+  "orientationDeg": 89.6,
+  "provisional": false
+ },
+ "way/1276963581": {
+  "name": null,
+  "osmId": 1276963581,
+  "lengthM": 37.5,
+  "widthM": 25,
+  "areaM2": 938.1,
+  "orientationDeg": 39.2,
+  "provisional": false
+ },
+ "way/1276963582": {
+  "name": null,
+  "osmId": 1276963582,
+  "lengthM": 24,
+  "widthM": 20.4,
+  "areaM2": 488.4,
+  "orientationDeg": 2.4,
+  "provisional": false
+ },
+ "way/1359811158": {
+  "name": "CIPS 2",
+  "osmId": 1359811158,
+  "lengthM": 81.6,
+  "widthM": 44.1,
+  "areaM2": 2138.9,
+  "orientationDeg": 114.7,
+  "provisional": false
+ },
+ "way/1359821158": {
+  "name": "Iqbal Mess",
+  "osmId": 1359821158,
+  "lengthM": 28.2,
+  "widthM": 22.6,
+  "areaM2": 556.6,
+  "orientationDeg": 59.7,
+  "provisional": false
+ },
+ "way/1364459243": {
+  "name": null,
+  "osmId": 1364459243,
+  "lengthM": 4.9,
+  "widthM": 4.5,
+  "areaM2": 17.4,
+  "orientationDeg": 120.4,
+  "provisional": false
+ },
+ "way/1364559421": {
+  "name": null,
+  "osmId": 1364559421,
+  "lengthM": 50.2,
+  "widthM": 46.9,
+  "areaM2": 1759.8,
+  "orientationDeg": 25.5,
+  "provisional": false
+ },
+ "way/1435844790": {
+  "name": null,
+  "osmId": 1435844790,
+  "lengthM": 21.4,
+  "widthM": 13.7,
+  "areaM2": 285,
+  "orientationDeg": 0.4,
+  "provisional": false
+ },
+ "way/1435844791": {
+  "name": "Tufan Plaza",
+  "osmId": 1435844791,
+  "lengthM": 24.2,
+  "widthM": 18.6,
+  "areaM2": 396,
+  "orientationDeg": 156.5,
+  "provisional": false
+ },
+ "way/1435865700": {
+  "name": "Peer Mehr Ali Shah Masjid",
+  "osmId": 1435865700,
+  "lengthM": 17.8,
+  "widthM": 9.4,
+  "areaM2": 124.5,
+  "orientationDeg": 145.7,
+  "provisional": false
+ },
+ "way/1435865701": {
+  "name": null,
+  "osmId": 1435865701,
+  "lengthM": 15.2,
+  "widthM": 14.4,
+  "areaM2": 216,
+  "orientationDeg": 92.8,
+  "provisional": false
+ },
+ "way/1435865703": {
+  "name": "AFIE",
+  "osmId": 1435865703,
+  "lengthM": 13.9,
+  "widthM": 10.1,
+  "areaM2": 132.2,
+  "orientationDeg": 179.4,
+  "provisional": false
+ },
+ "way/1436202302": {
+  "name": null,
+  "osmId": 1436202302,
+  "lengthM": 21,
+  "widthM": 15.1,
+  "areaM2": 272,
+  "orientationDeg": 80.9,
+  "provisional": false
+ },
+ "way/1436390204": {
+  "name": "Masjid e quba",
+  "osmId": 1436390204,
+  "lengthM": 9.9,
+  "widthM": 8.6,
+  "areaM2": 82.6,
+  "orientationDeg": 0,
+  "provisional": false
+ },
+ "way/1473385368": {
+  "name": "Nust Law School",
+  "osmId": 1473385368,
+  "lengthM": 54.3,
+  "widthM": 49.6,
+  "areaM2": 2445.8,
+  "orientationDeg": 106,
+  "provisional": false
+ },
+ "way/1479505164": {
+  "name": "Gannay Ka Juice",
+  "osmId": 1479505164,
+  "lengthM": 16.1,
+  "widthM": 10.7,
+  "areaM2": 159.6,
+  "orientationDeg": 24.1,
+  "provisional": false
+ },
+ "way/1481032812": {
+  "name": "corn khoka",
+  "osmId": 1481032812,
+  "lengthM": 9,
+  "widthM": 4.6,
+  "areaM2": 38.5,
+  "orientationDeg": 62.8,
+  "provisional": false
+ },
+ "way/209090693": {
+  "name": "Attar 1",
+  "osmId": 209090693,
+  "lengthM": 47.5,
+  "widthM": 45.5,
+  "areaM2": 1716.4,
+  "orientationDeg": 135.3,
+  "provisional": false
+ },
+ "way/209090803": {
+  "name": "Ghazali 1",
+  "osmId": 209090803,
+  "lengthM": 44.5,
+  "widthM": 43.4,
+  "areaM2": 1541.4,
+  "orientationDeg": 148.7,
+  "provisional": false
+ },
+ "way/209091616": {
+  "name": "Ghazali 2",
+  "osmId": 209091616,
+  "lengthM": 46.2,
+  "widthM": 43.2,
+  "areaM2": 1595.3,
+  "orientationDeg": 150.2,
+  "provisional": false
+ },
+ "way/209188521": {
+  "name": "Liaquat",
+  "osmId": 209188521,
+  "lengthM": 46.6,
+  "widthM": 45.1,
+  "areaM2": 1581.7,
+  "orientationDeg": 129,
+  "provisional": false
+ },
+ "way/209832802": {
+  "name": "Rumi I",
+  "osmId": 209832802,
+  "lengthM": 52.8,
+  "widthM": 46.5,
+  "areaM2": 1820.4,
+  "orientationDeg": 112.8,
+  "provisional": false
+ },
+ "way/209855481-prov": {
+  "name": "Razi Hostel",
+  "osmId": 209855481,
+  "lengthM": 132.3,
+  "widthM": 72.9,
+  "areaM2": 8801.2,
+  "orientationDeg": 149.5,
+  "provisional": true
+ }
+}

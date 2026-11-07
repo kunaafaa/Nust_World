@@ -1,0 +1,34 @@
+{
+  "name": "NUST World",
+  "short_name": "NUST World",
+  "description": "Never get lost at NUST again. Interactive 3D campus map of NUST Islamabad.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070d1c",
+  "theme_color": "#070d1c",
+  "categories": [
+    "navigation",
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

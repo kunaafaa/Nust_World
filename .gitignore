@@ -1,0 +1,19 @@
+node_modules
+.next
+out
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# secrets, archives, OS junk
+.env*
+*.zip
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# raw third-party downloads: not redistributed (reference/ = TopoExport files, photos, screenshots)
+/data/overture/
+/reference/

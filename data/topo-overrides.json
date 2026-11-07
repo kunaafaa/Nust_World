@@ -1,0 +1,17 @@
+{
+  "_readme": "Switch any topo-merge feature or layer on/off. Edit and rebuild (npm run build) or restart npm run dev. Add ?topo=off to any URL to disable the whole merge in the browser for a quick before/after.",
+  "layers": {
+    "additions": true,
+    "replacements": true,
+    "hostels": true,
+    "roads": true,
+    "green": true,
+    "trees": true
+  },
+  "excludeUpstream": [
+    "Google Open Buildings"
+  ],
+  "features": {},
+  "_excludeUpstreamNote": "DEFAULT: Google Open Buildings is excluded. Overture republishes it but its records carry no licence field here, and the project rule is never to use Google data without sign-off. Remove it from this list and re-run npm run topo-merge to include those outlines. Microsoft ML Buildings records declare ODbL-1.0.",
+  "_features": "Add \"<feature id>\": false to hide one feature. Ids: topo:<overture id> (added buildings, hostels, roads), dup:<osm way id> (suppressed duplicate), <osm way id> (a replacement), topo-green-N. Add \"layers.terrain\" is not used here: Terrain has its own in-app toggle."
+}

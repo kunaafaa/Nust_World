@@ -1,0 +1,151 @@
+# OSM refresh diff
+
+Fetched 2026-11-07T11:20:03.079Z · Overpass base timestamp **2026-11-07T11:00:05Z** · previous file timestamp 2026-11-07T10:41:51Z
+Features: 1002 → 1460 · **+475** added · **−17** removed · **985** changed
+NOT applied (run with `-- --apply`). New data saved to `data/raw/nust-full.2026-11-07T11-00-05Z.geojson`.
+
+## Added (named first)
+
+- relation/6122567 — پشاور - اٹک - راولپنڈی ریلوے لائن
+- relation/9325709 — IGIS Ground
+- relation/13911250 — اورینج میٹرو بس
+- relation/16448907 — Rehmat
+- relation/16449234 — Razi 1
+- relation/19834928 — Rehman Baba Express 48DN: Peshawar Cantt → Karachi Cantt
+- way/209650973 — Central Ac Chiller
+- way/209841365 — ASAB Animal House
+- way/209859224 — Nust Medical Center
+- way/209868342 — NUST Reception
+- way/241253507 — Nust villas
+- way/241253508 — Isra Appartments
+- way/436944674 — National University Of Technology (NUTECH)
+- way/472326220 — Rock Lizzard Park
+- way/652165537 — p6
+- way/652165539 — p1
+- way/652165540 — p2
+- way/652165541 — p3
+- way/652165542 — p4
+- way/652165543 — sedimentation pond
+- way/652165544 — collection pond
+- way/656070626 — P7
+- way/656070627 — P8
+- way/670478587 — Capital Hostel for Girls
+- way/721235901 — جی-12
+- way/821895097 — جی-13
+- way/868229244 — Dean parking
+- way/1036457769 — Isra Appartment Parking
+- way/1056121374 — SINES
+- way/1085692690 — Gate 10
+- way/1085692691 — Gate 1
+- way/1148401430 — NUST Grid Station
+- way/1152601619 — NUST Creative Learning School
+- way/1214392841 — Salon
+- way/1279575386 — F Block, Paris City
+- way/1364449584 — Footpath
+- way/1479492228 — CEMTECH
+- way/1570306597 — aps building
+- way/1375600682 — NUST Metro Bus Area
+- way/23049022 — 3 AK Brohi Rd
+- way/27728544 — Street 141
+- way/27728546 — Street 136
+- way/27728547 — Street 139
+- way/27728903 — سروس روڈ ویسٹ جی-11
+- way/453650168 — 3 AK Brohi Rd
+- way/468896134 — Street 139
+- way/617266397 — Zubair Shah Road
+- way/1159109394 — Street 1
+- way/1253905399 — Capital House
+- way/1364449583 — IGIS road
+- way/1433971945 — Awais ul Rehman Khokhar
+- way/993904636 — میٹرو بس ٹریک
+- way/993904644 — میٹرو بس ٹریک
+- node/2198465014 — C2 ROAD
+- node/2200224153 — NUST VILLAS
+- node/2201295155 — CIPS construction
+- node/2505816487 — Rumi Hostel
+- node/3093742233 — Allied Bank Ltd - ATM Only
+- node/5348544222 — Isra Apartments
+- node/5463538298 — Exam center
+
+## Removed
+
+- way/209857699
+- way/209858447
+- way/209858449
+- way/209858450
+- way/860253335
+- way/860253336
+- way/981805805
+- way/981817769
+- way/981817770
+- way/1314047236
+- way/1314047237
+- way/1314047241
+- way/1314047242
+- way/1314047243
+- way/1314047244
+- way/1314047245
+- way/1314047246
+
+## Changed (tags or geometry)
+
+- relation/3489900 — ایچ بی ایل پاکستان
+- relation/16441514 — NUST Business School
+- relation/16441515 — IESE (Institute of Environmental Sciences and Engineering)
+- relation/16442296 — Ayesha Hostel
+- relation/16442297
+- relation/16448908 — Hajveri Hostel
+- relation/16448909 — Zakariya Hostel
+- relation/16448910 — NIT
+- relation/16449233 — Fatima II
+- way/208827279 — ASAB
+- way/208959445 — NUST Ibrahim Mess
+- way/208960114 — Masjid-e-Rehmat
+- way/208960605 — Rumi hostels
+- way/208966637 — SCME Canteen
+- way/208966900 — Concordia-1
+- way/208969441 — IAEC
+- way/209090692 — Attar Hostel Area
+- way/209090693 — Attar 1
+- way/209090803 — Ghazali 1
+- way/209091615 — Ghazali Hostel Area
+- way/209091616 — Ghazali 2
+- way/209141896 — NUST Main Office
+- way/209188521 — Liaquat
+- way/209189592 — NICE
+- way/209190555 — NICE parking Area
+- way/209650351 — Concordia 2 (C2)
+- way/209651866 — SEECS Car parking
+- way/209666241 — IAEC & RIMMS Car Parking
+- way/209668231 — RIMMS
+- way/209670130
+- way/209670519 — Central Ac Chiller
+- way/209670695 — Basket Ball Court
+- way/209832437 — Rumi Hostel Area
+- way/209832719 — Rumi II
+- way/209832802 — Rumi I
+- way/209832837 — NUST Old Gym
+- way/209832968 — NBS Lawn
+- way/209835326 — Zainab Hostel
+- way/209835585 — Fatima Hostels Area
+- way/209836754 — SEECS Faculty Block
+- way/209836876 — NUST Auditorium
+- way/209836914
+- way/209836932
+- way/209838284
+- way/209838285
+- way/209838287
+- way/209838289
+- way/209838290 — Iqra Apartments
+- way/209838293
+- way/209838295
+- way/209838302
+- way/209838304
+- way/209841062
+- way/209843033
+- way/209843304
+- way/209843979
+- way/209845731 — NBS Ground
+- way/209846009
+- way/209846155 — IGIS Parking
+- way/209846720 — New Igis Parking

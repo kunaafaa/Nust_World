@@ -1,0 +1,486 @@
+{
+ "generated": "2026-11-07T12:32:18.649Z",
+ "overtureRelease": "2026-10-21.0",
+ "overtureDirect": {
+  "total": 2314,
+  "inRegion": 282,
+  "upstream": {
+   "Microsoft ML Buildings": 658,
+   "Google Open Buildings": 1452,
+   "OpenStreetMap": 204
+  }
+ },
+ "fitCheck": {
+  "18D98C": {
+   "n": 205,
+   "medianCentroidM": 0.005,
+   "p90CentroidM": 0.005,
+   "medianIoU": 1
+  },
+  "9CF709": {
+   "n": 176,
+   "medianCentroidM": 0.004,
+   "p90CentroidM": 0.004,
+   "medianIoU": 1
+  }
+ },
+ "buildings": {
+  "regionOverture": 282,
+  "matchedOSM": 103,
+  "overlapOnly": 5,
+  "noOsm": 174,
+  "skippedUnder100": 130,
+  "additions": 16,
+  "hostelFootprints": 0,
+  "additionsByConfidence": {
+   "low": 14,
+   "medium": 2
+  },
+  "additionsByUpstream": {
+   "Microsoft ML Buildings": 16
+  },
+  "additionsAreaM2": 2779,
+  "topoCrossCheckedOver90": 278,
+  "excludedByOverride": [
+   {
+    "id": "overture/d3a598af-71ed-487b-b768-2d4610a1cabf",
+    "kind": "addition",
+    "areaM2": 168,
+    "upstream": "Google Open Buildings",
+    "at": "33.64113, 72.98692"
+   },
+   {
+    "id": "overture/bed7fde4-07fb-4203-b535-74eb2ab026ad",
+    "kind": "addition",
+    "areaM2": 379,
+    "upstream": "Google Open Buildings",
+    "at": "33.64134, 72.98696"
+   },
+   {
+    "id": "overture/1ab591a9-a0b2-447c-975b-921818dc11d4",
+    "kind": "addition",
+    "areaM2": 163,
+    "upstream": "Google Open Buildings",
+    "at": "33.64136, 72.98675"
+   },
+   {
+    "id": "overture/21caa6d1-4b4a-46ec-a3a1-2d04ba29b263",
+    "kind": "addition",
+    "areaM2": 265,
+    "upstream": "Google Open Buildings",
+    "at": "33.64123, 72.98678"
+   },
+   {
+    "id": "overture/859a6621-88c7-4e76-8c3e-126a5154cb2b",
+    "kind": "addition",
+    "areaM2": 196,
+    "upstream": "Google Open Buildings",
+    "at": "33.64207, 72.98290"
+   },
+   {
+    "id": "overture/a3c30cef-b344-4f79-804a-df6b9404b9e5",
+    "kind": "addition",
+    "areaM2": 186,
+    "upstream": "Google Open Buildings",
+    "at": "33.64147, 72.98348"
+   },
+   {
+    "id": "overture/b615218b-267d-4c4a-a8f5-90cae8abc0ec",
+    "kind": "addition",
+    "areaM2": 166,
+    "upstream": "Google Open Buildings",
+    "at": "33.64142, 72.98339"
+   },
+   {
+    "id": "overture/b6a362a5-557f-41c6-82b8-3c44a373b8d6",
+    "kind": "addition",
+    "areaM2": 344,
+    "upstream": "Google Open Buildings",
+    "at": "33.64128, 72.98488"
+   },
+   {
+    "id": "overture/71abad86-14df-4afb-a01a-183406f94855",
+    "kind": "addition",
+    "areaM2": 119,
+    "upstream": "Google Open Buildings",
+    "at": "33.64183, 72.98464"
+   },
+   {
+    "id": "overture/56b68916-d1fe-4079-a71f-09aadff0cf1e",
+    "kind": "addition",
+    "areaM2": 333,
+    "upstream": "Google Open Buildings",
+    "at": "33.64115, 72.98497"
+   },
+   {
+    "id": "overture/0472b10c-d611-46c3-a676-ee65ec6f30ea",
+    "kind": "addition",
+    "areaM2": 225,
+    "upstream": "Google Open Buildings",
+    "at": "33.63969, 72.98626"
+   },
+   {
+    "id": "overture/939f64f3-7fc7-4d5f-a034-0d64f91bc8e1",
+    "kind": "hostel footprint (Razi Hostel)",
+    "areaM2": 210,
+    "upstream": "Google Open Buildings",
+    "at": "33.63966, 72.98670"
+   },
+   {
+    "id": "overture/4dd612d1-8192-409c-b128-e13bfab1e9dd",
+    "kind": "hostel footprint (Ghazali Hostel)",
+    "areaM2": 413,
+    "upstream": "Google Open Buildings",
+    "at": "33.64021, 72.98764"
+   },
+   {
+    "id": "overture/bf40ddf3-e28b-489b-aba8-5b4e0ba11216",
+    "kind": "hostel footprint (Razi Hostel)",
+    "areaM2": 373,
+    "upstream": "Google Open Buildings",
+    "at": "33.63975, 72.98693"
+   },
+   {
+    "id": "overture/3e85cda7-77ff-44c0-a4b0-3fb5341f4b69",
+    "kind": "addition",
+    "areaM2": 414,
+    "upstream": "Google Open Buildings",
+    "at": "33.63861, 72.98372"
+   },
+   {
+    "id": "overture/4420f255-234f-484d-bafb-98c32aac5c31",
+    "kind": "addition",
+    "areaM2": 210,
+    "upstream": "Google Open Buildings",
+    "at": "33.64808, 72.98798"
+   },
+   {
+    "id": "overture/56a227fb-74e0-4ac7-8b7d-187c0711b362",
+    "kind": "addition",
+    "areaM2": 171,
+    "upstream": "Google Open Buildings",
+    "at": "33.64165, 72.99226"
+   },
+   {
+    "id": "overture/c3a5cc30-edbf-40bb-84d1-a29532986946",
+    "kind": "addition",
+    "areaM2": 178,
+    "upstream": "Google Open Buildings",
+    "at": "33.64155, 72.99218"
+   },
+   {
+    "id": "overture/99e1ec85-67ad-4c67-860e-46cd1e8398ba",
+    "kind": "addition",
+    "areaM2": 138,
+    "upstream": "Google Open Buildings",
+    "at": "33.64170, 72.99266"
+   },
+   {
+    "id": "overture/714ccb06-7139-4d07-90fa-8ce01f371a3a",
+    "kind": "addition",
+    "areaM2": 341,
+    "upstream": "Google Open Buildings",
+    "at": "33.64196, 72.99347"
+   },
+   {
+    "id": "overture/76e511ba-d13b-411e-abd0-ef826950e529",
+    "kind": "addition",
+    "areaM2": 2613,
+    "upstream": "Google Open Buildings",
+    "at": "33.64147, 72.99450"
+   },
+   {
+    "id": "overture/6179f77a-0da9-439b-9cb3-6786a9d47ea8",
+    "kind": "addition",
+    "areaM2": 143,
+    "upstream": "Google Open Buildings",
+    "at": "33.64699, 72.99333"
+   },
+   {
+    "id": "overture/bdcac8b6-a869-4fd0-b4a5-2a6dadd2e7d2",
+    "kind": "addition",
+    "areaM2": 134,
+    "upstream": "Google Open Buildings",
+    "at": "33.64676, 72.99351"
+   },
+   {
+    "id": "overture/4e8c9c71-c880-462e-ae0c-e23eb91c20d0",
+    "kind": "hostel footprint (Fatima Hostels)",
+    "areaM2": 171,
+    "upstream": "Google Open Buildings",
+    "at": "33.64572, 72.99461"
+   },
+   {
+    "id": "overture/09ec62bc-abb5-424b-b4ca-3e4a8b36ff4a",
+    "kind": "addition",
+    "areaM2": 102,
+    "upstream": "Google Open Buildings",
+    "at": "33.64545, 72.99465"
+   },
+   {
+    "id": "overture/a29aa14a-5b7c-4c14-89d6-2913a5cdea3e",
+    "kind": "addition",
+    "areaM2": 131,
+    "upstream": "Google Open Buildings",
+    "at": "33.64229, 72.99077"
+   },
+   {
+    "id": "overture/955a3e5f-6169-47e7-97e0-fcd3d630d618",
+    "kind": "addition",
+    "areaM2": 139,
+    "upstream": "Google Open Buildings",
+    "at": "33.64321, 72.98977"
+   }
+  ],
+  "excludeUpstream": [
+   "Google Open Buildings"
+  ],
+  "suppressed": [
+   {
+    "target": "way/1364559421",
+    "duplicateOf": "way/209832719",
+    "reason": "exact duplicate outline of Rumi II (IoU 1.00); the copy without a name/place is suppressed to stop z-fighting"
+   }
+  ],
+  "defectsFound": [],
+  "defectsKept": [],
+  "replacements": [],
+  "disagreements": [
+   {
+    "id": "way/209091616",
+    "name": "Ghazali 2",
+    "offM": 10.9,
+    "bearing": 3
+   },
+   {
+    "id": "way/209832802",
+    "name": "Rumi I",
+    "offM": 10.9,
+    "bearing": 269
+   }
+  ],
+  "hostelLog": [
+   {
+    "name": "Razi Hostel",
+    "via": "OSM area way/209855481",
+    "areaM2": 1704,
+    "id": "overture/a84586b2-ff5a-427d-9146-b3851e58ff82",
+    "at": "33.64013, 72.98648"
+   }
+  ],
+  "replacedProvisional": [],
+  "deferredHostels": [
+   {
+    "place": "Razi Hostel",
+    "id": "overture/a84586b2-ff5a-427d-9146-b3851e58ff82",
+    "areaM2": 1704,
+    "upstream": "Microsoft ML Buildings"
+   }
+  ],
+  "osmHostelsHandledByOsm": [
+   "Fatima I",
+   "Fatima III",
+   "Khadija Hostel",
+   "Rumi II",
+   "Zainab Hostel",
+   "Ayesha Hostel",
+   "Hajveri Hostel",
+   "Zakariya Hostel",
+   "Fatima II",
+   "Attar 1",
+   "Ghazali 1",
+   "Ghazali 2",
+   "Liaquat",
+   "Rumi I"
+  ]
+ },
+ "additionsList": [
+  {
+   "id": "overture/2ff5f353-50ae-40e5-8423-43be26401b94",
+   "areaM2": 114,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64183, 72.98441"
+  },
+  {
+   "id": "overture/93194afa-48f0-476f-a097-6667a7cf75ba",
+   "areaM2": 122,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.63991, 72.98305"
+  },
+  {
+   "id": "overture/b8355d16-82c1-4dd5-b116-0c2931f45dbe",
+   "areaM2": 166,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.63993, 72.98318"
+  },
+  {
+   "id": "overture/9134a00c-d0d9-4518-a10f-a78ebe8d358b",
+   "areaM2": 182,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64065, 72.99046"
+  },
+  {
+   "id": "overture/14ac5d6d-e1bb-487d-bd25-1d420bbc0311",
+   "areaM2": 176,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.63871, 72.99164"
+  },
+  {
+   "id": "overture/85a8c44a-0c08-4edc-ae70-e63925da5e46",
+   "areaM2": 164,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64686, 72.99336"
+  },
+  {
+   "id": "overture/c48a05c5-890b-4229-b2fc-33041993cc65",
+   "areaM2": 116,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64659, 72.99382"
+  },
+  {
+   "id": "overture/196ec797-2f80-4417-93fd-2a663f709967",
+   "areaM2": 155,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64645, 72.99357"
+  },
+  {
+   "id": "overture/bcd9fb9b-1dbf-49ff-9af4-643ba9083ed2",
+   "areaM2": 125,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64663, 72.99362"
+  },
+  {
+   "id": "overture/8cd2a252-5a57-4d85-b500-665119939417",
+   "areaM2": 154,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64699, 72.99358"
+  },
+  {
+   "id": "overture/a87e3180-4b8c-405d-b11d-4c0b7b5571ec",
+   "areaM2": 168,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64295, 72.99353"
+  },
+  {
+   "id": "overture/26bbf34e-cf2b-48cb-b592-b87a487bf080",
+   "areaM2": 118,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64306, 72.99340"
+  },
+  {
+   "id": "overture/8b0fefa3-d04e-4b9d-86d3-c54bfab4d4fb",
+   "areaM2": 447,
+   "confidence": "medium",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64363, 72.99321"
+  },
+  {
+   "id": "overture/b9b67db7-fc79-4910-8e1c-ebd370fe6577",
+   "areaM2": 120,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64508, 72.99282"
+  },
+  {
+   "id": "overture/2ba78f9c-0d5f-402a-befa-fce3fc12fa15",
+   "areaM2": 344,
+   "confidence": "medium",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64262, 72.98953"
+  },
+  {
+   "id": "overture/1e753a31-4a14-452f-af4e-0003bc84d89c",
+   "areaM2": 108,
+   "confidence": "low",
+   "upstream": "Microsoft ML Buildings",
+   "at": "33.64842, 72.99114"
+  }
+ ],
+ "roads": {
+  "before": {
+   "nodes": 4064,
+   "largest": 3977
+  },
+  "after": {
+   "nodes": 4064,
+   "largest": 3977
+  },
+  "newSegments": 0,
+  "newMetres": 0,
+  "endpointsSnapped": 0,
+  "skippedOutsideRegion": 387,
+  "alreadyMapped": 293
+ },
+ "green": {
+  "topoPolygons": 65,
+  "over400m2": 43,
+  "coverageMin": 1,
+  "coverageMedian": 1,
+  "under70pct": 0,
+  "added": 0,
+  "addedAreaM2": 0
+ },
+ "trees": {
+  "placed": 6025,
+  "sizes": {
+   "h11/r5.24": 1,
+   "h8/r3.31": 1,
+   "h7/r3.5": 280,
+   "h9/r4.3": 1,
+   "h8/r4": 145,
+   "h6/r3": 5465,
+   "h7/r3": 1,
+   "h12/r5.45": 1,
+   "h13/r6.5": 1,
+   "h7/r3.44": 2,
+   "h17/r4.43": 1,
+   "h23/r5.63": 1,
+   "h10/r5": 30,
+   "h11/r5.5": 5,
+   "h9/r4.5": 71,
+   "h12/r6": 2,
+   "h21/r5.63": 1,
+   "h30/r7.62": 1,
+   "h14/r6.09": 1,
+   "h26/r11.94": 1,
+   "h14/r6.46": 1,
+   "h20/r10": 1,
+   "h18/r9": 1,
+   "h14/r7": 1,
+   "h26/r5.63": 1,
+   "h11/r4.79": 1,
+   "h18/r7.92": 1,
+   "h17/r6.3": 1,
+   "h16/r8": 1,
+   "h28/r14": 1,
+   "h23/r6.75": 1,
+   "h29/r7.2": 1,
+   "h30/r7.21": 1
+  }
+ },
+ "terrain": {
+  "cell": 20,
+  "cols": 61,
+  "rows": 64,
+  "zRefElevation": 558.7,
+  "min": 541.4,
+  "max": 579.1,
+  "rmsVsMeshM": 1.55,
+  "maxVsMeshM": 4.9,
+  "rmsVsContoursM": 1.24,
+  "meshSamples": 4291,
+  "contourSamples": 1843
+ }
+}
