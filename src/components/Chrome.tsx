@@ -1,6 +1,6 @@
 'use client';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { locateTap, stopLocation } from '@/hooks/useLocation';
 import { useApp } from '@/store/useApp';
 
@@ -21,10 +21,9 @@ const fmtDate = (iso?: string) => {
       });
 };
 
-/** Bottom-right locate button, above the safe area and above any open bottom sheet on phones. */
+/** Locate (+ stop) buttons, 44 px, meant to live inside the right-hand control stack. */
 export function LocateButton() {
   const mode = useApp((s) => s.locate);
-  const sheet = useApp((s) => !!(s.selectedId || s.navOpen));
   const label =
     mode === 'off'
       ? 'Show my location'
@@ -32,16 +31,25 @@ export function LocateButton() {
         ? 'Follow my location'
         : 'Following. Tap to recentre';
   return (
-    <div
-      className={`absolute right-3 z-20 flex flex-col items-end gap-2 transition-[bottom] duration-300 ${sheet ? 'bottom-[calc(52vh+var(--sab))] md:bottom-[calc(1rem+var(--sab))]' : 'bottom-[calc(4.5rem+var(--sab))] md:bottom-[calc(1rem+var(--sab))]'}`}
-    >
+    <>
       {mode !== 'off' && (
         <button
           aria-label="Stop showing my location"
           onClick={stopLocation}
-          className="chunky glass h-9 rounded-full px-3 text-[11px] font-bold text-[var(--ink)]"
+          className="chunky glass flex h-11 w-11 items-center justify-center text-[var(--ink)]"
         >
-          Stop
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.8"
+            strokeLinecap="round"
+            aria-hidden
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
         </button>
       )}
       <button
@@ -49,7 +57,7 @@ export function LocateButton() {
         title={label}
         aria-pressed={mode !== 'off'}
         onClick={locateTap}
-        className={`chunky glass flex h-12 w-12 items-center justify-center ${mode === 'follow' ? '!bg-blue-500 !text-white' : mode === 'on' ? 'text-blue-500' : 'text-[var(--ink)]'}`}
+        className={`chunky glass flex h-11 w-11 items-center justify-center ${mode === 'follow' ? '!bg-blue-500 !text-white' : mode === 'on' ? 'text-blue-500' : 'text-[var(--ink)]'}`}
       >
         <svg
           width="22"
@@ -66,50 +74,55 @@ export function LocateButton() {
           <path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3" />
         </svg>
       </button>
-    </div>
+    </>
   );
 }
 
-/** Attribution footer. The OSM credit is a licence requirement (ODbL), so it is always on screen. */
+/**
+ * Attribution. The OSM/Overture credit is a licence requirement, so it is always reachable: a small "i" button opens
+ * the full attribution, and the one-line credit shows at the very bottom for 5 s after load.
+ */
 export function Footer() {
   const ts = useApp((s) => s.data?.report.timestamp);
-  const sheet = useApp((s) => !!(s.selectedId || s.navOpen));
+  const sheet = useApp((s) => s.sheetPx > 0);
   const shot = useApp((s) => s.screenshot);
+  const [line, setLine] = useState(true);
+  useEffect(() => {
+    if (!line) return;
+    const t = setTimeout(() => setLine(false), 5000);
+    return () => clearTimeout(t);
+  }, [line]);
   if (shot) return null;
   return (
-    <footer
-      className={`pointer-events-none absolute left-0 right-16 z-10 px-3 pb-[calc(0.4rem+var(--sab))] text-[10px] leading-tight text-white/75 md:right-auto md:max-w-[520px] ${sheet ? 'bottom-0 max-md:hidden' : 'bottom-0'}`}
-    >
-      <p className="pointer-events-auto inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-lg bg-[#070d1c]/70 px-2 py-1 backdrop-blur">
-        <a
-          className="underline decoration-white/40"
-          href="https://www.openstreetmap.org/copyright"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          © OpenStreetMap contributors
-        </a>
-        <span>
-          ·{' '}
-          <a
-            className="underline decoration-white/40"
-            href="https://overturemaps.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Overture Maps Foundation
-          </a>{' '}
-          · terrain/canopy data CC BY 4.0 (per the export licence files)
-        </span>
-        <span>Map data updated {fmtDate(ts)}</span>
-        <button
-          className="font-bold underline decoration-white/40"
-          onClick={() => useApp.setState({ aboutOpen: true })}
-        >
-          About
-        </button>
+    <>
+      <p
+        className={`pointer-events-none absolute inset-x-0 bottom-[calc(0.15rem+var(--sab))] z-10 truncate px-3 text-center text-[9px] leading-tight text-white/70 transition-opacity duration-700 ${line && !sheet ? 'opacity-100' : 'opacity-0'}`}
+      >
+        © OpenStreetMap contributors · Overture Maps Foundation · terrain/canopy data CC BY 4.0 (per
+        the export licence files) · Map data updated {fmtDate(ts)}
       </p>
-    </footer>
+      {!sheet && (
+        <button
+          aria-label="About and attribution"
+          onClick={() => useApp.setState({ aboutOpen: true })}
+          className="glass absolute bottom-[calc(0.75rem+var(--sab))] left-3 z-20 flex h-11 w-11 items-center justify-center rounded-full text-[var(--ink)]"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            aria-hidden
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v6M12 7.5v.01" />
+          </svg>
+        </button>
+      )}
+    </>
   );
 }
 

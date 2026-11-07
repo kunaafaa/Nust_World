@@ -5,7 +5,7 @@ import { camState } from '@/scene/camState';
 import { useEffect, useRef, useState } from 'react';
 import { unproject } from '@/lib/geo';
 import { perf } from '@/scene/perf';
-import { SettingsButton } from './Extras';
+import { LocateButton } from './Chrome';
 
 function RoundBtn({
   label,
@@ -24,24 +24,38 @@ function RoundBtn({
       title={label}
       aria-pressed={active}
       onClick={onClick}
-      className={`chunky glass flex h-11 w-11 items-center justify-center text-xl ${active ? '!bg-amber-300 !text-slate-900' : 'text-[var(--ink)]'}`}
+      className={`chunky glass flex h-11 w-11 items-center justify-center text-sm font-black ${active ? '!bg-amber-300 !text-slate-900' : 'text-[var(--ink)]'}`}
     >
       {children}
     </button>
   );
 }
 
+const HOME_AZ = 0.35;
+/** Hidden until the map has been rotated away from the default heading. */
 function Compass() {
   const ref = useRef<HTMLSpanElement>(null);
+  const [rotated, setRotated] = useState(false);
   useEffect(() => {
-    let raf = 0;
+    let raf = 0,
+      was = false;
     const tick = () => {
       raf = requestAnimationFrame(tick);
+      const d = Math.atan2(
+        Math.sin(camState.azimuth - HOME_AZ),
+        Math.cos(camState.azimuth - HOME_AZ),
+      );
+      const r = Math.abs(d) > 0.08;
+      if (r !== was) {
+        was = r;
+        setRotated(r);
+      }
       if (ref.current) ref.current.style.transform = `rotate(${camState.azimuth}rad)`;
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
+  if (!rotated) return null;
   return (
     <button
       aria-label="Reset view to north"
@@ -55,30 +69,34 @@ function Compass() {
   );
 }
 
+/** One vertical stack of 44 px buttons, bottom-right, riding above the open bottom sheet. */
 export function Controls() {
-  const night = useApp((s) => s.night);
   const topDown = useApp((s) => s.topDown);
+  const sheetPx = useApp((s) => s.sheetPx);
+  const searching = useApp((s) => s.searchOpen);
+  const [vh, setVh] = useState(800);
+  useEffect(() => {
+    const r = () => setVh(window.innerHeight);
+    r();
+    window.addEventListener('resize', r);
+    return () => window.removeEventListener('resize', r);
+  }, []);
+  // hidden when a sheet is (nearly) full height; the CSS var follows the sheet while it is dragged
+  if (searching || sheetPx > vh * 0.7) return null;
   return (
-    <div className="absolute right-3 top-[calc(8.25rem+var(--sat))] z-10 flex flex-col gap-2 md:top-[calc(1rem+var(--sat))]">
+    <div
+      className="absolute right-3 z-10 flex flex-col gap-2"
+      style={{ bottom: `calc(var(--sheet-h, 0px) + var(--sab) + ${sheetPx > 0 ? 16 : 72}px)` }}
+    >
       <Compass />
       <RoundBtn
         label={topDown ? 'Switch to 3D view' : 'Switch to 2D top-down view'}
         active={topDown}
         onClick={() => useApp.setState({ topDown: !topDown })}
       >
-        <span className="text-xs font-black">{topDown ? '3D' : '2D'}</span>
+        {topDown ? '3D' : '2D'}
       </RoundBtn>
-      <RoundBtn
-        label={night ? 'Switch to day' : 'Switch to night'}
-        active={night}
-        onClick={() => {
-          useApp.setState({ night: !night });
-          document.documentElement.dataset.night = String(!night);
-        }}
-      >
-        {night ? '🌙' : '☀️'}
-      </RoundBtn>
-      <SettingsButton />
+      <LocateButton />
     </div>
   );
 }
@@ -163,7 +181,7 @@ export function DebugToggleMobile() {
 export function Toast() {
   const t = useApp((s) => s.toast);
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-[calc(8.5rem+var(--sat))] z-40 flex justify-center px-4">
+    <div className="pointer-events-none absolute inset-x-0 top-[calc(7rem+var(--sat))] z-40 flex justify-center px-4">
       <AnimatePresence>
         {t && (
           <motion.div

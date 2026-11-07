@@ -9,7 +9,7 @@ import { useApp } from '@/store/useApp';
 import { perf } from './perf';
 
 /** Statistics + cursor probes. Cheap enough to mount only when ?debug=1. */
-function Probes() {
+export function Probes() {
   const { gl, camera, scene, raycaster } = useThree();
   useEffect(() => {
     const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);

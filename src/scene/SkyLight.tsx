@@ -3,6 +3,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import * as THREE from 'three';
+import { useTier } from '@/lib/tier';
 import { useApp } from '@/store/useApp';
 import { camState } from './camState';
 import { sharedUniforms } from './materials';
@@ -26,7 +27,8 @@ export function SkyLight() {
   const hemi = useRef<THREE.HemisphereLight>(null);
   const skyMat = useRef<THREE.ShaderMaterial>(null);
   const skyMesh = useRef<THREE.Mesh>(null);
-  const low = useApp((s) => s.effectiveLow);
+  const tier = useTier();
+  const low = tier === 'low';
   const tmp = useMemo(
     () => ({ top: new THREE.Color(), hor: new THREE.Color(), fog: new THREE.Color() }),
     [],
@@ -96,7 +98,7 @@ void main(){ float h = clamp(normalize(vP).y, 0.0, 1.0); gl_FragColor = vec4(mix
       <directionalLight
         ref={sun}
         castShadow={!low}
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={tier === 'high' ? [2048, 2048] : [1024, 1024]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.6}
         shadow-camera-left={-260}

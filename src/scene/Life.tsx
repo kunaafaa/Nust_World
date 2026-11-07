@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { CampusData, Polyline, Vec2 } from '@/lib/types';
 import { groundY } from '@/lib/terrain';
+import { useTier } from '@/lib/tier';
 import { useApp } from '@/store/useApp';
 import { rng } from './geom';
 import { sharedUniforms } from './materials';
@@ -115,8 +116,16 @@ function Walkers({
 }
 
 export function Life({ data }: { data: CampusData }) {
-  const low = useApp((s) => s.effectiveLow);
+  const tier = useTier();
+  const low = tier === 'low';
   const reduced = useApp((s) => s.screenshot);
+  const clouds = useApp((s) => s.showClouds);
+  const prefersReduced = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
   const longFoot = useMemo(
     () => data.footways.filter((f) => f.kind === 'footway' && f.points.length > 3),
     [data],
@@ -140,7 +149,7 @@ export function Life({ data }: { data: CampusData }) {
     <>
       <Walkers
         lines={longFoot}
-        count={low ? 14 : 36}
+        count={low ? 14 : tier === 'medium' ? 24 : 36}
         speed={sp1}
         y={0.9}
         color={studentColors}
@@ -152,8 +161,8 @@ export function Life({ data }: { data: CampusData }) {
           </>
         }
       />
-      {!low && <Clouds />}
-      {!low && <Birds />}
+      {!low && clouds && !prefersReduced && <Clouds />}
+      {!low && !prefersReduced && <Birds />}
     </>
   );
 }

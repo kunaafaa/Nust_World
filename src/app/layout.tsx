@@ -43,6 +43,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
+  interactiveWidget: 'resizes-visual', // the on-screen keyboard never resizes the layout, so the map stays still
   themeColor: '#070d1c',
 };
 

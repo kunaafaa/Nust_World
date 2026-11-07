@@ -21,6 +21,7 @@ const ORDER: Category[] = [
 export function CategoryChips() {
   const { places } = usePlaces();
   const active = useApp((s) => s.category);
+  const hide = useApp((s) => s.interacting || s.searchOpen);
   const counts = useMemo(() => {
     const c: Partial<Record<Category, number>> = {};
     for (const p of places) c[p.category] = (c[p.category] ?? 0) + 1;
@@ -28,7 +29,7 @@ export function CategoryChips() {
   }, [places]);
   return (
     <div
-      className="scroll-hide -mx-1 flex gap-2 overflow-x-auto px-1 py-1"
+      className={`scroll-hide pointer-events-auto -mx-1 flex gap-2 overflow-x-auto px-1 transition-opacity duration-300 ${hide ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
       role="group"
       aria-label="Filter places by category"
     >
@@ -44,7 +45,7 @@ export function CategoryChips() {
                 selectedId: on ? useApp.getState().selectedId : null,
               })
             }
-            className="chunky glass flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-[13px] font-bold text-[var(--ink)]"
+            className="chunky glass flex h-8 shrink-0 items-center gap-1.5 !rounded-full !bg-[var(--glass)] px-3 text-[12px] font-bold text-[var(--ink)] opacity-90"
             style={
               on
                 ? { background: CAT_COLOR[c], color: '#fff', borderColor: CAT_COLOR[c] }

@@ -1,11 +1,13 @@
 'use client';
-import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { track } from '@vercel/analytics';
 import { landmarks } from '@/data/landmarks';
 import { CAT_COLOR, CAT_LABEL } from '@/lib/colors';
 import { unproject } from '@/lib/geo';
 import type { Place } from '@/lib/types';
+import { haptic } from '@/lib/haptics';
 import { useApp } from '@/store/useApp';
+import { BottomSheet } from './BottomSheet';
 
 const COMING = 'Info coming soon';
 const REPORT_EMAIL = process.env.NEXT_PUBLIC_REPORT_EMAIL ?? '';
@@ -89,21 +91,27 @@ export function InfoCard() {
   const data = useApp((s) => s.data);
   const debug = useApp((s) => s.debug);
   const navOpen = useApp((s) => s.navOpen);
+  const snap = useApp((s) => s.cardSnap);
   const p = id ? data?.places.find((x) => x.id === id) : null;
   const near = p && data ? nearbyPlaces(p, data.places) : [];
+  const open = !!p && !navOpen;
+  // keep the last place rendered while the sheet slides away
+  const [last, setLast] = useState<Place | null>(null);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (p) setLast(p);
+  }, [p]);
+  const q = p ?? last;
 
-  const onDragEnd = (_: unknown, info: PanInfo) => {
-    if (info.offset.y > 90 || info.velocity.y > 500) useApp.getState().select(null);
-  };
   const share = async () => {
-    if (!p) return;
-    const url = `${location.origin}${location.pathname}?place=${p.id}`;
-    track('share', { id: p.id });
+    if (!q) return;
+    const url = `${location.origin}${location.pathname}?place=${q.id}`;
+    track('share', { id: q.id });
     try {
       if (navigator.share)
         await navigator.share({
-          title: `${p.shortName} — NUST World`,
-          text: `Find ${p.shortName} on NUST World`,
+          title: `${q.shortName} — NUST World`,
+          text: `Find ${q.shortName} on NUST World`,
           url,
         });
       else {
@@ -114,183 +122,170 @@ export function InfoCard() {
       /* user cancelled */
     }
   };
+  const navigate = () => {
+    if (!q) return;
+    haptic(12);
+    useApp.getState().set({
+      to: { id: q.id, name: q.shortName, pos: q.entrance ?? q.pos, approx: !q.entrance },
+      navOpen: true,
+      navSnap: 'peek',
+    });
+  };
+  if (!q) return null;
+  const sub = [CAT_LABEL[q.category], !q.flat && q.levels ? `${q.levels} floors` : null]
+    .filter(Boolean)
+    .join(' · ');
 
   return (
-    <AnimatePresence>
-      {p && !navOpen && (
-        <motion.section
-          key={p.id}
-          role="dialog"
-          aria-label={`${p.name} details`}
-          initial={{ y: '100%', opacity: 0.6 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: '100%', opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-          drag="y"
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={{ top: 0, bottom: 0.5 }}
-          onDragEnd={onDragEnd}
-          className="glass fixed inset-x-0 bottom-0 z-20 max-h-[62vh] overflow-y-auto rounded-t-3xl p-4 pb-[calc(1rem+var(--sab))] md:inset-x-auto md:bottom-auto md:left-4 md:top-32 md:max-h-[calc(100vh-10rem)] md:w-[380px] md:rounded-3xl"
-        >
-          <div
-            className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-slate-400/50 md:hidden"
-            aria-hidden
+    <BottomSheet
+      open={open}
+      snap={snap}
+      onSnap={(s) => useApp.setState({ cardSnap: s })}
+      onClose={() => useApp.getState().select(null)}
+      label={`${q.name} details`}
+      header={
+        <div className="flex h-[68px] items-center gap-2.5">
+          <span
+            className="h-3.5 w-3.5 shrink-0 rounded-full"
+            style={{ background: CAT_COLOR[q.category] }}
           />
-          <div className="flex items-start gap-3">
-            <span
-              className="mt-1.5 h-4 w-4 shrink-0 rounded-full"
-              style={{ background: CAT_COLOR[p.category] }}
-            />
-            <div className="min-w-0 flex-1">
-              <h2 className="text-xl font-extrabold leading-tight text-[var(--ink)]">
-                {p.shortName}
-              </h2>
-              {p.name !== p.shortName && <p className="text-sm text-[var(--ink-soft)]">{p.name}</p>}
-              <div className="mt-1.5 flex flex-wrap gap-1.5">
-                <span
-                  className="rounded-full px-2.5 py-0.5 text-[11px] font-bold text-white"
-                  style={{ background: CAT_COLOR[p.category] }}
-                >
-                  {CAT_LABEL[p.category]}
-                </span>
-                {p.provisional && (
-                  <span className="rounded-full bg-orange-200 px-2.5 py-0.5 text-[11px] font-bold text-orange-900">
-                    provisional shape
-                  </span>
-                )}
-                {!p.verified && (
-                  <span className="rounded-full bg-amber-200 px-2.5 py-0.5 text-[11px] font-bold text-amber-900">
-                    unverified
-                  </span>
-                )}
-                {p.offCampus && (
-                  <span className="rounded-full bg-slate-300 px-2.5 py-0.5 text-[11px] font-bold text-slate-800">
-                    off-campus
-                  </span>
-                )}
-              </div>
-            </div>
-            <button
-              aria-label="Close"
-              onClick={() => useApp.getState().select(null)}
-              className="chunky p-2 text-lg text-[var(--ink-soft)]"
-            >
-              ✕
-            </button>
+          <div className="min-w-0 flex-1">
+            <h2 className="truncate text-[17px] font-extrabold leading-tight text-[var(--ink)]">
+              {q.shortName}
+            </h2>
+            <p className="truncate text-[13px] font-semibold text-[var(--ink-soft)]">
+              {sub}
+              {q.provisional ? ' · provisional shape' : ''}
+              {!q.verified ? ' · unverified' : ''}
+            </p>
           </div>
-
-          <p
-            className={`mt-3 text-sm ${p.description === COMING ? 'italic text-[var(--ink-soft)]' : 'text-[var(--ink)]'}`}
+          <button
+            aria-label={`Navigate to ${q.shortName}`}
+            onClick={navigate}
+            className="chunky flex h-11 w-11 shrink-0 items-center justify-center bg-blue-600 text-white shadow-md"
           >
-            {p.description || COMING}
-          </p>
-          <dl className="mt-2">
-            {!p.flat && <Row label="Floors" value={p.levels} />}
-            <Row label="Hours" />
-            <Row
-              label="Entrance"
-              value={p.entrance ? 'Marked on map' : 'Approximate (nearest path)'}
-            />
-          </dl>
-
-          {near.length > 0 && (
-            <div className="mt-3">
-              <h3 className="text-xs font-bold uppercase tracking-wide text-[var(--ink-soft)]">
-                Nearby
-              </h3>
-              <ul className="mt-1 flex flex-col">
-                {near.map(({ o, d }) => (
-                  <li key={o.id}>
-                    <button
-                      onClick={() => useApp.getState().select(o.id)}
-                      className="flex w-full items-center gap-2 rounded-xl px-1 py-1.5 text-left text-sm font-semibold text-[var(--ink)] hover:bg-black/5"
-                    >
-                      <span
-                        className="h-2.5 w-2.5 shrink-0 rounded-full"
-                        style={{ background: CAT_COLOR[o.category] }}
-                      />
-                      <span className="min-w-0 flex-1 truncate">{o.shortName}</span>
-                      <span className="text-xs text-[var(--ink-soft)]">
-                        {Math.round(d)} m · {Math.max(1, Math.round(d / 78))} min
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            <button
-              onClick={() => {
-                useApp.getState().set({
-                  to: {
-                    id: p.id,
-                    name: p.shortName,
-                    pos: p.entrance ?? p.pos,
-                    approx: !p.entrance,
-                  },
-                  navOpen: true,
-                });
-              }}
-              className="chunky col-span-3 bg-blue-600 px-4 py-3 text-[15px] font-extrabold text-white shadow-lg"
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12 2l8 19-8-4-8 4z" />
+            </svg>
+          </button>
+          <button
+            aria-label="Close"
+            onClick={() => useApp.getState().select(null)}
+            className="flex h-11 w-11 shrink-0 items-center justify-center text-[var(--ink-soft)]"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              aria-hidden
             >
-              🧭 Navigate here
-            </button>
-            <button
-              onClick={share}
-              className="chunky glass col-span-1 px-2 py-2.5 text-sm font-bold text-[var(--ink)]"
-            >
-              Share
-            </button>
-            <button
-              onClick={() => report(p)}
-              className="chunky glass col-span-2 px-2 py-2.5 text-sm font-bold text-[var(--ink)]"
-            >
-              Report a mistake
-            </button>
-          </div>
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+      }
+    >
+      <p
+        className={`pt-1 text-sm ${q.description === COMING ? 'italic text-[var(--ink-soft)]' : 'text-[var(--ink)]'}`}
+      >
+        {q.description || COMING}
+      </p>
+      <dl className="mt-2">
+        {!q.flat && <Row label="Floors" value={q.levels} />}
+        <Row label="Hours" />
+        <Row label="Entrance" value={q.entrance ? 'Marked on map' : 'Approximate (nearest path)'} />
+      </dl>
 
-          {debug && (
-            <div className="mt-3 rounded-2xl bg-slate-900/90 p-3 font-mono text-[11px] leading-relaxed text-slate-200">
-              <div>id: {p.id}</div>
-              <div>
-                osmId: {p.osmId ?? '—'} · source: {p.source}
-              </div>
-              <div>
-                height: {p.resolvedHeight.toFixed(1)} m · source: {p.heightSource}
-                {p.heightEstimated ? ' (ESTIMATED)' : ''}
-              </div>
-              <div>
-                levels: {p.levels ?? '—'} · heightM: {p.heightM ?? '—'}
-              </div>
-              <div>
-                footprints: {p.footprints.length} · entrance: {p.entrance ? 'set' : 'none'}
-              </div>
-              <button
-                onClick={() => {
-                  navigator.clipboard
-                    .writeText(landmarkJson(p) + ',')
-                    .then(() => useApp.getState().setToast('Landmark JSON copied'));
-                }}
-                className="chunky mt-2 w-full bg-emerald-500 px-3 py-2 text-xs font-extrabold text-slate-900"
-              >
-                Copy landmark JSON
-              </button>
-              <button
-                onClick={() => {
-                  navigator.clipboard
-                    .writeText(heightJson(p) + ',')
-                    .then(() => useApp.getState().setToast('Height JSON copied'));
-                }}
-                className="chunky mt-2 w-full bg-sky-400 px-3 py-2 text-xs font-extrabold text-slate-900"
-              >
-                Copy height JSON
-              </button>
-            </div>
-          )}
-        </motion.section>
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        <button
+          onClick={navigate}
+          className="chunky col-span-3 min-h-11 bg-blue-600 px-4 py-3 text-[15px] font-extrabold text-white shadow-lg"
+        >
+          Navigate here
+        </button>
+        <button
+          onClick={share}
+          className="chunky glass col-span-1 min-h-11 px-2 py-2.5 text-sm font-bold text-[var(--ink)]"
+        >
+          Share
+        </button>
+        <button
+          onClick={() => report(q)}
+          className="chunky glass col-span-2 min-h-11 px-2 py-2.5 text-sm font-bold text-[var(--ink)]"
+        >
+          Report a mistake
+        </button>
+      </div>
+
+      {near.length > 0 && (
+        <div className="mt-3">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-[var(--ink-soft)]">
+            Nearby
+          </h3>
+          <ul className="mt-1 flex flex-col">
+            {near.map(({ o, d }) => (
+              <li key={o.id}>
+                <button
+                  onClick={() => useApp.getState().select(o.id)}
+                  className="flex min-h-11 w-full items-center gap-2 rounded-xl px-1 py-1.5 text-left text-sm font-semibold text-[var(--ink)] hover:bg-black/5"
+                >
+                  <span
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{ background: CAT_COLOR[o.category] }}
+                  />
+                  <span className="min-w-0 flex-1 truncate">{o.shortName}</span>
+                  <span className="text-xs text-[var(--ink-soft)]">
+                    {Math.round(d)} m · {Math.max(1, Math.round(d / 78))} min
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
-    </AnimatePresence>
+
+      {debug && (
+        <div className="mt-3 rounded-2xl bg-slate-900/90 p-3 font-mono text-[11px] leading-relaxed text-slate-200">
+          <div>id: {q.id}</div>
+          <div>
+            osmId: {q.osmId ?? '—'} · source: {q.source}
+          </div>
+          <div>
+            height: {q.resolvedHeight.toFixed(1)} m · source: {q.heightSource}
+            {q.heightEstimated ? ' (ESTIMATED)' : ''}
+          </div>
+          <div>
+            levels: {q.levels ?? '—'} · heightM: {q.heightM ?? '—'}
+          </div>
+          <div>
+            footprints: {q.footprints.length} · entrance: {q.entrance ? 'set' : 'none'}
+          </div>
+          <button
+            onClick={() => {
+              navigator.clipboard
+                .writeText(landmarkJson(q) + ',')
+                .then(() => useApp.getState().setToast('Landmark JSON copied'));
+            }}
+            className="chunky mt-2 w-full bg-emerald-500 px-3 py-2 text-xs font-extrabold text-slate-900"
+          >
+            Copy landmark JSON
+          </button>
+          <button
+            onClick={() => {
+              navigator.clipboard
+                .writeText(heightJson(q) + ',')
+                .then(() => useApp.getState().setToast('Height JSON copied'));
+            }}
+            className="chunky mt-2 w-full bg-sky-400 px-3 py-2 text-xs font-extrabold text-slate-900"
+          >
+            Copy height JSON
+          </button>
+        </div>
+      )}
+    </BottomSheet>
   );
 }

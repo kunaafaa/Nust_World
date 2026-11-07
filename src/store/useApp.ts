@@ -7,6 +7,7 @@ import type { TopoReport } from '@/lib/topoMerge';
 
 export type Phase = 'loading' | 'title' | 'explore';
 export type Quality = 'auto' | 'low' | 'medium' | 'high';
+export type Tier = 'low' | 'medium' | 'high';
 
 /** approx: no verified entrance, so the route ends at the nearest footpath point */
 export interface Endpoint {
@@ -26,6 +27,18 @@ interface AppState {
   topDown: boolean;
   quality: Quality;
   effectiveLow: boolean; // result of auto-scaling or manual low
+  /** Tier chosen by the first-seconds fps probe (used while quality is 'auto') */
+  autoTier: Tier;
+  /** User is dragging/zooming the map (chips hide while true) */
+  interacting: boolean;
+  showClouds: boolean;
+  /** Visible height in px of the open bottom sheet (0 = none) */
+  sheetPx: number;
+  perfOn: boolean;
+  /** Place card sheet snap */
+  cardSnap: 'peek' | 'half' | 'full';
+  navSnap: 'peek' | 'half' | 'full';
+  searchOpen: boolean;
   sound: boolean;
   showTrees: boolean;
   settingsOpen: boolean;
@@ -74,6 +87,14 @@ export const useApp = create<AppState>((set, get) => ({
   topDown: false,
   quality: 'auto',
   effectiveLow: false,
+  autoTier: 'high',
+  interacting: false,
+  showClouds: true,
+  sheetPx: 0,
+  perfOn: false,
+  cardSnap: 'half',
+  navSnap: 'peek',
+  searchOpen: false,
   sound: false,
   showTrees: true,
   showCars: true,
@@ -113,7 +134,13 @@ export const useApp = create<AppState>((set, get) => ({
       place && !s.visited.includes(place.category) && place.category !== 'other'
         ? [...s.visited, place.category]
         : s.visited;
-    set({ selectedId: id, floorsOpen: false, focusTick: s.focusTick + 1, visited });
+    set({
+      selectedId: id,
+      cardSnap: 'peek',
+      floorsOpen: false,
+      focusTick: s.focusTick + 1,
+      visited,
+    });
     if (id) sfx.select();
     if (visited !== s.visited) {
       try {

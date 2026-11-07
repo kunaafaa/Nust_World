@@ -12,8 +12,17 @@ import { applyTopoMerge, type TopoMergeFile, type TopoTreesFile } from '@/lib/to
 import type { RawOsm } from '@/lib/osm';
 import { setTerrainOn, useApp } from '@/store/useApp';
 import { CategoryChips } from './CategoryChips';
-import { About, Footer, LocateButton, Title } from './Chrome';
-import { ListView, NearestBar, Onboarding, ScreenshotBar, SettingsPanel, Tour } from './Extras';
+import { About, Footer, Title } from './Chrome';
+import {
+  ListView,
+  NearestBar,
+  Onboarding,
+  ScreenshotBar,
+  SettingsButton,
+  SettingsPanel,
+  Tour,
+} from './Extras';
+import { PerfOverlay } from './PerfOverlay';
 import { Controls, DebugBar, DebugToggleMobile, Loading, Toast } from './Hud';
 import { InfoCard } from './InfoCard';
 import { LabelLayer } from './LabelLayer';
@@ -36,6 +45,7 @@ export default function App() {
   const data = useApp((s) => s.data);
   const phase = useApp((s) => s.phase);
   const shot = useApp((s) => s.screenshot);
+  const searchOpen = useApp((s) => s.searchOpen);
   const [gl, setGl] = useState(true);
   // Reads browser-only capabilities after mount so server and client markup match (hydration-safe).
   useEffect(
@@ -50,6 +60,7 @@ export default function App() {
     const params = new URLSearchParams(location.search);
     const debug = params.get('debug') === '1';
     const low = params.get('low') === '1';
+    if (params.get('perf') === '1') useApp.setState({ perfOn: true });
     useApp.setState({
       debug,
       progress: 0.1,
@@ -142,12 +153,14 @@ export default function App() {
       <Title />
       {phase === 'explore' && !shot && (
         <>
-          <LocateButton />
           <NearestBar />
           <SettingsPanel />
           <Tour />
           <Onboarding />
-          <header className="absolute inset-x-0 top-0 z-20 mx-auto flex max-w-xl flex-col gap-2 px-3 pt-[calc(0.75rem+var(--sat))] md:left-4 md:right-auto md:mx-0 md:w-[380px] md:px-0">
+          <SettingsButton />
+          <header
+            className={`absolute left-4 right-[68px] top-0 z-20 flex flex-col gap-2 pt-[calc(0.75rem+var(--sat))] md:w-[380px]`}
+          >
             <SearchBar />
             <CategoryChips />
           </header>
@@ -163,6 +176,7 @@ export default function App() {
       <ListView />
       <ScreenshotBar />
       <Toast />
+      <PerfOverlay />
       <Loading />
     </main>
   );

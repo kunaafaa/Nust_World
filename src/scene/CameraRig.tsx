@@ -25,6 +25,7 @@ interface Anim {
   dur: number;
 }
 
+let idleTimer: ReturnType<typeof setTimeout> | undefined;
 const ringCache: { ring: Vec2[] | null; c: Vec2 } = { ring: null, c: [0, 0] };
 const HOME: Pose = { tx: 0, tz: 0, dist: 820, polar: 0.95, az: 0.35 };
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -226,8 +227,13 @@ export function CameraRig() {
       if (a.t >= 1) anim.current = null;
     }
     // On phones a bottom sheet covers the lower half: shift the projection up so the subject stays visible.
-    const sheet = (st.selectedId || st.navOpen) && state.size.width < 768;
-    const want = sheet ? 0.2 : 0;
+    // The shift equals half the sheet's visible height, so the subject is centred in the map area above it.
+    const sheet =
+      (st.selectedId || st.navOpen || st.settingsOpen) &&
+      st.sheetPx > 0 &&
+      state.size.width < 768 &&
+      state.size.height > 500;
+    const want = sheet ? Math.min(0.3, st.sheetPx / (2 * state.size.height)) : 0;
     if (Math.abs(viewShift.current - want) > 0.001) {
       viewShift.current += (want - viewShift.current) * Math.min(1, dt * 8);
       const cam = camera as THREE.PerspectiveCamera;
@@ -304,7 +310,13 @@ export function CameraRig() {
       ref={controls}
       makeDefault
       onStart={() => {
+        if (idleTimer) clearTimeout(idleTimer);
+        useApp.setState({ interacting: true });
         if (useApp.getState().locate === 'follow') useApp.setState({ locate: 'on' });
+      }}
+      onEnd={() => {
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => useApp.setState({ interacting: false }), 1100);
       }}
       enableDamping
       dampingFactor={0.09}

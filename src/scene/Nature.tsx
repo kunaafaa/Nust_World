@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { useTier } from '@/lib/tier';
 import { TREE_CAP, type TreeSpot, type TreeType } from '@/lib/scatter';
 import { groundY } from '@/lib/terrain';
 import type { CampusData } from '@/lib/types';
@@ -180,14 +181,9 @@ function TreeGroup({ type, spots }: { type: TreeType; spots: TreeSpot[] }) {
 
 export function Trees({ data }: { data: CampusData }) {
   const show = useApp((s) => s.showTrees);
-  const low = useApp((s) => s.effectiveLow);
-  const quality = useApp((s) => s.quality);
-  const cap =
-    low || quality === 'low'
-      ? TREE_CAP.low
-      : quality === 'medium'
-        ? TREE_CAP.medium
-        : TREE_CAP.high;
+  const tier = useTier();
+  const low = tier === 'low';
+  const cap = TREE_CAP[tier];
   const all = sceneModel(data).trees;
   const by = useMemo(() => {
     const list = all.slice(0, cap);
@@ -196,8 +192,9 @@ export function Trees({ data }: { data: CampusData }) {
     );
   }, [all, cap]);
   useEffect(() => {
-    swayUniform.value = low || quality === 'low' ? 0 : 1;
-  }, [low, quality]);
+    swayUniform.value =
+      low || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1;
+  }, [low]);
   if (!show) return null;
   return (
     <>
