@@ -1,6 +1,6 @@
 'use client';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { track } from '@vercel/analytics';
 import { usePlaces } from '@/hooks/usePlaces';
 import { CAT_COLOR, CAT_LABEL } from '@/lib/colors';
@@ -290,8 +290,23 @@ const TIPS = [
 
 export function Onboarding() {
   const phase = useApp((s) => s.phase);
-  const hidden = useApp((s) => s.sheetPx > 0 || s.searchOpen);
+  // Any card, sheet, panel or the search overlay counts as "busy". `sheetPx` alone is 0 in the side-panel layout,
+  // so the real open-state flags are checked too.
+  const busy = useApp(
+    (s) =>
+      s.sheetPx > 0 ||
+      s.searchOpen ||
+      !!s.selectedId ||
+      s.navOpen ||
+      s.settingsOpen ||
+      s.listOpen ||
+      s.aboutOpen ||
+      s.tourStep != null ||
+      s.screenshot,
+  );
+  const reduced = useReducedMotion();
   const [i, setI] = useState<number | null>(null);
+  const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (phase !== 'explore') return;
     try {
@@ -302,37 +317,72 @@ export function Onboarding() {
     const t = setTimeout(() => setI(0), 2500);
     return () => clearTimeout(t);
   }, [phase]);
-  const done = () => {
+  const finish = useCallback(() => {
     setI(null);
     try {
       localStorage.setItem('nw-onboarded', '1');
     } catch {
       /* ignore */
     }
+  }, []);
+  // A card opened while a tip was up: skip that tip and wait (hidden) for the card to close.
+  useEffect(() => {
+    if (!busy || i === null) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (i + 1 < TIPS.length) setI(i + 1);
+    else finish();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busy]);
+  const shown = i !== null && !busy;
+  useEffect(() => {
+    if (!shown) return;
+    const key = (e: KeyboardEvent) => e.key === 'Escape' && finish();
+    const out = (e: PointerEvent) => {
+      if (!box.current?.contains(e.target as Node)) finish();
+    };
+    window.addEventListener('keydown', key);
+    document.addEventListener('pointerdown', out);
+    return () => {
+      window.removeEventListener('keydown', key);
+      document.removeEventListener('pointerdown', out);
+    };
+  }, [shown, finish]);
+  const next = () => {
+    if (i === null) return;
+    if (i + 1 < TIPS.length) setI(i + 1);
+    else finish();
   };
   return (
-    <AnimatePresence>
-      {i !== null && !hidden && (
+    <AnimatePresence mode="wait">
+      {i !== null && !busy && (
         <motion.div
+          ref={box}
           key={i}
           role="dialog"
           aria-label="Tip"
-          initial={{ opacity: 0, y: 12 }}
+          data-onboarding
+          initial={reduced ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          className="glass absolute bottom-[calc(4.25rem+var(--sab))] left-3 right-[68px] z-30 max-w-sm rounded-2xl p-3.5 md:bottom-16"
+          exit={reduced ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0 }}
+          className="glass absolute bottom-[calc(4.25rem+var(--sab))] left-3 right-[68px] z-30 max-w-sm rounded-2xl p-3.5"
         >
           <div className="text-[11px] font-black uppercase tracking-wide text-amber-500">
             Tip {i + 1} of {TIPS.length}
           </div>
           <div className="text-base font-black text-[var(--ink)]">{TIPS[i].t}</div>
           <p className="mt-0.5 text-sm text-[var(--ink)]">{TIPS[i].b}</p>
-          <div className="mt-3 flex justify-between">
-            <button onClick={done} className="text-sm font-bold text-[var(--ink-soft)] underline">
+          <div className="mt-3 flex items-center justify-between gap-2">
+            <button
+              onClick={finish}
+              className="min-h-11 min-w-11 rounded-xl px-3 text-sm font-bold text-[var(--ink-soft)] underline"
+            >
               Skip
             </button>
-            <button className="chunky rounded-xl bg-amber-300 px-4 py-1.5 text-sm font-black text-slate-900">
-              {i + 1 < TIPS.length ? 'Next' : 'Got it'}
+            <button
+              onClick={next}
+              className="chunky min-h-11 min-w-11 rounded-xl bg-[var(--accent)] px-5 text-sm font-black text-white"
+            >
+              {i + 1 < TIPS.length ? 'Next' : 'Done'}
             </button>
           </div>
         </motion.div>
