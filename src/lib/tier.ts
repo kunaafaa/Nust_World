@@ -16,3 +16,11 @@ export const tierOf = (s: { quality: string; autoTier: Tier; effectiveLow: boole
 
 /** Current graphics tier: manual choice, or the auto-probed one. */
 export const useTier = (): Tier => useApp(tierOf);
+
+/** Navigating on Medium or Low: use the lighter navigation rendering budget. */
+export const useNavLight = (): boolean =>
+  useApp((s) => (s.nav === 'NAV_FOLLOW' || s.nav === 'NAV_FREE') && tierOf(s) !== 'high');
+
+/** Share of objects kept outside NAV_KEEP_RADIUS_M of the user while navigating on Medium/Low (about 40 % fewer). */
+export const NAV_KEEP_RADIUS_M = 150;
+export const NAV_KEEP_SHARE = 0.6;

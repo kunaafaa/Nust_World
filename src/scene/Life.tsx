@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { CampusData, Polyline, Vec2 } from '@/lib/types';
 import { groundY } from '@/lib/terrain';
-import { useTier } from '@/lib/tier';
+import { useNavLight, useTier } from '@/lib/tier';
 import { useApp } from '@/store/useApp';
 import { rng } from './geom';
 import { sharedUniforms } from './materials';
@@ -119,7 +119,9 @@ export function Life({ data }: { data: CampusData }) {
   const tier = useTier();
   const low = tier === 'low';
   const reduced = useApp((s) => s.screenshot);
-  const clouds = useApp((s) => s.showClouds);
+  const cloudsOn = useApp((s) => s.showClouds);
+  const navLight = useNavLight();
+  const clouds = cloudsOn && !navLight; // clouds stop while navigating on Medium/Low
   const prefersReduced = useMemo(
     () =>
       typeof window !== 'undefined' &&

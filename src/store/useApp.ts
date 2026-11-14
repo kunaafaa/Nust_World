@@ -4,6 +4,7 @@ import type { RouteResult } from '@/lib/routing';
 import { sfx } from '@/lib/sfx';
 import { setTerrain, type Terrain } from '@/lib/terrain';
 import type { TopoReport } from '@/lib/topoMerge';
+import { AUTO_RECENTRE_CHOICES, AUTO_RECENTRE_DEFAULT, type NavState } from '@/lib/navMachine';
 
 export type Phase = 'loading' | 'title' | 'explore';
 export type Quality = 'auto' | 'low' | 'medium' | 'high';
@@ -17,7 +18,32 @@ export interface Endpoint {
   approx?: boolean;
 }
 
+/** Small, non-blocking status chips under the search pill (never a modal). */
+export type ChipKind = 'locationOff' | 'pickStart' | 'weakGps' | 'offCampus';
+export interface Chip {
+  kind: ChipKind;
+  text: string;
+  /** Still unresolved: the chip stays until resolved or dismissed (otherwise it hides after 5 s) */
+  sticky?: boolean;
+  /** Label of the action button, if any (e.g. "change") */
+  action?: string;
+}
+
 interface AppState {
+  /** Navigation state machine (src/lib/navMachine.ts) */
+  nav: NavState;
+  /** Camera tilt the user had before navigation started (restored when it ends) */
+  navPrevTopDown: boolean | null;
+  /** Current step index during navigation (changes only when the step changes) */
+  navStep: number;
+  /** Seconds without touching the map before NAV_FREE returns to NAV_FOLLOW; 0 = off */
+  autoRecentreS: number;
+  /** Navigation camera: rotate with the compass instead of north up */
+  headingUp: boolean;
+  chips: Chip[];
+  setChip: (c: Chip | null, kind?: ChipKind) => void;
+  /** The compact inline search for the route's starting point */
+  startPickerOpen: boolean;
   phase: Phase;
   progress: number;
   data: CampusData | null;
@@ -77,7 +103,32 @@ interface AppState {
   setToast: (t: string | null) => void;
 }
 
+const readAutoRecentre = () => {
+  try {
+    const raw = localStorage.getItem('nw-auto-recentre');
+    const v = Number(raw);
+    return raw != null && (AUTO_RECENTRE_CHOICES as readonly number[]).includes(v)
+      ? v
+      : AUTO_RECENTRE_DEFAULT;
+  } catch {
+    return AUTO_RECENTRE_DEFAULT;
+  }
+};
+
 export const useApp = create<AppState>((set, get) => ({
+  nav: 'IDLE',
+  navPrevTopDown: null,
+  navStep: 0,
+  autoRecentreS: typeof window === 'undefined' ? AUTO_RECENTRE_DEFAULT : readAutoRecentre(),
+  headingUp: false,
+  startPickerOpen: false,
+  chips: [],
+  setChip: (c, kind) =>
+    set((s) => {
+      const k = c?.kind ?? kind;
+      const rest = s.chips.filter((x) => x.kind !== k);
+      return { chips: c ? [...rest, c] : rest };
+    }),
   phase: 'loading',
   progress: 0,
   data: null,

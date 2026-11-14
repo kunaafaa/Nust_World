@@ -6,7 +6,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import type { CarSpot } from '@/lib/scatter';
 import { groundY } from '@/lib/terrain';
 import type { CampusData, Polyline, Vec2 } from '@/lib/types';
-import { useTier } from '@/lib/tier';
+import { NAV_KEEP_SHARE, useNavLight, useTier } from '@/lib/tier';
 import { useApp } from '@/store/useApp';
 import { rng } from './geom';
 import { sharedUniforms } from './materials';
@@ -177,6 +177,7 @@ export function TrafficCars({ data }: { data: CampusData }) {
   const tier = useTier();
   const low = tier === 'low';
   const medium = tier === 'medium';
+  const navLight = useNavLight();
   const screenshot = useApp((s) => s.screenshot);
   const refs = useRef<(THREE.InstancedMesh | null)[]>([]);
   const head = useRef<THREE.InstancedMesh>(null),
@@ -202,7 +203,9 @@ export function TrafficCars({ data }: { data: CampusData }) {
           [0, 0] as Vec2,
         ),
       );
-    const n = low ? 8 : medium ? 12 : MAX_MOVING;
+    const n0 = low ? 8 : medium ? 12 : MAX_MOVING;
+    // navigating on Medium/Low: about 40 % fewer moving cars (they drive everywhere, so no radius applies)
+    const n = navLight ? Math.round(n0 * NAV_KEEP_SHARE) : n0;
     const vehs: Veh[] = [];
     for (let i = 0; i < n && pool.length; i++) {
       const l = pool[i % pool.length];
@@ -226,7 +229,7 @@ export function TrafficCars({ data }: { data: CampusData }) {
       });
     }
     return { vehs, rounds };
-  }, [data, low, medium]);
+  }, [data, low, medium, navLight]);
 
   const groups = useMemo(() => CAR_GEOS.map((_, m) => vehs.filter((v) => v.model === m)), [vehs]);
 

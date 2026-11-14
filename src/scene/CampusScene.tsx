@@ -4,7 +4,9 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import dynamic from 'next/dynamic';
 import * as THREE from 'three';
 import type { CampusData } from '@/lib/types';
-import { defaultTier, tierOf, useTier } from '@/lib/tier';
+import { isNavigating } from '@/lib/navMachine';
+import { navRuntime } from '@/lib/navRuntime';
+import { defaultTier, tierOf, useNavLight, useTier } from '@/lib/tier';
 import { useApp, type Tier } from '@/store/useApp';
 import { Buildings } from './Buildings';
 import { CameraRig } from './CameraRig';
@@ -14,7 +16,7 @@ import { Environment } from './Environment';
 import { Flags, Life } from './Life';
 import { EasterEggs, Pins, RouteLine, SelectionRing, UserMarker } from './Markers';
 import { ParkedCars, TrafficCars } from './Cars';
-import { Trees } from './Nature';
+import { Trees, setSwayPaused } from './Nature';
 import { Lamps, useLamps } from './Props';
 import { SkyLight } from './SkyLight';
 
@@ -30,25 +32,31 @@ export const driver = { until: 0 };
 export const bump = (ms = 2000) => {
   driver.until = Math.max(driver.until, performance.now() + ms);
 };
+// Following the dot is no longer "always active": the scene renders at full rate only while the dot or the camera
+// is actually moving (navRuntime.moving), and on demand otherwise.
 const isActive = () => {
   const st = useApp.getState();
   return (
     performance.now() < driver.until ||
     st.phase !== 'explore' ||
     st.interacting ||
-    st.locate === 'follow'
+    navRuntime.moving
   );
 };
+/** Navigation on Low: never more than 30 frames a second. */
+const LOW_NAV_FRAME_MS = 1000 / 30;
 function IdleDriver() {
   const invalidate = useThree((s) => s.invalidate);
   const el = useThree((s) => s.gl.domElement);
+  const tier = useTier();
   useEffect(() => {
     let raf = 0,
       last = 0;
     const loop = (t: number) => {
       raf = requestAnimationFrame(loop);
       if (document.hidden) return; // paused with the tab
-      if (isActive() || t - last > 48) {
+      const cap = tier === 'low' && isNavigating(useApp.getState().nav) ? LOW_NAV_FRAME_MS - 2 : 0;
+      if ((isActive() && t - last >= cap) || t - last > 48) {
         last = t;
         invalidate();
       }
@@ -58,7 +66,13 @@ function IdleDriver() {
     for (const ev of ['pointerdown', 'pointermove', 'wheel', 'touchstart'])
       el.addEventListener(ev, poke, { passive: true });
     window.addEventListener('resize', poke);
-    const unsub = useApp.subscribe(poke);
+    // Any UI change renders a burst of frames, except location bookkeeping (the dot and camera already report
+    // their own motion through navRuntime.moving).
+    const QUIET = new Set(['userPos', 'userAcc', 'userHeading', 'navStep', 'chips', 'toast']);
+    const unsub = useApp.subscribe((s, prev) => {
+      for (const k in s)
+        if (s[k as keyof typeof s] !== prev[k as keyof typeof prev] && !QUIET.has(k)) return poke();
+    });
     return () => {
       cancelAnimationFrame(raf);
       for (const ev of ['pointerdown', 'pointermove', 'wheel', 'touchstart'])
@@ -66,7 +80,24 @@ function IdleDriver() {
       window.removeEventListener('resize', poke);
       unsub();
     };
-  }, [invalidate, el]);
+  }, [invalidate, el, tier]);
+  return null;
+}
+
+/**
+ * Navigation rendering budget on Medium and Low: shadows stop re-rendering every frame (the shadow map is frozen at
+ * the start of navigation), tree sway and clouds stop, and Trees / TrafficCars thin out (see `useNavLight`).
+ * Bloom only exists on High. High keeps everything.
+ */
+function NavBudget() {
+  const gl = useThree((s) => s.gl);
+  const light = useNavLight();
+  useEffect(() => {
+    if (!gl.shadowMap.enabled) return;
+    gl.shadowMap.autoUpdate = !light;
+    gl.shadowMap.needsUpdate = true;
+    setSwayPaused(light);
+  }, [gl, light]);
   return null;
 }
 
@@ -164,6 +195,7 @@ function World({ data }: { data: CampusData }) {
       {debug && <DebugLayer data={data} />}
       <ViewBridge />
       <IdleDriver />
+      <NavBudget />
       <AutoQuality />
       {perfOn && <Probes />}
       <Capture />

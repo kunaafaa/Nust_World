@@ -1,8 +1,9 @@
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { locateThen } from '@/hooks/useLocation';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { usePlaces } from '@/hooks/usePlaces';
 import { haptic } from '@/lib/haptics';
+import { endNavigation, navDispatch } from '@/lib/navController';
+import type { RouteStep } from '@/lib/routing';
 import { cameraCommands } from '@/scene/CameraRig';
 import { useApp } from '@/store/useApp';
 import { BottomSheet } from './BottomSheet';
@@ -67,6 +68,42 @@ function StepIcon({ text, size = 26 }: { text: string; size?: number }) {
 const iconBtn =
   'chunky flex h-11 w-11 shrink-0 items-center justify-center text-[var(--ink)] active:bg-black/10';
 
+/** One step row. Memoized: when the current step moves, only the two rows whose `active` flag changed re-render. */
+const StepRow = memo(function StepRow({
+  step,
+  i,
+  active,
+  onPick,
+}: {
+  step: RouteStep;
+  i: number;
+  active: boolean;
+  onPick: (i: number) => void;
+}) {
+  return (
+    <li className="step-row">
+      <button
+        onClick={() => onPick(i)}
+        aria-current={active ? 'step' : undefined}
+        className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-2 py-1.5 text-left text-sm text-[var(--ink)] ${active ? 'bg-blue-600/15 font-extrabold' : 'font-semibold'}`}
+      >
+        <span className="flex w-7 shrink-0 justify-center text-blue-600">
+          <StepIcon text={step.text} size={22} />
+        </span>
+        <span className="min-w-0 flex-1">{step.text}</span>
+        {i > 0 && step.distance > 0 && (
+          <span className="shrink-0 text-xs font-bold text-[var(--ink-soft)]">
+            {step.distance} m
+          </span>
+        )}
+      </button>
+    </li>
+  );
+});
+
+/** No start after this long (no fix, slow GPS): offer "Pick a starting point" as a chip. */
+const START_WAIT_MS = 8000;
+
 export function RoutePanel() {
   const open = useApp((s) => s.navOpen);
   const snap = useApp((s) => s.navSnap);
@@ -75,98 +112,75 @@ export function RoutePanel() {
   const route = useApp((s) => s.route);
   const routing = useApp((s) => s.routing);
   const err = useApp((s) => s.routeError);
-  const userPos = useApp((s) => s.userPos);
-  const locate = useApp((s) => s.locate);
+  const nav = useApp((s) => s.nav);
+  const navStep = useApp((s) => s.navStep);
+  const picker = useApp((s) => s.startPickerOpen);
   const { places } = usePlaces();
   const gates = places.filter((p) => p.category === 'gate').slice(0, 6);
-  const [picker, setPicker] = useState(false);
-  const [active, setActive] = useState(0);
-  const arrived = useRef(false);
-  const [startPos, setStartPos] = useState<[number, number] | null>(null);
+  const [picked, setPicked] = useState<number | null>(null);
+  const navigating = nav === 'NAV_FOLLOW' || nav === 'NAV_FREE' || nav === 'ARRIVED';
 
-  // Fit the whole route once when it appears; collapse to the peek bar so the map stays the main view.
+  // Route preview: fit the whole route in the map area above the sheet. During navigation a new route is a
+  // reroute: the camera keeps following and nothing jumps.
   useEffect(() => {
     if (!route) return;
-    cameraCommands.fitPoints(route.path);
-    arrived.current = false;
-    setStartPos(userPos); // eslint-disable-line react-hooks/set-state-in-effect
-    useApp.setState({ navSnap: 'peek' });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (useApp.getState().nav === 'ROUTE_PREVIEW') cameraCommands.fitPoints(route.path);
+    setPicked(null); // eslint-disable-line react-hooks/set-state-in-effect
   }, [route]);
-  // No start yet: the picker needs room.
+  // No start yet: wait a moment for the first fix, then offer a starting point (a chip, never a popup).
   useEffect(() => {
-    if (open && to && !from) useApp.setState({ navSnap: 'half' });
+    if (!open || !to || from) {
+      useApp.getState().setChip(null, 'pickStart');
+      return;
+    }
+    const t = setTimeout(() => {
+      const s = useApp.getState();
+      if (s.navOpen && s.to && !s.from)
+        s.setChip({ kind: 'pickStart', text: 'Pick a starting point', sticky: true });
+    }, START_WAIT_MS);
+    return () => clearTimeout(t);
   }, [open, to, from]);
-  // With live location, follow the blue dot while navigating.
-  useEffect(() => {
-    if (route && userPos && locate === 'on') useApp.setState({ locate: 'follow' });
-  }, [route, userPos, locate]);
 
-  // Which step is next, from where the user is on the path.
-  const stepIdx = useMemo(
-    () => (route ? route.steps.map((s) => route.path.indexOf(s.at)) : []),
+  const active = picked ?? (navigating ? navStep : route ? Math.min(1, route.steps.length - 1) : 0);
+  const onPick = useCallback(
+    (i: number) => {
+      setPicked(i);
+      haptic(8);
+      const s = route?.steps[i];
+      if (!s) return;
+      // looking at a step is looking around: navigation continues in NAV_FREE
+      if (useApp.getState().nav === 'NAV_FOLLOW') navDispatch({ type: 'GESTURE', kind: 'pan' });
+      cameraCommands.centerOn(s.at[0], s.at[1]);
+    },
     [route],
   );
-  const cur = useMemo(() => {
-    if (!route) return 0;
-    if (!userPos || locate === 'off') return Math.min(1, route.steps.length - 1);
-    let best = 0,
-      bd = Infinity;
-    route.path.forEach((p, i) => {
-      const d = Math.hypot(p[0] - userPos[0], p[1] - userPos[1]);
-      if (d < bd) {
-        bd = d;
-        best = i;
-      }
-    });
-    const nxt = stepIdx.findIndex((k, i) => i > 0 && k > best);
-    return nxt < 0 ? route.steps.length - 1 : nxt;
-  }, [route, userPos, locate, stepIdx]);
-  useEffect(() => setActive(cur), [cur]); // eslint-disable-line react-hooks/set-state-in-effect
 
-  // Arrival: a short toast, not a modal.
-  useEffect(() => {
-    if (!route || !userPos || locate === 'off' || arrived.current) return;
-    const end = route.path[route.path.length - 1];
-    if (Math.hypot(end[0] - userPos[0], end[1] - userPos[1]) < 20) {
-      arrived.current = true;
-      haptic([20, 70, 20]);
-      useApp.getState().setToast('You have arrived');
-    }
-  }, [route, userPos, locate]);
-
-  // Moving and untouched for 4 s: fall back to the peek bar.
-  const [touch, setTouch] = useState(0);
-  const moved =
-    !!userPos && !!startPos && Math.hypot(userPos[0] - startPos[0], userPos[1] - startPos[1]) > 8;
-  useEffect(() => {
-    if (snap === 'peek' || !route || !moved) return;
-    const t = setTimeout(() => useApp.setState({ navSnap: 'peek' }), 4000);
-    return () => clearTimeout(t);
-  }, [snap, route, moved, touch, userPos]);
-
-  const locateStart = () =>
-    locateThen((p) => useApp.getState().set({ from: { name: 'My location', pos: p } }));
-  const close = () =>
-    useApp.getState().set({ navOpen: false, from: null, to: null, route: null, pickMode: null });
   const swap = () => {
     haptic(10);
     useApp.getState().set({ from: to, to: from });
   };
   const recenter = () => {
-    if (userPos && locate !== 'off') useApp.setState({ locate: 'follow' });
+    if (nav === 'NAV_FREE') navDispatch({ type: 'RECENTRE' });
+    else if (nav === 'NAV_FOLLOW') cameraCommands.navFollow(false);
     else if (route) cameraCommands.fitPoints(route.path);
   };
+  const start = () => {
+    haptic(15);
+    navDispatch({ type: 'START' });
+  };
+  const openPicker = () => useApp.setState({ startPickerOpen: true });
 
-  const step = route?.steps[cur];
+  const step = route?.steps[active];
   const peekText = !to
     ? ''
     : !from
-      ? 'Choose a starting point'
+      ? 'Finding your location…'
       : routing
         ? 'Finding the best path…'
         : (err ??
-          (step ? `${cur > 0 && step.distance ? step.distance + ' m · ' : ''}${step.text}` : ''));
+          (step
+            ? `${active > 0 && step.distance ? step.distance + ' m · ' : ''}${step.text}`
+            : ''));
 
   return (
     <>
@@ -174,16 +188,17 @@ export function RoutePanel() {
         open={open && !!to}
         snap={snap}
         peek={122}
-        onSnap={(s) => {
-          setTouch((n) => n + 1);
-          useApp.setState({ navSnap: s });
-        }}
-        onClose={close}
+        onSnap={(s) => useApp.setState({ navSnap: s })}
+        onClose={endNavigation}
         label="Walking directions"
         header={
-          <div className="pb-1" onPointerDownCapture={() => setTouch((n) => n + 1)}>
+          <div className="pb-1">
             <div className="flex h-11 items-center gap-1">
-              <div className="flex min-w-0 flex-1 items-center gap-1.5 text-[13px] font-extrabold text-[var(--ink)]">
+              <button
+                onClick={openPicker}
+                className="flex min-w-0 flex-1 items-center gap-1.5 text-left text-[13px] font-extrabold text-[var(--ink)]"
+                aria-label={`Change start (now ${from?.name ?? 'not set'})`}
+              >
                 <span className="max-w-[44%] truncate">{from?.name ?? 'Start?'}</span>
                 <svg
                   width="14"
@@ -200,29 +215,31 @@ export function RoutePanel() {
                   <path d="M9 5l7 7-7 7" />
                 </svg>
                 <span className="truncate">{to?.name}</span>
-              </div>
-              <button
-                aria-label="Swap start and destination"
-                onClick={swap}
-                disabled={!from}
-                className={`${iconBtn} disabled:opacity-40`}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="M7 4v14M3 14l4 4 4-4M17 20V6M13 10l4-4 4 4" />
-                </svg>
               </button>
+              {!navigating && (
+                <button
+                  aria-label="Swap start and destination"
+                  onClick={swap}
+                  disabled={!from}
+                  className={`${iconBtn} disabled:opacity-40`}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M7 4v14M3 14l4 4 4-4M17 20V6M13 10l4-4 4 4" />
+                  </svg>
+                </button>
+              )}
               <button
-                aria-label="Re-centre"
+                aria-label={navigating ? 'Re-centre on me' : 'Show the whole route'}
                 onClick={recenter}
                 disabled={!route}
                 className={`${iconBtn} disabled:opacity-40`}
@@ -242,7 +259,7 @@ export function RoutePanel() {
                   <path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3" />
                 </svg>
               </button>
-              <button aria-label="End route" onClick={close} className={iconBtn}>
+              <button aria-label="End route" onClick={endNavigation} className={iconBtn}>
                 <svg
                   width="18"
                   height="18"
@@ -266,10 +283,22 @@ export function RoutePanel() {
                   </span>
                 </p>
               ) : null}
-              <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-blue-600/10 px-2.5 py-2 text-[13px] font-bold text-[var(--ink)]">
-                {route && step && <StepIcon text={step.text} size={22} />}
-                <span className="min-w-0 flex-1 truncate">{peekText}</span>
-              </div>
+              {nav === 'ROUTE_PREVIEW' && route && from ? (
+                <button
+                  onClick={start}
+                  className="chunky flex h-12 min-w-0 flex-1 items-center justify-center rounded-2xl bg-blue-600 text-base font-black text-white"
+                >
+                  Start
+                </button>
+              ) : (
+                <div
+                  className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-blue-600/10 px-2.5 py-2 text-[13px] font-bold text-[var(--ink)]"
+                  aria-live="polite"
+                >
+                  {route && step && <StepIcon text={step.text} size={22} />}
+                  <span className="min-w-0 flex-1 truncate">{peekText}</span>
+                </div>
+              )}
               <button
                 aria-label={snap === 'peek' ? 'Show all steps' : 'Collapse steps'}
                 aria-expanded={snap !== 'peek'}
@@ -298,18 +327,12 @@ export function RoutePanel() {
         {!from && (
           <div className="space-y-2 pt-2">
             <button
-              onClick={() => setPicker(true)}
+              onClick={openPicker}
               className="glass flex h-11 w-full items-center gap-2 rounded-full px-4 text-left text-[15px] font-semibold text-[var(--ink-soft)]"
             >
               Search a starting point
             </button>
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={locateStart}
-                className="chunky min-h-11 bg-blue-600 px-3 py-2 text-xs font-extrabold text-white"
-              >
-                My location
-              </button>
               <button
                 onClick={() => useApp.getState().set({ pickMode: 'from', navOpen: true })}
                 className="chunky glass min-h-11 px-3 py-2 text-xs font-bold text-[var(--ink)]"
@@ -334,31 +357,11 @@ export function RoutePanel() {
           <>
             <ol className="pt-1">
               {route.steps.map((s, i) => (
-                <li key={i}>
-                  <button
-                    onClick={() => {
-                      setActive(i);
-                      haptic(8);
-                      cameraCommands.centerOn(s.at[0], s.at[1]);
-                    }}
-                    aria-current={i === active ? 'step' : undefined}
-                    className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-2 py-1.5 text-left text-sm text-[var(--ink)] ${i === active ? 'bg-blue-600/15 font-extrabold' : 'font-semibold'}`}
-                  >
-                    <span className="flex w-7 shrink-0 justify-center text-blue-600">
-                      <StepIcon text={s.text} size={22} />
-                    </span>
-                    <span className="min-w-0 flex-1">{s.text}</span>
-                    {i > 0 && s.distance > 0 && (
-                      <span className="shrink-0 text-xs font-bold text-[var(--ink-soft)]">
-                        {s.distance} m
-                      </span>
-                    )}
-                  </button>
-                </li>
+                <StepRow key={i} step={s} i={i} active={i === active} onPick={onPick} />
               ))}
             </ol>
             <button
-              onClick={() => setPicker(true)}
+              onClick={openPicker}
               className="chunky glass mt-2 min-h-11 px-3 py-2 text-xs font-bold text-[var(--ink)]"
             >
               Change start
@@ -369,12 +372,14 @@ export function RoutePanel() {
       </BottomSheet>
       <SearchOverlay
         open={picker}
-        onClose={() => setPicker(false)}
+        onClose={() => useApp.setState({ startPickerOpen: false })}
         placeholder="Starting point (building, gate…)"
         autoSelect={false}
-        onPick={(p) =>
-          useApp.getState().set({ from: { id: p.id, name: p.shortName, pos: p.entrance ?? p.pos } })
-        }
+        onPick={(p) => {
+          const s = useApp.getState();
+          s.setChip(null, 'offCampus');
+          s.set({ from: { id: p.id, name: p.shortName, pos: p.entrance ?? p.pos } });
+        }}
       />
     </>
   );

@@ -5,6 +5,8 @@ import { camState } from '@/scene/camState';
 import { useEffect, useRef, useState } from 'react';
 import { unproject } from '@/lib/geo';
 import { perf } from '@/scene/perf';
+import { navDispatch } from '@/lib/navController';
+import { subscribeSheetHeight } from './BottomSheet';
 import { InfoIcon, LocateButton, useSideLayout } from './Chrome';
 
 function RoundBtn({
@@ -82,15 +84,55 @@ export function Controls() {
     window.addEventListener('resize', r);
     return () => window.removeEventListener('resize', r);
   }, []);
-  // hidden when a sheet is (nearly) full height; the CSS var follows the sheet while it is dragged
-  if (searching || sheetPx > vh * 0.7) return null;
-  // Side layout (landscape/desktop): the sheet is a left panel, so the stack stays at the bottom-right instead of
-  // riding up by --sheet-h, which pushed it into the Settings button on short screens.
-  const bottom = side
-    ? 'calc(var(--sab) + 72px)'
-    : `calc(var(--sheet-h, 0px) + var(--sab) + ${sheetPx > 0 ? 16 : 72}px)`;
+  const nav = useApp((s) => s.nav);
+  const headingUp = useApp((s) => s.headingUp);
+  const hasCompass = useApp((s) => s.userHeading != null);
+  const box = useRef<HTMLDivElement>(null);
+  const hidden = searching || sheetPx > vh * 0.7; // a sheet is (nearly) full height
+  // Portrait: ride above the bottom sheet with a transform that follows it frame by frame (no React re-render, no
+  // document-wide restyle). Side layout: the sheet is a left panel, so the stack stays put.
+  useEffect(() => {
+    if (side || hidden) return;
+    return subscribeSheetHeight((h) => {
+      if (box.current) box.current.style.transform = `translate3d(0, ${-h}px, 0)`;
+    });
+  }, [side, hidden]);
+  if (hidden) return null;
+  const bottom = `calc(var(--sab) + ${!side && sheetPx > 0 ? 16 : 72}px)`;
+  const navigating = nav === 'NAV_FOLLOW' || nav === 'NAV_FREE';
   return (
-    <div className="absolute right-3 z-10 flex flex-col gap-2" style={{ bottom }}>
+    <div
+      ref={box}
+      className="absolute right-3 z-10 flex flex-col gap-2"
+      style={{ bottom, willChange: side ? undefined : 'transform' }}
+    >
+      {nav === 'NAV_FREE' && (
+        <RoundBtn label="Re-centre" onClick={() => navDispatch({ type: 'RECENTRE' })}>
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            aria-hidden
+          >
+            <circle cx="12" cy="12" r="3" fill="currentColor" />
+            <circle cx="12" cy="12" r="8" />
+            <path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3" />
+          </svg>
+        </RoundBtn>
+      )}
+      {navigating && hasCompass && (
+        <RoundBtn
+          label={headingUp ? 'North up' : 'Heading up'}
+          active={headingUp}
+          onClick={() => useApp.setState({ headingUp: !headingUp })}
+        >
+          {headingUp ? 'N' : '↑'}
+        </RoundBtn>
+      )}
       <Compass />
       <RoundBtn
         label={topDown ? 'Switch to 3D view' : 'Switch to 2D top-down view'}

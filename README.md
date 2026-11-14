@@ -56,6 +56,30 @@ Locate button (bottom right, safe-area aware): tap 1 asks permission and centres
 
 `?debug=1` adds the routing graph, footprints, building ids, entrances, FPS, draw calls, instance counts, the lat/lng and scene x/z under the cursor, a ground legend, and "Copy landmark JSON" / "Copy height JSON" on every card.
 
+## Navigation mode (phones first)
+
+One state machine (`src/lib/navMachine.ts`, pure, unit-tested) drives the whole flow: `IDLE → ROUTE_PREVIEW → NAV_FOLLOW ⇄ NAV_FREE → ARRIVED → IDLE`. `navDispatch` in `src/lib/navController.ts` is the only thing that changes it and runs its side effects (camera fits and flights, the arrival toast, the destination card). `<main data-nav="…">` shows the current state.
+
+|           |                                                                                                                                                                                                                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Preview   | Navigate on a card opens the route with **From = My location** by default, the whole route fitted above the sheet, and a large **Start** button. No location yet: the "Pick a starting point" chip appears after 8 s. Off campus: the route starts at the nearest gate, with a chip. |
+| Follow    | Start flies (400 ms) to a top-down, north-up walking view (~170 m) centred on your dot. The dot glides between fixes; the walked part of the line dims and the current step is highlighted (shader uniforms, the line is built once). Heading-up is a toggle in the controls.        |
+| Free look | A one-finger pan or a twist switches to `NAV_FREE`; a pinch only zooms and keeps following. Navigation keeps running. A 44 px **Re-centre** button flies back in 400 ms; with no touch for **12 s** it re-centres by itself (Settings, "Auto re-centre": off, 5, 8, 12, 20 or 30 s). |
+| Rerouting | Only from My location, only when more than 25 m off the path, at most once every 3 s. A reroute never refits the camera.                                                                                                                                                             |
+| Arrival   | Within 15 m: a short "You have arrived at …" toast, then the place card at peek, and your previous tilt comes back. The (x) always ends the route and restores the tilt.                                                                                                             |
+| No popups | Location off, weak GPS, off campus and "pick a start" are dismissible chips under the search bar (`StatusChips.tsx`), auto-hiding after 5 s unless they need an action. The chip strip lets taps through to the map.                                                                 |
+
+Decisions (so you can overrule them):
+
+1. **GPS fixes never go through React.** They write `navRuntime` (a plain object); the dot, line progress and camera read it each frame. The store's `userPos` updates at most once a second for the UI (distance, step list).
+2. **One camera controller.** Every flight is the same frame-rate-independent damping toward one goal pose, so follow, fly-to and fit can no longer fight each other.
+3. **Render only when something moves.** While following, frames are drawn only while the dot, the camera or the sheet is moving. On **Low**, navigation is capped at 30 fps.
+4. **Lighter rendering while navigating on Medium and Low** (High is unchanged): the shadow map is **frozen** at its last state instead of removed (no visual jump), tree sway and clouds stop, trees outside 150 m of you are thinned to 60 %, and moving traffic is cut to about 60 % **everywhere** rather than by radius (cars drive across that radius; popping in and out looked worse).
+5. **The sheet no longer restyles the page.** Its height was a CSS variable on `<html>` updated every animation frame; now the few elements that follow it subscribe to it and move by `transform`. The step list is memoised and uses `content-visibility: auto` rather than a virtualisation library (a route has at most a few dozen steps).
+6. **Testing hooks only with `?simulate`.** `?simulate=gate1` (falls back to Gate no. 2, there is no "Gate 1" in the data) adds `&walk=1` (walk the route), `&walkSpeed=` (m/s) and `&simHz=` (fixes per second), plus `window.__nwSim`, `__nwCam` and `__nwNav` for the Playwright tests. None of it exists without `?simulate`.
+
+Profiles: `node scripts/perf-nav.mjs <label>` against `next start` (4x CPU throttling, 390x844). Results and the top causes of the old lag: `docs/perf/nav-before.md`, `docs/perf/nav-after.md`. Tests: `tests/navMachine.test.ts`, `e2e/nav.spec.ts`.
+
 ## Topo merge (Overture + TopoExport), non-destructive
 
 What it adds on top of OSM, all switchable in `data/topo-overrides.json` (or `?topo=off` in the URL for a quick before/after):

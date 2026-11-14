@@ -40,7 +40,9 @@ export function LabelLayer() {
 
   useEffect(() => {
     let raf = 0,
-      last = 0;
+      last = 0,
+      sig = '',
+      places0: Place[] | null = null;
     const tick = (t: number) => {
       raf = requestAnimationFrame(tick);
       if (t - last < 50) return;
@@ -48,7 +50,18 @@ export function LabelLayer() {
       const cam = viewApi.camera;
       const st = useApp.getState();
       const hide = () => nodes.current.forEach((n) => n && (n.style.display = 'none'));
-      if (!cam || st.phase !== 'explore' || st.screenshot) return hide();
+      if (!cam || st.phase !== 'explore' || st.screenshot) {
+        sig = '';
+        return hide();
+      }
+      // Nothing moved and nothing changed: the labels are already right (no DOM writes while idle or while
+      // following a static dot).
+      const e = cam.matrixWorld.elements;
+      const pm = cam.projectionMatrix.elements; // the sheet's view offset changes the projection, not the pose
+      const s = `${e[12].toFixed(2)},${e[13].toFixed(2)},${e[14].toFixed(2)},${e[8].toFixed(4)},${e[10].toFixed(4)},${pm[9].toFixed(4)},${pm[0].toFixed(4)},${viewApi.width}x${viewApi.height},${st.selectedId},${st.category},${st.debug},${st.showOffCampus}`;
+      if (s === sig && places0 === placesRef.current) return;
+      sig = s;
+      places0 = placesRef.current;
       const W = viewApi.width,
         Hh = viewApi.height;
       const dist = camState.distance;

@@ -8,8 +8,17 @@ import { GROUND_BUFFER, boundaryDist } from '@/lib/boundary';
 import { centroid, SCENE_BOUNDS } from '@/lib/geo';
 import type { Vec2 } from '@/lib/types';
 import { groundY } from '@/lib/terrain';
+import { damp, isNavigating } from '@/lib/navMachine';
+import { navDispatch } from '@/lib/navController';
+import { navRuntime } from '@/lib/navRuntime';
 import { useApp } from '@/store/useApp';
 import { camState } from './camState';
+
+const dotMoving = () => {
+  const a = navRuntime.shown,
+    b = navRuntime.target;
+  return !!a && !!b && Math.hypot(a[0] - b[0], a[1] - b[1]) > 0.05;
+};
 
 interface Pose {
   tx: number;
@@ -18,25 +27,43 @@ interface Pose {
   polar: number;
   az: number;
 }
+/**
+ * One camera controller owns all motion. A move sets a goal pose; every frame the pose closes a fixed fraction of
+ * the remaining gap (critically damped, frame-rate independent). A new move replaces the old one, so moves never
+ * fight. `lambda` = 5 / duration settles to within 1 % in about `duration` seconds.
+ */
 interface Anim {
-  from: Pose;
   to: Pose;
-  t: number;
-  dur: number;
+  lambda: number;
 }
 
 let idleTimer: ReturnType<typeof setTimeout> | undefined;
 const ringCache: { ring: Vec2[] | null; c: Vec2 } = { ring: null, c: [0, 0] };
 const HOME: Pose = { tx: 0, tz: 0, dist: 820, polar: 0.95, az: 0.35 };
-const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+/** Navigation: walking zoom on start, tilt for top-down, follow stiffness */
+export const NAV_WALK_DIST = 170;
+const TOP = 0.02;
+const TILT = 0.85;
+const FOLLOW_LAMBDA = 6;
+const RECENTRE_S = 0.4;
 
 /** Exposed so UI can request camera moves without touching three.js. */
 export const cameraCommands = {
   fitPoints: (_pts: [number, number][]) => {},
   zoomBy: (_f: number) => {},
   centerOn: (_x: number, _z: number) => {},
+  /** Fly to the user's dot for navigation (start = also set the walking zoom). */
+  navFollow: (_start: boolean) => {},
 };
+
+const wrapAz = (a: number, ref: number) => {
+  while (a - ref > Math.PI) a -= Math.PI * 2;
+  while (a - ref < -Math.PI) a += Math.PI * 2;
+  return a;
+};
+/** North up (0) or heading up (camera behind the user's heading). */
+const navAzimuth = (headingUp: boolean) =>
+  headingUp && navRuntime.heading != null ? -(navRuntime.heading * Math.PI) / 180 : 0;
 
 export function CameraRig() {
   const controls = useRef<OrbitControlsImpl>(null);
@@ -79,10 +106,9 @@ export function CameraRig() {
     if (!controls.current) return;
     const from = readPose();
     const target = { ...from, ...to };
-    // Take the short way around in azimuth.
-    while (target.az - from.az > Math.PI) target.az -= Math.PI * 2;
-    while (target.az - from.az < -Math.PI) target.az += Math.PI * 2;
-    anim.current = { from, to: target, t: 0, dur: reduced.current ? 0.01 : dur };
+    target.az = wrapAz(target.az, from.az); // the short way around
+    // replaces any running move: there is only ever one
+    anim.current = { to: target, lambda: reduced.current ? 1e4 : 5 / Math.max(0.05, dur) };
   };
 
   // Initial pose
@@ -106,12 +132,32 @@ export function CameraRig() {
         d = Math.max(d, z);
       }
       const span = Math.max(c - a, d - b, 60);
+      // Phones: the sheet covers the bottom, and the view is shifted to centre the area above it. Zoom out so the
+      // whole route fits in that smaller area.
+      const st = useApp.getState();
+      const h = window.innerHeight;
+      const covered = window.innerWidth < 768 && h > 500 ? Math.min(0.6, st.sheetPx / h) : 0;
       flyTo({
         tx: (a + c) / 2,
         tz: (b + d) / 2,
-        dist: span * 1.5 + 40,
-        polar: useApp.getState().topDown ? 0.02 : 0.85,
+        dist: (span * 1.5 + 40) / (1 - covered),
+        polar: st.topDown ? TOP : TILT,
       });
+    };
+    cameraCommands.navFollow = (start) => {
+      const st = useApp.getState();
+      const p = navRuntime.shown ?? navRuntime.target ?? st.userPos;
+      if (!p) return;
+      flyTo(
+        {
+          tx: p[0],
+          tz: p[1],
+          ...(start ? { dist: NAV_WALK_DIST } : {}),
+          polar: st.topDown ? TOP : TILT,
+          az: navAzimuth(st.headingUp),
+        },
+        RECENTRE_S,
+      );
     };
     if (useApp.getState().debug || new URLSearchParams(location.search).has('shots')) {
       // Debug-only handle for scripted screenshots: __nwFly(x, z, distance, polar, azimuth)
@@ -164,9 +210,89 @@ export function CameraRig() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
   useEffect(() => {
-    flyTo({ polar: topDown ? 0.02 : 0.85 }, 0.9);
+    // While navigating, the follow controller owns the tilt (and a running navigation flight must not be replaced).
+    const st = useApp.getState();
+    if (st.nav === 'NAV_FOLLOW') {
+      if (anim.current) anim.current.to.polar = topDown ? TOP : TILT;
+      return;
+    }
+    flyTo({ polar: topDown ? TOP : TILT }, 0.9);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topDown]);
+
+  // Navigation gestures: a one-finger drag (pan) or a two-finger twist (rotate) leaves NAV_FOLLOW for NAV_FREE.
+  // A pinch or the mouse wheel only zooms and keeps following. Every touch resets the auto re-centre timer.
+  useEffect(() => {
+    const el = gl.domElement;
+    const pts = new Map<number, { x0: number; y0: number; x: number; y: number }>();
+    let twist0: number | null = null;
+    let decided = false;
+    let rightButton = false;
+    const touch = () => {
+      navRuntime.lastTouch = performance.now();
+    };
+    // A finger (or the wheel) always wins over a running flight: cancel it and hand the camera to the controls, or a
+    // pinch that starts during the 400 ms navigation flight would be ignored. Runs in the capture phase, before
+    // OrbitControls' own listener on the same element sees the event.
+    const takeOver = () => {
+      if (!anim.current || useApp.getState().phase !== 'explore') return;
+      anim.current = null;
+      if (controls.current) controls.current.enabled = true;
+    };
+    const angle = () => {
+      const [a, b] = [...pts.values()];
+      return Math.atan2(b.y - a.y, b.x - a.x);
+    };
+    const down = (e: PointerEvent) => {
+      touch();
+      takeOver();
+      pts.set(e.pointerId, { x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY });
+      decided = false;
+      rightButton = e.pointerType === 'mouse' && e.button === 2;
+      twist0 = pts.size === 2 ? angle() : null;
+    };
+    const move = (e: PointerEvent) => {
+      const p = pts.get(e.pointerId);
+      if (!p) return;
+      touch();
+      p.x = e.clientX;
+      p.y = e.clientY;
+      if (decided || useApp.getState().nav !== 'NAV_FOLLOW') return;
+      if (pts.size === 1 && Math.hypot(p.x - p.x0, p.y - p.y0) > 8) {
+        decided = true;
+        navDispatch({ type: 'GESTURE', kind: rightButton ? 'rotate' : 'pan' });
+      } else if (pts.size === 2 && twist0 != null) {
+        const d = Math.abs(wrapAz(angle(), twist0) - twist0);
+        if (d > 0.2) {
+          decided = true;
+          navDispatch({ type: 'GESTURE', kind: 'rotate' });
+        }
+      }
+    };
+    const up = (e: PointerEvent) => {
+      pts.delete(e.pointerId);
+      if (pts.size < 2) twist0 = null;
+      touch();
+    };
+    const wheel = () => {
+      touch();
+      takeOver();
+    };
+    const opts = { passive: true } as const;
+    const first = { passive: true, capture: true } as const;
+    el.addEventListener('pointerdown', down, first);
+    el.addEventListener('pointermove', move, opts);
+    el.addEventListener('pointerup', up, opts);
+    el.addEventListener('pointercancel', up, opts);
+    el.addEventListener('wheel', wheel, first);
+    return () => {
+      el.removeEventListener('pointerdown', down, first);
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up);
+      el.removeEventListener('pointercancel', up);
+      el.removeEventListener('wheel', wheel, first);
+    };
+  }, [gl]);
 
   // Double tap / double click zoom-in at the tapped ground point.
   useEffect(() => {
@@ -213,19 +339,57 @@ export function CameraRig() {
       return;
     }
     c.enabled = !anim.current;
+    let camMoving = false;
+    const following = st.nav === 'NAV_FOLLOW' && !!navRuntime.shown;
     if (anim.current) {
       const a = anim.current;
-      a.t = Math.min(1, a.t + dt / a.dur);
-      const k = ease(a.t);
-      applyPose({
-        tx: lerp(a.from.tx, a.to.tx, k),
-        tz: lerp(a.from.tz, a.to.tz, k),
-        dist: lerp(a.from.dist, a.to.dist, k),
-        polar: lerp(a.from.polar, a.to.polar, k),
-        az: lerp(a.from.az, a.to.az, k),
-      });
-      if (a.t >= 1) anim.current = null;
+      // a navigation flight tracks the moving dot instead of where it was when the flight began
+      if (following) {
+        a.to.tx = navRuntime.shown![0];
+        a.to.tz = navRuntime.shown![1];
+      }
+      const p = readPose();
+      const k = damp(a.lambda, Math.min(dt, 0.1));
+      const next = {
+        tx: p.tx + (a.to.tx - p.tx) * k,
+        tz: p.tz + (a.to.tz - p.tz) * k,
+        dist: p.dist + (a.to.dist - p.dist) * k,
+        polar: p.polar + (a.to.polar - p.polar) * k,
+        az: p.az + (wrapAz(a.to.az, p.az) - p.az) * k,
+      };
+      applyPose(next);
+      const done =
+        Math.hypot(a.to.tx - next.tx, a.to.tz - next.tz) < 0.3 &&
+        Math.abs(a.to.dist - next.dist) < 0.5 &&
+        Math.abs(a.to.polar - next.polar) < 0.003 &&
+        Math.abs(wrapAz(a.to.az, next.az) - next.az) < 0.003;
+      if (done) {
+        applyPose(a.to);
+        anim.current = null;
+      }
+    } else if (following) {
+      // NAV_FOLLOW: centre on the dot, top-down (or the user's 3D choice), north/heading up. Zoom is the user's.
+      const p = readPose();
+      const k = damp(FOLLOW_LAMBDA, Math.min(dt, 0.1));
+      const goalPolar = st.topDown ? TOP : TILT;
+      const goalAz = wrapAz(navAzimuth(st.headingUp), p.az);
+      const [sx, sz] = navRuntime.shown!;
+      const moved =
+        Math.abs(sx - p.tx) > 0.02 ||
+        Math.abs(sz - p.tz) > 0.02 ||
+        Math.abs(goalPolar - p.polar) > 0.001 ||
+        Math.abs(goalAz - p.az) > 0.001;
+      if (moved)
+        applyPose({
+          tx: p.tx + (sx - p.tx) * k,
+          tz: p.tz + (sz - p.tz) * k,
+          dist: p.dist,
+          polar: p.polar + (goalPolar - p.polar) * k,
+          az: p.az + (goalAz - p.az) * k,
+        });
+      camMoving = moved;
     }
+    navRuntime.moving = !!anim.current || camMoving || dotMoving();
     // On phones a bottom sheet covers the lower half: shift the projection up so the subject stays visible.
     // The shift equals half the sheet's visible height, so the subject is centred in the map area above it.
     const sheet =
@@ -250,11 +414,12 @@ export function CameraRig() {
           state.size.height,
         );
     }
-    // Follow mode: glide the view with the blue dot.
-    if (st.locate === 'follow' && st.userPos && !anim.current) {
-      const k = Math.min(1, dt * 3);
-      const dx = (st.userPos[0] - c.target.x) * k,
-        dz = (st.userPos[1] - c.target.z) * k;
+    // Locate "follow" outside navigation: glide the view with the blue dot (read from the ref, not React state).
+    const dotP = navRuntime.shown;
+    if (st.locate === 'follow' && dotP && !anim.current && !isNavigating(st.nav)) {
+      const k = damp(3, Math.min(dt, 0.1));
+      const dx = (dotP[0] - c.target.x) * k,
+        dz = (dotP[1] - c.target.z) * k;
       c.target.x += dx;
       c.target.z += dz;
       camera.position.x += dx;

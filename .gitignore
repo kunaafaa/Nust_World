@@ -27,3 +27,6 @@ reference/
 # Playwright output
 /test-results/
 /playwright-report/
+
+# Chrome traces from scripts/perf-nav.mjs (about 4 MB per run; the numbers are in docs/perf/*.json)
+/docs/perf/traces/

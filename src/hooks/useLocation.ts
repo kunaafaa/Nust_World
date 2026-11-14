@@ -2,19 +2,26 @@
 import { useEffect } from 'react';
 import { project, unproject } from '@/lib/geo';
 import {
-  ARRIVE_M,
   buildSnapIndex,
-  distToPath,
   maybeSnap,
   nearCampus,
   plausible,
-  REROUTE_M,
   smooth,
   WEAK_GPS_M,
   type Fix,
   type SnapIndex,
 } from '@/lib/location';
-import { sfx } from '@/lib/sfx';
+import {
+  ARRIVE_M,
+  cumulative,
+  currentStep,
+  isNavigating,
+  projectOnPath,
+  shouldReroute,
+} from '@/lib/navMachine';
+import { navDispatch } from '@/lib/navController';
+import { navRuntime } from '@/lib/navRuntime';
+import type { RouteResult } from '@/lib/routing';
 import { cameraCommands } from '@/scene/CameraRig';
 import { useApp } from '@/store/useApp';
 import type { Vec2 } from '@/lib/types';
@@ -22,6 +29,10 @@ import type { Vec2 } from '@/lib/types';
 /**
  * Live location controller. Privacy: positions are held in memory only. Nothing is sent to any server,
  * stored, or logged. Module-level state because there is exactly one GPS watch per tab.
+ *
+ * Performance: fixes are processed at their native rate, but they only write a ref (`navRuntime`); the dot and the
+ * camera read it imperatively. React state (`userPos`) is updated at most once a second, for UI that needs it.
+ * Problems (permission, weak GPS, off campus) are small chips under the search pill, never popups.
  */
 let watchId: number | null = null;
 let lastFix: Fix | null = null;
@@ -30,14 +41,15 @@ let shownAcc = 50;
 let snapIdx: SnapIndex | null = null;
 let snapFor: unknown = null;
 let wantCentre = false;
-let warnedWeak = false,
-  warnedOff = false;
-let offPathSince = 0;
-let arrivedFor: string | null = null;
 let orientationOn = false;
 let simTimer: ReturnType<typeof setInterval> | null = null;
 let onFirstFix: ((p: Vec2) => void) | null = null;
+let lastStoreAt = 0;
+let routeFor: RouteResult | null = null;
+let routeCum: number[] = [];
+let stepAt: number[] = [];
 
+const STORE_EVERY_MS = 1000;
 const st = () => useApp.getState();
 
 function ensureSnap() {
@@ -47,34 +59,76 @@ function ensureSnap() {
   snapFor = d;
 }
 
+function routeIndex(route: RouteResult) {
+  if (routeFor === route) return;
+  routeFor = route;
+  routeCum = cumulative(route.path);
+  stepAt = route.steps.map((s) => {
+    const k = route.path.indexOf(s.at);
+    return k >= 0 ? routeCum[k] : projectOnPath(route.path, routeCum, s.at).along;
+  });
+}
+
+/** Nearest gate to a (possibly off-campus) scene position. */
+function nearestGate(p: Vec2) {
+  const gates = st().data?.places.filter((x) => x.category === 'gate' && !x.offCampus) ?? [];
+  let best = gates[0],
+    bd = Infinity;
+  for (const g of gates) {
+    const d = Math.hypot(g.pos[0] - p[0], g.pos[1] - p[1]);
+    if (d < bd) {
+      bd = d;
+      best = g;
+    }
+  }
+  return best;
+}
+
 /** Process a raw fix (from the browser or the simulator). */
 export function handleFix(lon: number, lat: number, accuracy: number, t = Date.now()) {
+  const s = st();
   if (!nearCampus(lon, lat)) {
-    if (!warnedOff) {
-      warnedOff = true;
-      st().setToast("You don't seem to be on campus. Pick a gate to start from instead.");
-    }
-    st().set({ userPos: null, userAcc: null });
+    // Never draw the dot off the map. If a route preview is waiting for a start, start from the nearest gate.
+    navRuntime.target = null;
+    if (s.userPos) s.set({ userPos: null, userAcc: null });
+    if (s.navOpen && s.to && !s.from) {
+      const g = nearestGate(project(lon, lat));
+      if (g) {
+        onFirstFix = null;
+        s.set({ from: { id: g.id, name: g.shortName, pos: g.entrance ?? g.pos } });
+        s.setChip({
+          kind: 'offCampus',
+          text: `You're not on campus. Starting from ${g.shortName}`,
+          action: 'change',
+        });
+      }
+    } else if (!s.chips.some((c) => c.kind === 'offCampus'))
+      s.setChip({ kind: 'offCampus', text: "You're not on campus" });
     return;
   }
-  warnedOff = false;
   const raw = project(lon, lat);
   const fix: Fix = { pos: raw, accuracy, t };
   if (!plausible(lastFix, fix)) return; // ignore teleports (>30 m/s)
   lastFix = fix;
   ensureSnap();
-  if (accuracy > WEAK_GPS_M && !warnedWeak) {
-    warnedWeak = true;
-    st().setToast(
-      'GPS signal is weak here. Your position may be off by ' + Math.round(accuracy) + ' m.',
-    );
-  }
-  if (accuracy <= WEAK_GPS_M) warnedWeak = false;
+  if (accuracy > WEAK_GPS_M) {
+    if (!s.chips.some((c) => c.kind === 'weakGps'))
+      s.setChip({ kind: 'weakGps', text: `Weak GPS (±${Math.round(accuracy)} m)`, sticky: true });
+  } else if (s.chips.some((c) => c.kind === 'weakGps')) s.setChip(null, 'weakGps');
+  if (s.chips.some((c) => c.kind === 'offCampus' && !c.action)) s.setChip(null, 'offCampus');
+  if (s.chips.some((c) => c.kind === 'locationOff')) s.setChip(null, 'locationOff');
   const sm = smooth(shown, fix, shownAcc);
   shown = sm;
   shownAcc = accuracy;
   const pos = maybeSnap(snapIdx, sm, accuracy);
-  st().set({ userPos: pos, userAcc: accuracy });
+  navRuntime.target = pos;
+  navRuntime.accuracy = accuracy;
+
+  const now = performance.now();
+  if (!s.userPos || now - lastStoreAt >= STORE_EVERY_MS) {
+    lastStoreAt = now;
+    s.set({ userPos: pos, userAcc: Math.round(accuracy) });
+  }
 
   if (wantCentre) {
     wantCentre = false;
@@ -85,24 +139,35 @@ export function handleFix(lon: number, lat: number, accuracy: number, t = Date.n
     onFirstFix = null;
     cb(pos);
   }
+  trackRoute(pos, t);
+}
 
-  // Arrival and off-route detection.
-  const { route, to, navOpen } = st();
-  if (route && to && navOpen) {
-    const left = Math.hypot(pos[0] - to.pos[0], pos[1] - to.pos[1]);
-    if (left < ARRIVE_M && arrivedFor !== to.name) {
-      arrivedFor = to.name;
-      st().setToast(`You have arrived at ${to.name}`);
-      sfx.arrive();
-    } else if (left >= ARRIVE_M * 2) arrivedFor = null;
-    if (st().from?.name === 'My location' && distToPath(pos, route.path) > REROUTE_M) {
-      offPathSince ||= t;
-      if (t - offPathSince > 3000) {
-        offPathSince = 0;
-        st().set({ from: { name: 'My location', pos } });
-        st().setToast('Rerouting…');
-      }
-    } else offPathSince = 0;
+/** Progress, current step, arrival and rerouting while navigating. No React state unless the step changes. */
+function trackRoute(pos: Vec2, t: number) {
+  const s = st();
+  const { route, to } = s;
+  if (!route || !to || !isNavigating(s.nav)) return;
+  routeIndex(route);
+  const pr = projectOnPath(route.path, routeCum, pos);
+  navRuntime.progressM = pr.along;
+  const k = currentStep(stepAt, pr.along);
+  navRuntime.stepFromM = stepAt[k - 1] ?? 0;
+  navRuntime.stepToM = stepAt[k] ?? routeCum[routeCum.length - 1];
+  if (k !== s.navStep) s.set({ navStep: k });
+  // the route ends at the (approximate) entrance: arrival counts from there or from the destination itself
+  const end = route.path[route.path.length - 1];
+  const toDest = Math.min(
+    Math.hypot(pos[0] - end[0], pos[1] - end[1]),
+    Math.hypot(pos[0] - to.pos[0], pos[1] - to.pos[1]),
+  );
+  if (toDest <= ARRIVE_M) {
+    navDispatch({ type: 'FIX', toDestM: toDest });
+    return;
+  }
+  if (s.from?.name === 'My location' && shouldReroute(pr.off, navRuntime.lastRerouteAt, t)) {
+    navRuntime.lastRerouteAt = t;
+    s.set({ from: { name: 'My location', pos } }); // the routing worker picks this up
+    s.setToast('Rerouting…');
   }
 }
 
@@ -113,7 +178,10 @@ function onOrientation(e: DeviceOrientationEvent & { webkitCompassHeading?: numb
       : e.alpha != null
         ? (360 - e.alpha) % 360
         : null;
-  if (h != null && !Number.isNaN(h)) st().set({ userHeading: h });
+  if (h == null || Number.isNaN(h)) return;
+  navRuntime.heading = h;
+  // the heading cone is drawn from the ref; React only needs to know a compass exists
+  if (st().userHeading == null) st().set({ userHeading: h });
 }
 
 async function startOrientation() {
@@ -126,8 +194,14 @@ async function startOrientation() {
   } catch {
     return;
   }
-  window.addEventListener('deviceorientationabsolute', onOrientation as EventListener, true);
-  window.addEventListener('deviceorientation', onOrientation as EventListener, true);
+  window.addEventListener('deviceorientationabsolute', onOrientation as EventListener, {
+    capture: true,
+    passive: true,
+  });
+  window.addEventListener('deviceorientation', onOrientation as EventListener, {
+    capture: true,
+    passive: true,
+  });
   orientationOn = true;
 }
 
@@ -142,29 +216,38 @@ function startWatch() {
   const sim = new URLSearchParams(location.search).get('simulate');
   if (sim) return startSimulation(sim);
   if (!navigator.geolocation) {
-    st().setToast('Location is not available on this device.');
+    locationProblem('Location off, tap to enable');
     st().set({ locate: 'off' });
     return;
   }
   watchId = navigator.geolocation.watchPosition(
     (p) => handleFix(p.coords.longitude, p.coords.latitude, p.coords.accuracy, p.timestamp),
     (err) => {
-      const msg =
-        err.code === 1
-          ? 'Location permission was denied. You can still pick a gate to start from.'
-          : err.code === 2
-            ? 'Your location is unavailable right now. Try moving near a window or outdoors.'
-            : 'Getting your location timed out. Try again outdoors.';
-      st().setToast(msg);
-      if (err.code === 1) stopLocation();
+      if (err.code === 1) {
+        stopLocation();
+        locationProblem('Location off, tap to enable');
+      } else locationProblem('Location unavailable, tap to retry');
     },
     { enableHighAccuracy: true, maximumAge: 1000, timeout: 15000 },
   );
 }
 
-/** `?simulate=gate1` pretends you are standing at Gate 1 with a little GPS jitter, for testing without leaving home. */
+/** Location is off or failing: a chip, and if a route is waiting for a start, a second chip to pick one. */
+function locationProblem(text: string) {
+  const s = st();
+  s.setChip({ kind: 'locationOff', text, sticky: true });
+  if (s.navOpen && s.to && !s.from)
+    s.setChip({ kind: 'pickStart', text: 'Pick a starting point', sticky: true });
+}
+
+/**
+ * `?simulate=gate1` pretends you are standing at Gate 1 with a little GPS jitter, for testing without leaving home.
+ * Add `&walk=1` to walk the active route while navigating (`&walkSpeed=6` m/s for tests, default 1.4).
+ * With ?simulate, `window.__nwSim.offset(m)` pushes the simulated walker sideways off the path (reroute tests).
+ */
 function startSimulation(name: string) {
   const d = st().data;
+  const q = new URLSearchParams(location.search);
   const gates = d?.places.filter((p) => p.category === 'gate') ?? [];
   const num = name.match(/gate(\d+)/i)?.[1];
   const g =
@@ -174,16 +257,50 @@ function startSimulation(name: string) {
       )) ||
     gates[0];
   if (!g) return;
-  // Convert scene position back to lon/lat so the full pipeline (bbox check, projection, smoothing) is exercised.
-  const [lon, lat] = unproject(g.pos[0], g.pos[1]);
-  const tick = () =>
+  const walk = q.get('walk') === '1';
+  const speed = Number(q.get('walkSpeed') ?? 1.4) || 1.4;
+  const hz = Math.min(10, Math.max(1, Number(q.get('simHz') ?? 1) || 1));
+  const sim = { offset: 0, d: 0, route: null as RouteResult | null, cum: [] as number[] };
+  (window as unknown as { __nwSim?: unknown }).__nwSim = {
+    offset: (m: number) => {
+      sim.offset = m;
+    },
+  };
+  let here: Vec2 = g.pos;
+  const tick = () => {
+    const s = st();
+    if (walk && s.route && isNavigating(s.nav)) {
+      if (sim.route !== s.route) {
+        sim.route = s.route;
+        sim.cum = cumulative(s.route.path);
+        sim.d = 0;
+      }
+      sim.d = Math.min(sim.cum[sim.cum.length - 1], sim.d + speed / hz);
+      const path = s.route.path;
+      let i = 1;
+      while (i < path.length - 1 && sim.cum[i] < sim.d) i++;
+      const a = path[i - 1],
+        b = path[i];
+      const seg = sim.cum[i] - sim.cum[i - 1] || 1;
+      const f = Math.min(1, Math.max(0, (sim.d - sim.cum[i - 1]) / seg));
+      const nx = -(b[1] - a[1]) / seg,
+        nz = (b[0] - a[0]) / seg;
+      here = [
+        a[0] + (b[0] - a[0]) * f + nx * sim.offset,
+        a[1] + (b[1] - a[1]) * f + nz * sim.offset,
+      ];
+    }
+    // Convert back to lon/lat so the full pipeline (bbox check, projection, smoothing) is exercised.
+    const [lon, lat] = unproject(here[0], here[1]);
+    const j = walk ? 4e-6 : 3e-5;
     handleFix(
-      lon + (Math.random() - 0.5) * 3e-5,
-      lat + (Math.random() - 0.5) * 3e-5,
+      lon + (Math.random() - 0.5) * j,
+      lat + (Math.random() - 0.5) * j,
       8 + Math.random() * 4,
     );
+  };
   tick();
-  simTimer = setInterval(tick, 1000);
+  simTimer = setInterval(tick, 1000 / hz);
 }
 
 function stopWatch() {
@@ -204,6 +321,9 @@ export function stopLocation() {
   shown = null;
   wantCentre = false;
   onFirstFix = null;
+  navRuntime.target = null;
+  navRuntime.shown = null;
+  navRuntime.heading = null;
   st().set({ locate: 'off', userPos: null, userAcc: null, userHeading: null });
 }
 
@@ -225,7 +345,10 @@ export function locateTap() {
   } else if (s.userPos) cameraCommands.centerOn(s.userPos[0], s.userPos[1]);
 }
 
-/** For "My location" in the route panel: make sure tracking is on, then hand back the first position. */
+/**
+ * For "My location" as the route start: make sure tracking is on (this is where permission is asked, once, from the
+ * Directions tap), then hand back the first position.
+ */
 export function locateThen(cb: (p: Vec2) => void) {
   const s = st();
   if (s.userPos) return cb(s.userPos);
@@ -235,6 +358,17 @@ export function locateThen(cb: (p: Vec2) => void) {
     startWatch();
     void startOrientation();
   }
+}
+
+/** Retry after "Location off, tap to enable". */
+export function enableLocation() {
+  const s = st();
+  s.setChip(null, 'locationOff');
+  if (s.locate === 'off') s.set({ locate: 'on' });
+  startWatch();
+  void startOrientation();
+  if (s.navOpen && s.to && !s.from)
+    onFirstFix = (p) => st().set({ from: { name: 'My location', pos: p } });
 }
 
 /** Mount once: pauses the watch when the tab is hidden (battery) and resumes after. */

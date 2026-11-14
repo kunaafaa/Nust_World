@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { track } from '@vercel/analytics';
 import { usePlaces } from '@/hooks/usePlaces';
 import { CAT_COLOR, CAT_LABEL } from '@/lib/colors';
+import { AUTO_RECENTRE_CHOICES } from '@/lib/navMachine';
+import { startDirections } from '@/lib/navController';
 import { setSoundEnabled, sfx, soundEnabled } from '@/lib/sfx';
 import type { Category, Place } from '@/lib/types';
 import { captureApi } from '@/scene/CampusScene';
@@ -73,6 +75,7 @@ export function SettingsPanel() {
   const night = useApp((s) => s.night);
   const hasTerrain = useApp((s) => !!s.terrain);
   const terrainOn = useApp((s) => s.terrainOn);
+  const autoRecentre = useApp((s) => s.autoRecentreS);
   const [sound, setSound] = useState(true);
   const [snap, setSnap] = useState<Snap>('half');
   // localStorage is only readable after mount (hydration-safe).
@@ -189,6 +192,34 @@ export function SettingsPanel() {
           }}
         />
       </div>
+      <div className="mt-2 border-t border-black/10 pt-2">
+        <div className="text-xs font-black uppercase tracking-wide text-[var(--ink-soft)]">
+          Navigation: back to following after
+        </div>
+        <div
+          className="mt-1 grid grid-cols-6 gap-1.5"
+          role="group"
+          aria-label="Auto re-centre during navigation"
+        >
+          {AUTO_RECENTRE_CHOICES.map((v) => (
+            <button
+              key={v}
+              aria-pressed={autoRecentre === v}
+              onClick={() => {
+                useApp.setState({ autoRecentreS: v });
+                try {
+                  localStorage.setItem('nw-auto-recentre', String(v));
+                } catch {
+                  /* ignore */
+                }
+              }}
+              className={`chunky min-h-11 rounded-xl px-1 text-[12px] font-black ${autoRecentre === v ? 'bg-amber-300 text-slate-900' : 'bg-black/10 text-[var(--ink)]'}`}
+            >
+              {v ? `${v} s` : 'Off'}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="mt-2 grid grid-cols-2 gap-2 border-t border-black/10 pt-2">
         <button
           className="chunky glass min-h-11 py-2 text-xs font-black text-[var(--ink)]"
@@ -242,15 +273,11 @@ export function NearestBar() {
       .sort((a, b) => a.d - b.d)[0];
     if (!near) return useApp.getState().setToast(`No ${cat} found nearby`);
     track('nearest', { cat });
-    useApp.getState().set({
-      from: { name: 'My location', pos },
-      to: {
-        id: near.p.id,
-        name: near.p.shortName,
-        pos: near.p.entrance ?? near.p.pos,
-        approx: !near.p.entrance,
-      },
-      navOpen: true,
+    startDirections({
+      id: near.p.id,
+      name: near.p.shortName,
+      pos: near.p.entrance ?? near.p.pos,
+      approx: !near.p.entrance || !!near.p.entranceApprox,
     });
   };
   return (

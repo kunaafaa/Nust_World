@@ -6,6 +6,8 @@ import * as THREE from 'three';
 import { EASTER_EGGS } from '@/data/extras';
 import { CAT_COLOR } from '@/lib/colors';
 import { project } from '@/lib/geo';
+import { damp, isNavigating } from '@/lib/navMachine';
+import { navRuntime } from '@/lib/navRuntime';
 import { groundY } from '@/lib/terrain';
 import type { CampusData, Place, Vec2 } from '@/lib/types';
 import { useApp } from '@/store/useApp';
@@ -131,21 +133,41 @@ export function RouteLine() {
     // terrainOn lifts the route onto the ground
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route, terrainOn]);
+  // Built once per route: progress, the current step and the glow are uniforms, never new geometry.
   const mat = useMemo(
     () =>
       new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
         toneMapped: false,
-        uniforms: { uTime: sharedUniforms.uTime },
+        uniforms: {
+          uTime: sharedUniforms.uTime,
+          uProgress: { value: 0 },
+          uStepA: { value: 0 },
+          uStepB: { value: 0 },
+          uNav: { value: 0 },
+        },
         vertexShader:
           'attribute float cum; varying float vC; void main(){ vC = cum; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-        fragmentShader: `varying float vC; uniform float uTime;
+        fragmentShader: `varying float vC; uniform float uTime; uniform float uProgress; uniform float uStepA; uniform float uStepB; uniform float uNav;
 void main(){ float w = 0.5 + 0.5 * sin(vC * 0.35 - uTime * 6.0);
-  vec3 c = mix(vec3(0.1,0.75,1.0), vec3(0.6,1.0,0.9), w); gl_FragColor = vec4(c * (1.2 + w), 0.92); }`,
+  vec3 c = mix(vec3(0.1,0.75,1.0), vec3(0.6,1.0,0.9), w) * (1.2 + w);
+  float passed = uNav * step(vC, uProgress);
+  float cur = uNav * step(uStepA, vC) * step(vC, uStepB) * (1.0 - passed);
+  c = mix(c, vec3(1.0, 0.95, 0.6) * 1.6, cur * 0.55);
+  c = mix(c, vec3(0.35, 0.42, 0.5), passed);
+  gl_FragColor = vec4(c, mix(0.92, 0.45, passed)); }`,
       }),
     [],
   );
+  useFrame(() => {
+    const u = mat.uniforms;
+    const nav = isNavigating(useApp.getState().nav) ? 1 : 0;
+    u.uNav.value = nav;
+    u.uProgress.value = navRuntime.progressM;
+    u.uStepA.value = navRuntime.stepFromM;
+    u.uStepB.value = navRuntime.stepToM;
+  });
   return (
     <>
       {geom && <mesh geometry={geom} material={mat} renderOrder={5} frustumCulled={false} />}
@@ -179,15 +201,54 @@ function Flag({ pos, color, label }: { pos: Vec2; color: string; label: string }
   );
 }
 
+/** Dot smoothing: how fast the drawn dot closes the gap to the latest fix (1/s, frame-rate independent). */
+const DOT_LAMBDA = 4;
+/** The dot samples new fixes at most 10 times a second. */
+const DOT_SAMPLE_MS = 100;
+
+/**
+ * The user's dot. Never re-rendered by React on location updates: it reads `navRuntime` every frame, low-passes
+ * towards the latest fix and moves itself. The accuracy circle is a unit mesh scaled to metres (no new geometry).
+ */
 export function UserMarker() {
-  const pos = useApp((s) => s.userPos);
-  const acc = useApp((s) => s.userAcc);
-  const heading = useApp((s) => s.userHeading);
-  useApp((s) => s.terrainOn); // re-render when the terrain toggles
+  const group = useRef<THREE.Group>(null);
+  const accArea = useRef<THREE.Group>(null);
   const dot = useRef<THREE.Mesh>(null);
   const halo = useRef<THREE.Mesh>(null);
   const cone = useRef<THREE.Mesh>(null);
-  useFrame(({ clock }) => {
+  const goal = useRef<{ p: Vec2 | null; t: number }>({ p: null, t: 0 });
+  useFrame(({ clock }, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const now = performance.now();
+    if (now - goal.current.t >= DOT_SAMPLE_MS) {
+      goal.current = { p: navRuntime.target, t: now };
+    }
+    const target = goal.current.p;
+    if (!target) {
+      g.visible = false;
+      navRuntime.shown = null;
+      return;
+    }
+    const s = navRuntime.shown;
+    const far = !s || Math.hypot(target[0] - s[0], target[1] - s[1]) > 60;
+    const k = damp(DOT_LAMBDA, Math.min(dt, 0.1));
+    const next: Vec2 = far
+      ? [target[0], target[1]]
+      : [s[0] + (target[0] - s[0]) * k, s[1] + (target[1] - s[1]) * k];
+    navRuntime.shown = next;
+    g.visible = true;
+    g.position.set(next[0], groundY(next[0], next[1]), next[1]);
+    const r = Math.max(4, navRuntime.accuracy); // true metres, not a fixed-size ring
+    accArea.current?.scale.set(r, 1, r);
+    if (cone.current) {
+      const h = navRuntime.heading;
+      cone.current.visible = h != null;
+      if (h != null) {
+        cone.current.rotation.z = -(h * Math.PI) / 180;
+        cone.current.scale.setScalar(Math.max(14, Math.min(r, 30)));
+      }
+    }
     const p = (clock.elapsedTime % 1.6) / 1.6;
     if (halo.current) {
       halo.current.scale.setScalar(1 + p * 2.2);
@@ -195,35 +256,34 @@ export function UserMarker() {
     }
     if (dot.current) dot.current.scale.setScalar(1 + Math.sin(clock.elapsedTime * 4) * 0.06);
   });
-  if (!pos) return null;
-  const r = Math.max(4, acc ?? 20); // true metres, not a fixed-size ring
   return (
-    <group position={[pos[0], groundY(pos[0], pos[1]), pos[1]]}>
-      <mesh rotation-x={-Math.PI / 2} position-y={0.5} renderOrder={40}>
-        <circleGeometry args={[r, 48]} />
-        <meshBasicMaterial color="#3b82f6" transparent opacity={0.16} depthWrite={false} />
-      </mesh>
-      <mesh rotation-x={-Math.PI / 2} position-y={0.52} renderOrder={41}>
-        <ringGeometry args={[r - 0.5, r, 48]} />
-        <meshBasicMaterial color="#60a5fa" transparent opacity={0.55} depthWrite={false} />
-      </mesh>
-      {heading != null && (
-        <mesh
-          ref={cone}
-          rotation={[-Math.PI / 2, 0, -(heading * Math.PI) / 180]}
-          position-y={0.6}
-          renderOrder={42}
-        >
-          <circleGeometry args={[Math.max(14, Math.min(r, 30)), 16, Math.PI / 2 - 0.5, 1.0]} />
-          <meshBasicMaterial
-            color="#60a5fa"
-            transparent
-            opacity={0.45}
-            depthWrite={false}
-            side={THREE.DoubleSide}
-          />
+    <group ref={group} visible={false}>
+      <group ref={accArea}>
+        <mesh rotation-x={-Math.PI / 2} position-y={0.5} renderOrder={40}>
+          <circleGeometry args={[1, 48]} />
+          <meshBasicMaterial color="#3b82f6" transparent opacity={0.16} depthWrite={false} />
         </mesh>
-      )}
+        <mesh rotation-x={-Math.PI / 2} position-y={0.52} renderOrder={41}>
+          <ringGeometry args={[0.975, 1, 48]} />
+          <meshBasicMaterial color="#60a5fa" transparent opacity={0.55} depthWrite={false} />
+        </mesh>
+      </group>
+      <mesh
+        ref={cone}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position-y={0.6}
+        renderOrder={42}
+        visible={false}
+      >
+        <circleGeometry args={[1, 16, Math.PI / 2 - 0.5, 1.0]} />
+        <meshBasicMaterial
+          color="#60a5fa"
+          transparent
+          opacity={0.45}
+          depthWrite={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
       <mesh ref={halo} rotation-x={-Math.PI / 2} position-y={0.55} renderOrder={42}>
         <circleGeometry args={[3, 24]} />
         <meshBasicMaterial color="#3b82f6" transparent opacity={0.3} depthWrite={false} />

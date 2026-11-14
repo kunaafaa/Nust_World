@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { track } from '@vercel/analytics';
 import { landmarks } from '@/data/landmarks';
 import { PHOTOS } from '@/data/photos';
+import { startDirections } from '@/lib/navController';
 import { CAT_COLOR, CAT_LABEL } from '@/lib/colors';
 import { unproject } from '@/lib/geo';
 import type { Place } from '@/lib/types';
@@ -150,15 +151,11 @@ export function InfoCard() {
   const navigate = () => {
     if (!q) return;
     haptic(12);
-    useApp.getState().set({
-      to: {
-        id: q.id,
-        name: q.shortName,
-        pos: q.entrance ?? q.pos,
-        approx: !q.entrance || !!q.entranceApprox,
-      },
-      navOpen: true,
-      navSnap: 'peek',
+    startDirections({
+      id: q.id,
+      name: q.shortName,
+      pos: q.entrance ?? q.pos,
+      approx: !q.entrance || !!q.entranceApprox,
     });
   };
   if (!q) return null;

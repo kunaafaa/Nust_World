@@ -98,6 +98,13 @@ a:focus-visible {
   }
 }
 
+/* Walking-directions step rows: rows scrolled out of view skip style, layout and paint (cheap virtualisation for
+   long step lists). */
+.step-row {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 48px;
+}
+
 /* ───────── Cafe menu (place card) ─────────
    Colours, easing and durations arrive as --m-* variables set from scene/theme.ts (MENU_THEME);
    everything else is the card's own --ink / --ink-soft / --glass-* tokens. */

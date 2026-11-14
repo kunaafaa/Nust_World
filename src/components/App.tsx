@@ -29,6 +29,9 @@ import { LabelLayer } from './LabelLayer';
 import { Map2D, SceneBoundary, hasWebGL } from './Map2D';
 import { RoutePanel } from './RoutePanel';
 import { SearchBar } from './SearchBar';
+import { StatusChips, useNavAutoRecentre } from './StatusChips';
+import { camState } from '@/scene/camState';
+import { navRuntime } from '@/lib/navRuntime';
 
 const CampusScene = dynamic(() => import('@/scene/CampusScene'), { ssr: false });
 
@@ -55,6 +58,16 @@ export default function App() {
   );
   useRouter();
   useLocationLifecycle();
+  useNavAutoRecentre();
+  const nav = useApp((s) => s.nav);
+  // ?simulate (tests and field checks only): expose the camera snapshot and the navigation runtime read-only.
+  useEffect(() => {
+    if (!new URLSearchParams(location.search).has('simulate')) return;
+    Object.assign(window as unknown as Record<string, unknown>, {
+      __nwCam: camState,
+      __nwNav: navRuntime,
+    });
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -140,7 +153,7 @@ export default function App() {
   }, [selectedId, phase]);
 
   return (
-    <main className="fixed inset-0 overflow-hidden bg-[#0b1020]">
+    <main className="fixed inset-0 overflow-hidden bg-[#0b1020]" data-nav={nav}>
       {data &&
         (gl ? (
           <SceneBoundary data={data}>
@@ -163,6 +176,7 @@ export default function App() {
           >
             <SearchBar />
             <CategoryChips />
+            <StatusChips />
           </header>
           <Controls />
           <InfoCard />

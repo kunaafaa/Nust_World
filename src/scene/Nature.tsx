@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { useTier } from '@/lib/tier';
+import { NAV_KEEP_RADIUS_M, NAV_KEEP_SHARE, useNavLight, useTier } from '@/lib/tier';
 import { TREE_CAP, type TreeSpot, type TreeType } from '@/lib/scatter';
 import { groundY } from '@/lib/terrain';
 import type { CampusData } from '@/lib/types';
@@ -131,8 +131,17 @@ transformed.x += sw * (position.y + 1.0); transformed.z += sw * 0.6 * (position.
   }
   return m;
 };
-/** 1 = sway on, 0 = off (low quality). */
+/** 1 = sway on, 0 = off (low quality, reduced motion, or navigating on Medium/Low). */
 const swayUniform = { value: 1 };
+let swayAllowed = 1;
+let swayPaused = false;
+const applySway = () => {
+  swayUniform.value = swayPaused ? 0 : swayAllowed;
+};
+export function setSwayPaused(p: boolean) {
+  swayPaused = p;
+  applySway();
+}
 
 function TreeGroup({ type, spots }: { type: TreeType; spots: TreeSpot[] }) {
   const parts = PARTS[type];
@@ -185,15 +194,29 @@ export function Trees({ data }: { data: CampusData }) {
   const low = tier === 'low';
   const cap = TREE_CAP[tier];
   const all = sceneModel(data).trees;
+  // Navigating on Medium/Low: keep every tree within NAV_KEEP_RADIUS_M of the user, about 60 % of the rest.
+  // The centre is snapped to a 75 m cell, so the instances are rebuilt only when the user crosses a cell.
+  const navLight = useNavLight();
+  const cell = useApp((s) =>
+    navLight && s.userPos
+      ? `${Math.round(s.userPos[0] / 75)},${Math.round(s.userPos[1] / 75)}`
+      : null,
+  );
   const by = useMemo(() => {
-    const list = all.slice(0, cap);
+    let list = all.slice(0, cap);
+    if (cell) {
+      const [cx, cz] = cell.split(',').map((v) => Number(v) * 75);
+      const r2 = NAV_KEEP_RADIUS_M * NAV_KEEP_RADIUS_M;
+      const keep = Math.round(NAV_KEEP_SHARE * 5); // 3 in 5 outside the radius
+      list = list.filter((s, i) => (s.x - cx) ** 2 + (s.z - cz) ** 2 <= r2 || i % 5 < keep);
+    }
     return (['round', 'conifer', 'palm', 'shrub'] as TreeType[]).map(
       (t) => [t, list.filter((x) => x.type === t)] as const,
     );
-  }, [all, cap]);
+  }, [all, cap, cell]);
   useEffect(() => {
-    swayUniform.value =
-      low || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1;
+    swayAllowed = low || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1;
+    applySway();
   }, [low]);
   if (!show) return null;
   return (

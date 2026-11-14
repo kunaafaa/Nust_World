@@ -4,6 +4,21 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNo
 import { useApp } from '@/store/useApp';
 
 export type Snap = 'peek' | 'half' | 'full';
+
+/** Visible height (px) of the open bottom sheet, pushed every animation frame to imperative subscribers. */
+const sheetSubs = new Set<(h: number) => void>();
+let sheetH = 0;
+function publishSheetHeight(h: number) {
+  const r = Math.round(h);
+  if (r === sheetH) return;
+  sheetH = r;
+  for (const f of sheetSubs) f(r);
+}
+export function subscribeSheetHeight(f: (h: number) => void): () => void {
+  sheetSubs.add(f);
+  f(sheetH);
+  return () => sheetSubs.delete(f);
+}
 const ORDER: Snap[] = ['peek', 'half', 'full'];
 
 /** Viewport metrics. `side` = wide or short screens (desktop, phone landscape): the sheet becomes a left panel. */
@@ -128,21 +143,22 @@ export function BottomSheet({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, snap, vp.h, vp.w, peek]);
 
-  // Publish the visible height: CSS var for the control stack, store for the camera shift.
+  // Publish the visible height to subscribers (the control stack moves itself with a transform). It used to be a
+  // CSS variable on <html>, which restyled the whole document on every animation frame. The store gets the snap
+  // height only (for the camera shift), never per frame.
   useEffect(() => {
-    const root = document.documentElement;
+    if (vp.side) return;
     const off = y.on('change', (v) => {
-      const vis = Math.max(0, full - v);
-      if (open) root.style.setProperty('--sheet-h', `${Math.round(vis)}px`);
+      if (open) publishSheetHeight(Math.max(0, full - v));
     });
     return () => {
       off();
-      if (open) root.style.setProperty('--sheet-h', '0px');
+      if (open) publishSheetHeight(0);
     };
-  }, [y, full, open]);
+  }, [y, full, open, vp.side]);
   useEffect(() => {
     if (!open) {
-      document.documentElement.style.setProperty('--sheet-h', '0px');
+      publishSheetHeight(0);
       useApp.setState({ sheetPx: 0 });
     } else useApp.setState({ sheetPx: vp.side ? 0 : heights[snap] });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -251,6 +267,7 @@ export function BottomSheet({
       data-sheet
       style={{
         y,
+        willChange: 'transform', // transform only: the sheet never animates layout properties
         height: full,
         visibility: open ? 'visible' : 'hidden',
         ...(vp.side ? { width: Math.min(vp.w >= 768 ? 380 : 300, vp.w * 0.4), left: 12 } : {}),
