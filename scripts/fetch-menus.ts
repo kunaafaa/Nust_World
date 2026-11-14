@@ -5,7 +5,7 @@
  *   2. the cafe's public JS chunk referenced by the site's main bundle (what the page itself renders from)
  * Nothing is invented or rounded. No keys, no logins, no private URLs.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import {
   buildMenu,
@@ -104,6 +104,7 @@ async function main() {
     lines.push(`### ${m.cafeId}`, '', ...notes.map((n) => `- ${n}`), '');
   }
   if (!any) lines.push('Nothing unusual found by the automatic checks.', '');
+  lines.push(readFileSync(path.join(ROOT, 'scripts', 'menu-link-notes.md'), 'utf8'));
   lines.push(
     '## Fixed observations (about the source, not the data)',
     '',

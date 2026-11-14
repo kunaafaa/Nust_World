@@ -695,8 +695,9 @@ export const landmarks: Landmark[] = [
     lat: 33.639351,
     lng: 72.988117,
     entrance: null,
-    aliases: ['RETRO'],
+    aliases: ['RETRO', 'Retro', 'Retro Cafe'],
     description: 'Info coming soon',
+    menuId: 'retro',
     verified: false,
   },
   {

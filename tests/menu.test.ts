@@ -81,13 +81,14 @@ describe('shipped menus', () => {
 });
 
 describe('landmark links', () => {
-  it('C1/C2/C3 point at menus that exist, with searchable aliases', async () => {
+  it('C1/C2/C3/Retro point at menus that exist, with searchable aliases', async () => {
     const { landmarks } = await import('../src/data/landmarks');
     const { MENU_IDS } = await import('../src/lib/menu');
     const want: Record<number, [string, string]> = {
       208966900: ['c1', 'C1'],
       209650351: ['c2', 'C2'],
       1256889785: ['c3', 'C3'],
+      670478873: ['retro', 'Retro Cafe'],
     };
     for (const [osm, [menuId, alias]] of Object.entries(want)) {
       const lm = landmarks.find((l) => l.osmId === Number(osm))!;
@@ -96,6 +97,9 @@ describe('landmark links', () => {
       expect(lm.category).toBe('food');
       expect(MENU_IDS).toContain(menuId);
     }
-    expect(landmarks.filter((l) => l.menuId)).toHaveLength(3);
+    const retro = landmarks.find((l) => l.osmId === 670478873)!;
+    expect(retro.aliases).toEqual(expect.arrayContaining(['RETRO', 'Retro', 'Retro Cafe']));
+    expect(itemCount((await loadMenu('retro'))!)).toBe(46);
+    expect(landmarks.filter((l) => l.menuId)).toHaveLength(4);
   });
 });
