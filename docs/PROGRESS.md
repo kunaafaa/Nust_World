@@ -1,6 +1,21 @@
 # Progress
 
-Last updated 2026-11-07.
+Last updated 2026-11-15.
+
+## Overnight run (2026-11-15): resume here
+
+| Phase                            | Status           | Commit(s) | Notes                                                                                                   |
+| -------------------------------- | ---------------- | --------- | ------------------------------------------------------------------------------------------------------- |
+| 0A Navigation mode               | **Done**         | 021cd1e   | Gate green: lint, typecheck, 117 unit, build, 51/51 e2e (nav spec 27/27 over 3 repeats).                |
+| 4 Clean perf comparison          | **Done** (early) | c53d5cc   | Ran outside OneDrive, 3 alternating runs per build. Temp worktrees removed. `docs/perf/nav-after.md`.   |
+| 0A+ Camera gesture fixes         | **Done**         | 73cc409   | Found by the e2e suite: pinch dropped after a flight, late first-fix recentre, slow flights at low fps. |
+| 0B Razi/Rehmat reuse Ghazali     | **Done**         | (next)    | `data/hostel-placement.ts`; Rehmat = Ghazali 1, Razi 1 = Ghazali 2; 127 unit, 56/56 e2e.                |
+| 1 Reviews and food ratings       | Next             |           |                                                                                                         |
+| 2 Security hardening             | Not started      |           |                                                                                                         |
+| 3 Cleanup and readability        | Not started      |           |                                                                                                         |
+| Final gate + OVERNIGHT_REPORT.md | Not started      |           |                                                                                                         |
+
+Blockers: none yet. Things that need the owner go in `docs/NEEDS_FROM_ME.md`.
 
 ## Built (Master Prompt, phases 1 to 8)
 
@@ -64,10 +79,10 @@ Floor counts, entrances, building photos (NSTP), 10+ GPS control points, hostel 
 
 ## Cafe menus in the place card (2026-11-14)
 
-|       |       |
-| ----- | ----- |
-| Done  | Menus for C1 (216 items), C2 (112), C3 (129) read from nustcafe.vercel.app's public menu chunks (no API, no login) into `data/menus/*.json`; all 9 site cafes saved. `npm run menus` refreshes them (API first, page second). Landmarks C1/C2/C3 got `menuId` + aliases. Menu section in the place card: pill at peek, sticky chips and category headers, search (more than 25 items), "Menu coming soon" for other food places. Dynamic import per cafe, idle warm-up so the service worker caches the chunks, SW cache `v4-menus`. |
-| Tests | 100 vitest tests (28 new: menu parser, price format, filter, landmark links, sheet snap maths in `tests/sheet.test.ts`); 11 Playwright tests in `e2e/` (3 viewports, touch targets, font sizes, chip jump, search, no-menu cards, 3 visual baselines). |
-| Docs  | `docs/menu-notes.md` (generated), README "Cafe menus", screenshots in `docs/compare/menu/`. |
-| Found, not changed | First-visit tip overlay (`Extras.tsx` Onboarding), seen while testing landscape: (1) it dismisses with one tap on Skip and the card stays usable, so it does not trap the user; (2) in the side-panel layout it sits on top of the card, because `sheetPx` is 0 there and the tip only hides when it is above 0; (3) the Skip target is 28x32 px, under 44; (4) the "Next" button has no click handler, so only Skip moves past the tips. The menu screenshots set `nw-onboarded=1` instead of touching app code. |
-| Sheet tests | Done: `snapOffsets` and `chooseSnap` (portrait, small phone, side panel, safe-area, flick, close rules). Still not covered: drag gestures and the content-pull-down handoff in `BottomSheet` (needs a browser; the e2e suite only taps and drags the handle). |
+|                    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Done               | Menus for C1 (216 items), C2 (112), C3 (129) read from nustcafe.vercel.app's public menu chunks (no API, no login) into `data/menus/*.json`; all 9 site cafes saved. `npm run menus` refreshes them (API first, page second). Landmarks C1/C2/C3 got `menuId` + aliases. Menu section in the place card: pill at peek, sticky chips and category headers, search (more than 25 items), "Menu coming soon" for other food places. Dynamic import per cafe, idle warm-up so the service worker caches the chunks, SW cache `v4-menus`. |
+| Tests              | 100 vitest tests (28 new: menu parser, price format, filter, landmark links, sheet snap maths in `tests/sheet.test.ts`); 11 Playwright tests in `e2e/` (3 viewports, touch targets, font sizes, chip jump, search, no-menu cards, 3 visual baselines).                                                                                                                                                                                                                                                                               |
+| Docs               | `docs/menu-notes.md` (generated), README "Cafe menus", screenshots in `docs/compare/menu/`.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Found, not changed | First-visit tip overlay (`Extras.tsx` Onboarding), seen while testing landscape: (1) it dismisses with one tap on Skip and the card stays usable, so it does not trap the user; (2) in the side-panel layout it sits on top of the card, because `sheetPx` is 0 there and the tip only hides when it is above 0; (3) the Skip target is 28x32 px, under 44; (4) the "Next" button has no click handler, so only Skip moves past the tips. The menu screenshots set `nw-onboarded=1` instead of touching app code.                    |
+| Sheet tests        | Done: `snapOffsets` and `chooseSnap` (portrait, small phone, side panel, safe-area, flick, close rules). Still not covered: drag gestures and the content-pull-down handoff in `BottomSheet` (needs a browser; the e2e suite only taps and drags the handle).                                                                                                                                                                                                                                                                        |

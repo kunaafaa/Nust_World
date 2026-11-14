@@ -1,28 +1,30 @@
 # Hostels and areas that need an OSM outline
 
-Updated 2026-11-15. Hostel **areas** are no longer extruded: every hostel area polygon (Razi, Ghazali, Attar, Rumi,
-Fatima, Rumi hostels) is drawn only as a faint dashed boundary on the ground, with no fill and no height. Real building
-outlines come from OSM or, where the attribution covers it, from Overture (topo merge). Nothing is drawn from label
-positions. Trace the real outlines in OSM (`building=dormitory` or `building=yes` + `name=…`) and re-export.
+Generated 2026-11-14. Hostel **areas** are never extruded: every hostel area polygon is drawn only as a faint dashed
+boundary on the ground, with no fill and no height. Real building outlines come from OSM or, where the attribution
+covers it, from Overture (topo merge). Trace the real outlines in OSM (`building=dormitory` or `building=yes` +
+`name=…`) and re-export.
 
 - Attar Hostel (area way/209090692): 1 hostel outline(s) mapped inside; other hostels in this area may be unmapped
 - Ghazali Hostel (area way/209091615): 2 hostel outline(s) mapped inside; other hostels in this area may be unmapped
-- Razi Hostel Area (area way/209855481, centroid **33.63998, 72.98663**): no OSM building outline.
+- Razi Hostel Area (area way/209855481): no OSM building outline inside; area drawn as a dashed boundary
 
-### Rehmat Hostel and Razi 1 (inside Razi Hostel Area)
+### Template-based, approximate: Rehmat Hostel and Razi 1 (inside Razi Hostel Area, way/209855481)
 
-| Hostel        | OSM outline | Overture outline                                                                      | Shown in the app                    |
-| ------------- | ----------- | ------------------------------------------------------------------------------------- | ----------------------------------- |
-| Rehmat Hostel | none        | see below                                                                             | searchable; lands on the area place |
-| Razi 1        | none        | none allowed (the other outlines here come only from Google Open Buildings, excluded) | searchable; lands on the area place |
+Neither hostel has a building outline in OSM. Until someone traces them, each is drawn with an **exact copy of a Ghazali
+footprint** (no scaling, no simplification), rotated and placed by `data/hostel-placement.ts`. The shape, the position
+and the entrance side are **approximate**. The centroid below is where the copy sits in the app, not a survey.
 
-- One Overture outline exists in the area: `overture/a84586b2-ff5a-427d-9146-b3851e58ff82`, **1,704 m²**, upstream
-  Microsoft ML Buildings (ODbL), centroid about 33.64010, 72.98655. It is extruded exactly as given (4 floors x 3.0 m).
-- It is **left unnamed**: it sits 1.1 m from "Rehmat Hostel Parking" (way/1481128908) and 5.6 m from "Rahmat Sidewalk"
-  (way/1256471914), so it is probably Rehmat, but nothing in the data says so. Please confirm, then map it in OSM with
-  `name=Rehmat Hostel`.
-- Razi 1 has no outline from any allowed source. Map it in OSM.
-- No landmarks.ts entries exist for either hostel (there is no OSM object to give them an osmId).
+| Hostel        | Template                      | Centroid in the app (lat, lng) | Placement                                | Fit             |
+| ------------- | ----------------------------- | ------------------------------ | ---------------------------------------- | --------------- |
+| Rehmat Hostel | Ghazali 1 (OSM way/209090803) | **33.63999, 72.98660**         | -94° · mirror false · offset 4.7, 13.7 m | inside the area |
+| Razi 1        | Ghazali 2 (OSM way/209091616) | **33.63952, 72.98678**         | 85° · mirror false · offset 0, 0 m       | inside the area |
+
+- The one Overture outline in the area (`overture/a84586b2-ff5a-427d-9146-b3851e58ff82`, 1,704 m², Microsoft ML
+  Buildings, about 33.64010, 72.98655, next to Rehmat Hostel Parking) is **not drawn** any more; its centroid is
+  Rehmat's position anchor. It is probably the real Rehmat Hostel: a good starting point for tracing it in OSM.
+- To trace: map each building in OSM with `building=dormitory` + `name=Rehmat Hostel` / `name=Razi 1`, re-export,
+  then delete its entry from `data/hostel-placement.ts`.
 
 ## Buildings added from Overture (not in OSM): please map them
 
@@ -47,8 +49,6 @@ Overture release 2026-10-21.0. These are drawn as **provisional** (dashed outlin
 | 15  | 33.64262, 72.98953  | 344 m² | Microsoft ML Buildings | medium     |
 | 16  | 33.64842, 72.99114  | 108 m² | Microsoft ML Buildings | low        |
 
-Hostel outlines from Overture: 1 (Razi Hostel Area, 1,704 m², Microsoft ML Buildings). The group is incomplete: the
-other outlines in that area come only from Google Open Buildings and stay excluded. With the provisional block gone, a
-partial set no longer hides anything, so the one allowed outline is drawn.
+Hostel outlines from Overture: 1 (Razi Hostel). Outlines inside Razi Hostel Area are not drawn: the template placement above is used there.
 
 Left out by the override list (Google Open Buildings): 27 outlines (23 additions, 4 hostel footprints). Under 100 m² without an OSM counterpart: 130, not added.

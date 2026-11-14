@@ -21,6 +21,8 @@ import { buildGraph, largestComponent, nearestNode } from '../src/lib/routing';
 import { names, parseOsm, type RawOsm } from '../src/lib/osm';
 import type { Vec2 } from '../src/lib/types';
 import { applyTopoMerge, type TopoMergeFile, type TopoTreesFile } from '../src/lib/topoMerge';
+import { applyHostelPlacement } from '../src/lib/hostelPlacement';
+import { PLACEMENT_AREA } from '../data/hostel-placement';
 
 const tryJson = <T>(p: string): T | null => {
   try {
@@ -40,10 +42,12 @@ const topoStats = tryJson<{
     deferredHostels: { place: string }[];
   };
 }>('docs/.topo-merge-stats.json');
-const data = applyTopoMerge(
-  buildCampus({ osm, landmarks }),
-  merge,
-  tryJson<TopoTreesFile>('public/data/topo-trees.json'),
+const data = applyHostelPlacement(
+  applyTopoMerge(
+    buildCampus({ osm, landmarks }),
+    merge,
+    tryJson<TopoTreesFile>('public/data/topo-trees.json'),
+  ),
 );
 const feats = parseOsm(osm);
 const r = data.report;
@@ -314,10 +318,42 @@ Overture release ${merge.overtureRelease}. These are drawn as **provisional** (d
 |---|---|---|---|---|
 ${merge.additions.map((a, i) => `| ${i + 1} | ${row(a.ring)} | ${a.areaM2} m² | ${a.upstream} | ${a.confidence} |`).join('\n') || '| none | | | | |'}
 
-Hostel outlines from Overture: ${merge.hostels.length} (${[...new Set(merge.hostels.map((h) => h.placeName))].join(', ') || 'none'}).
+Hostel outlines from Overture: ${merge.hostels.length} (${[...new Set(merge.hostels.map((h) => h.placeName))].join(', ') || 'none'}). Outlines inside ${PLACEMENT_AREA.name} are not drawn: the template placement above is used there.
 ${topoStats?.buildings.deferredHostels.length ? `Deferred (not drawn): ${[...new Set(topoStats.buildings.deferredHostels.map((h) => h.place))].join(', ')}: some outlines in this area come only from an excluded upstream, so the provisional block stays.` : ''}
 
 Left out by the override list (${topoStats?.buildings.excludeUpstream.join(', ') || 'none'}): ${ex.length} outlines (${ex.filter((e) => e.kind === 'addition').length} additions, ${ex.filter((e) => e.kind.startsWith('hostel')).length} hostel footprints). Under 100 m² without an OSM counterpart: ${topoStats?.buildings.skippedUnder100 ?? 0}, not added.
+`;
+}
+
+// Hostels drawn with another hostel's footprint as a stand-in (data/hostel-placement.ts)
+function templateSection(): string {
+  const tp = data.places.filter((p) => p.placement);
+  if (!tp.length) return '';
+  const ll = (v: [number, number]) => {
+    const [lng, lat] = unproject(v[0], v[1]);
+    return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  };
+  const rows = tp.map((p) => {
+    const pl = p.placement!;
+    const v = pl.values;
+    return `| ${p.name} | ${pl.templateName} (OSM way/${pl.templateOsmId}) | **${ll(centroid(p.footprints[0]))}** | ${v.rotationDeg}° · mirror ${v.mirror} · offset ${v.offsetM.join(', ')} m | ${pl.outsideM > 0 ? `outside the area by ${pl.outsideM} m` : 'inside the area'} |`;
+  });
+  return `
+### Template-based, approximate: Rehmat Hostel and Razi 1 (inside Razi Hostel Area, way/${PLACEMENT_AREA.osmId})
+
+Neither hostel has a building outline in OSM. Until someone traces them, each is drawn with an **exact copy of a Ghazali
+footprint** (no scaling, no simplification), rotated and placed by \`data/hostel-placement.ts\`. The shape, the position
+and the entrance side are **approximate**. The centroid below is where the copy sits in the app, not a survey.
+
+| Hostel | Template | Centroid in the app (lat, lng) | Placement | Fit |
+|---|---|---|---|---|
+${rows.join('\n')}
+
+- The one Overture outline in the area (\`overture/a84586b2-ff5a-427d-9146-b3851e58ff82\`, 1,704 m², Microsoft ML
+  Buildings, about 33.64010, 72.98655, next to Rehmat Hostel Parking) is **not drawn** any more; its centroid is
+  Rehmat's position anchor. It is probably the real Rehmat Hostel: a good starting point for tracing it in OSM.
+- To trace: map each building in OSM with \`building=dormitory\` + \`name=Rehmat Hostel\` / \`name=Razi 1\`, re-export,
+  then delete its entry from \`data/hostel-placement.ts\`.
 `;
 }
 
@@ -325,14 +361,13 @@ writeFileSync(
   'docs/needs-osm-outline.md',
   `# Hostels and areas that need an OSM outline
 
-Generated ${today}. Provisional blocks are drawn with **dashed outlines** and a "provisional" tag. They are inset 3 m from
-the area polygon and use the hostel default height. They are NOT real building shapes. Trace the real outlines in OSM
-(\`building=dormitory\` or \`building=yes\` + \`name=…\`), re-export, and they replace the provisional blocks automatically.
+Generated ${today}. Hostel **areas** are never extruded: every hostel area polygon is drawn only as a faint dashed
+boundary on the ground, with no fill and no height. Real building outlines come from OSM or, where the attribution
+covers it, from Overture (topo merge). Trace the real outlines in OSM (\`building=dormitory\` or \`building=yes\` +
+\`name=…\`) and re-export.
 
 ${list(r.needsOutline)}
-
-Provisional blocks currently generated: ${r.provisional.map((p) => `${p.name} (${p.areaM2} m²)`).join(', ') || 'none'}.
-${topoSection()}`,
+${templateSection()}${topoSection()}`,
 );
 
 console.log({

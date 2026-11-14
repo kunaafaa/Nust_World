@@ -36,7 +36,9 @@ describe('topo merge: provenance and safety', () => {
   });
   it('every merged feature carries its source', () => {
     const added = merged.buildings.filter((b) => b.id.startsWith('topo:'));
-    expect(added.length).toBe(merge.additions.length + merge.hostels.length);
+    // hostel outlines in the placement area are left to data/hostel-placement.ts
+    const placedArea = merge.hostels.filter((h) => h.areaId === 'way/209855481').length;
+    expect(added.length).toBe(merge.additions.length + merge.hostels.length - placedArea);
     for (const b of added) {
       expect(b.provisional).toBe(true);
       expect(b.source).toMatch(/overture|topo/);
@@ -93,27 +95,13 @@ describe('topo merge: rules', () => {
     expect(ghazali.footprint).toEqual(original.footprint);
     expect(ghazali.flags?.[0]).toMatch(/differ by/);
   });
-  it('Razi Hostel Area: the one real outline (Overture / Microsoft ML) is extruded as is, 4 x 3.0 m', () => {
+  it('Razi Hostel Area: the Overture outline is left to the template placement (data/hostel-placement.ts)', () => {
     const h = merge.hostels.find((x) => x.areaId === 'way/209855481')!;
     expect(h.upstream).toBe('Microsoft ML Buildings');
-    expect(h.incomplete).toBe(true); // the rest exist only in the excluded Google upstream
-    const b = merged.buildings.find((x) => x.id === `topo:${h.id}`)!;
-    expect(b.footprint.length).toBe(h.ring.length); // never simplified
-    expect(b.height).toBeCloseTo(12);
-    expect(b.roofType).toBe('hostel-template');
-    expect(b.entrance).toBeDefined();
-    expect(b.flags).toContain('curved central block: height unverified');
+    // not drawn by the topo merge: Rehmat and Razi 1 are template copies placed in this area instead
+    expect(merged.buildings.some((x) => x.id === `topo:${h.id}`)).toBe(false);
     const p = merged.places.find((x) => x.id === 'prov-razi-hostel')!;
-    expect(p).toMatchObject({
-      levels: 4,
-      levelsEstimated: true,
-      entranceApprox: true,
-      flat: false,
-      verified: false,
-      category: 'hostel',
-    });
-    // the label sits on the building, not on the area centre
-    expect(pointInRing(p.pos, b.footprint)).toBe(true);
+    expect(p).toMatchObject({ flat: true, footprints: [], category: 'hostel' });
     // nothing else in the map is a hostel area block
     expect(merged.buildings.filter((x) => x.id.endsWith('-prov'))).toHaveLength(0);
   });

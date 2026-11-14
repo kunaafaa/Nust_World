@@ -79,9 +79,10 @@ describe('nust-full pipeline', () => {
     );
     const razi = data.places.find((p) => p.id === 'prov-razi-hostel')!;
     expect(razi).toMatchObject({ flat: true, footprints: [], category: 'hostel', verified: false });
+    // Rehmat Hostel and Razi 1 are separate (template-based) places now: tests/hostelPlacement.test.ts
     const al = razi.aliases.map((a) => a.toLowerCase());
-    for (const a of ['rehmat', 'rahmat', 'razi', 'razi 1', 'razi hostel', 'razi hostels'])
-      expect(al).toContain(a);
+    for (const a of ['razi hostel area', 'razi hostel']) expect(al).toContain(a);
+    expect(al).not.toContain('rehmat');
   });
   it('alias variants (Zakaria, Rahmat, Salon)', () => {
     const z = data.places.find((p) => /zakariya/i.test(p.name))!;

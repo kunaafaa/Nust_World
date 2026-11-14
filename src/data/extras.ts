@@ -9,18 +9,9 @@ export const EASTER_EGGS: { id: string; lonLat: [number, number]; label: string 
  * add real aliases to landmarks.ts to make them official.
  */
 export const SEARCH_HINTS: Record<number, string[]> = {
-  // Razi Hostel Area (way/209855481) holds Rehmat Hostel and Razi 1. Neither has a confirmed outline yet, so
-  // searching for either lands on the area (see docs/needs-osm-outline.md).
-  209855481: [
-    'Rehmat Hostel',
-    'Razi 1',
-    'rehmat',
-    'rahmat',
-    'razi',
-    'razi 1',
-    'razi hostel',
-    'razi hostels',
-  ],
+  // Razi Hostel Area (way/209855481): Rehmat Hostel and Razi 1 are their own places now (template-based, see
+  // data/hostel-placement.ts), with the rehmat / razi aliases in src/lib/hostelPlacement.ts.
+  209855481: ['Razi hostels area'],
 };
 
 /** Landmarks removed from the rendered map entirely (footprint, label and search). */

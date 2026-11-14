@@ -111,6 +111,11 @@ export const HOSTEL = {
   areaWidth: 0.3,
   accentRazi: '#d2b277',
   accentRehmat: '#d89b7e',
+  /** Area label ("Razi Hostel Area") when its buildings carry their own labels: muted, smaller, at the edge */
+  areaLabel: '#9aa3b2',
+  areaLabelOpacity: 0.8,
+  /** ?debug=1: entrance-side arrow on template-based hostels */
+  debugArrow: '#22d3ee',
 } as const;
 
 /** Accent for a named hostel building ("Razi 1", "Rehmat Hostel"); never for an area place. */

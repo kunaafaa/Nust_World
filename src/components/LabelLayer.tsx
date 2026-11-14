@@ -5,6 +5,7 @@ import { CAT_COLOR, CAT_PRIORITY } from '@/lib/colors';
 import { groundY } from '@/lib/terrain';
 import type { Place } from '@/lib/types';
 import { camState } from '@/scene/camState';
+import { HOSTEL } from '@/scene/theme';
 import { viewApi } from '@/scene/viewApi';
 import { useApp } from '@/store/useApp';
 
@@ -83,13 +84,14 @@ export function LabelLayer() {
           y = (-v.y * 0.5 + 0.5) * Hh;
         if (x < -40 || x > W + 40 || y < 40 || y > Hh - 40) continue;
         const label = st.debug ? `${p.shortName} · ${p.osmId ?? ''}` : p.shortName;
+        // an area label ("Razi Hostel Area") yields to the labels of the buildings inside it
         const score =
           (isSel ? 10000 : 0) +
           (catMatch ? 2000 : 0) +
           CAT_PRIORITY[p.category] * 10 +
           Math.min(p.resolvedHeight, 30) -
-          dist * 0;
-        cands.push({ p, x, y, w: 26 + label.length * 6.6, score });
+          (p.areaLabel && !isSel ? 600 : 0);
+        cands.push({ p, x, y, w: 26 + label.length * (p.areaLabel ? 5.6 : 6.6), score });
       }
       cands.sort((a, b) => b.score - a.score);
       const placed: { x: number; y: number; w: number }[] = [];
@@ -114,11 +116,18 @@ export function LabelLayer() {
           : c.p.shortName;
         n.style.display = 'flex';
         n.style.transform = `translate(${Math.round(x0)}px, ${Math.round(c.y - H)}px)`;
-        n.style.borderColor = CAT_COLOR[c.p.category];
+        const muted = !!c.p.areaLabel && !forced;
+        const col = muted ? HOSTEL.areaLabel : CAT_COLOR[c.p.category];
+        n.style.borderColor = col;
         n.style.zIndex = forced ? '5' : '1';
-        n.style.opacity = c.p.verified || !st.debug ? '1' : '0.92';
+        n.style.opacity = muted
+          ? String(HOSTEL.areaLabelOpacity)
+          : c.p.verified || !st.debug
+            ? '1'
+            : '0.92';
         n.dataset.sel = forced ? '1' : '0';
-        (n.firstChild as HTMLElement).style.background = CAT_COLOR[c.p.category];
+        n.dataset.area = muted ? '1' : '0';
+        (n.firstChild as HTMLElement).style.background = col;
         (n.lastChild as HTMLElement).textContent = label;
       }
       for (let i = used; i < POOL; i++) {
@@ -138,7 +147,7 @@ export function LabelLayer() {
           ref={(el) => {
             nodes.current[i] = el;
           }}
-          className="absolute left-0 top-0 hidden items-center gap-1.5 whitespace-nowrap rounded-full border-2 bg-white/92 px-2 text-[11px] font-bold leading-[20px] text-slate-800 shadow-md data-[sel='1']:scale-110 data-[sel='1']:bg-amber-200"
+          className="absolute left-0 top-0 hidden items-center gap-1.5 whitespace-nowrap rounded-full border-2 bg-white/92 px-2 text-[11px] font-bold leading-[20px] text-slate-800 shadow-md data-[area='1']:origin-left data-[area='1']:scale-[0.85] data-[area='1']:border data-[area='1']:font-semibold data-[area='1']:text-slate-600 data-[area='1']:shadow-none data-[sel='1']:scale-110 data-[sel='1']:bg-amber-200"
           style={{ height: 24, willChange: 'transform' }}
         >
           <span className="h-2.5 w-2.5 shrink-0 rounded-full" />

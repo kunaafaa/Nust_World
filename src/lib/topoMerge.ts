@@ -7,6 +7,7 @@
  * Terrain/canopy (CC BY 4.0, per the export licence files) feed the tree and terrain layers.
  */
 import overridesJson from '../../data/topo-overrides.json';
+import { PLACEMENT_AREA } from '../../data/hostel-placement';
 import { DEFAULT_FLOOR_HEIGHT_M, HEIGHTS } from '../data/heights';
 import { GLOBAL_OFFSET } from './config';
 import { nameVariants } from './aliases';
@@ -205,7 +206,8 @@ export function applyTopoMerge(
   if (layer('hostels')) {
     const groups = new Map<string, MergeHostel[]>();
     for (const h of merge.hostels) {
-      if (!ok(h.id, h.upstream)) {
+      // The area's hostels are drawn from data/hostel-placement.ts (template copies) instead.
+      if (h.areaId === PLACEMENT_AREA.id || !ok(h.id, h.upstream)) {
         rep.skipped++;
         continue;
       }

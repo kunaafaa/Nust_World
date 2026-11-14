@@ -9,6 +9,7 @@ import { Terrain, type TerrainFile } from '@/lib/terrain';
 import { applyBoundary } from '@/lib/cleanup';
 import { parseBoundary, parseContext, type ContextFile } from '@/lib/context';
 import { applyTopoMerge, type TopoMergeFile, type TopoTreesFile } from '@/lib/topoMerge';
+import { applyHostelPlacement } from '@/lib/hostelPlacement';
 import type { RawOsm } from '@/lib/osm';
 import { setTerrainOn, useApp } from '@/store/useApp';
 import { CategoryChips } from './CategoryChips';
@@ -102,7 +103,9 @@ export default function App() {
       // OSM first; the topo merge (Overture, trees) is applied on top and is entirely optional: if its files are
       // missing the map is exactly the OSM map.
       const base = buildCampus({ osm, landmarks });
-      const merged = applyTopoMerge(base, merge ?? null, trees ?? null);
+      const topo = applyTopoMerge(base, merge ?? null, trees ?? null);
+      // Hostels without an OSM outline are drawn from a template footprint (data/hostel-placement.ts).
+      const merged = { ...applyHostelPlacement(topo), topoReport: topo.topoReport };
       // Production edge: clip to the campus boundary (+30 m), clean polygons, and add the faded road context ring.
       const ring = bnd && params.get('edge') !== 'off' ? parseBoundary(bnd) : null; // ?edge=off = old hard-cut look, for comparison
       const { data: clipped } = applyBoundary(merged, ring);

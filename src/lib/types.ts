@@ -1,4 +1,5 @@
 import type { RoofType } from '@/data/heights';
+import type { HostelPlacement } from '../../data/hostel-placement';
 
 export type Category =
   | 'academic'
@@ -38,7 +39,7 @@ export interface LandmarkInput {
   verified: boolean;
 }
 
-export type PlaceSource = 'landmark' | 'osm' | 'extra' | 'provisional' | 'topo';
+export type PlaceSource = 'landmark' | 'osm' | 'extra' | 'provisional' | 'topo' | 'template';
 
 export interface Place {
   id: string;
@@ -81,6 +82,23 @@ export interface Place {
   entranceApprox?: boolean;
   /** Show a photo slot on the card (photos only from /public/photos, placeholder when missing) */
   photoSlot?: boolean;
+  /** An area place (e.g. "Razi Hostel Area") whose buildings have their own labels: small, muted label at its edge */
+  areaLabel?: boolean;
+  /** Drawn with another hostel's footprint as a stand-in (data/hostel-placement.ts): template-based, approximate */
+  placement?: PlacementInfo;
+}
+
+/** How a template-based hostel was placed: the editable values plus what the loader measured. */
+export interface PlacementInfo {
+  key: string;
+  values: HostelPlacement;
+  templateName: string;
+  templateOsmId: number;
+  /** unit vector (scene x, z) pointing out of the entrance side */
+  entranceDir: Vec2;
+  /** metres of footprint outside the area polygon (0 = fits) and where (scene x, z of the worst point) */
+  outsideM: number;
+  outsideAt?: Vec2;
 }
 
 export interface BuildingShape {

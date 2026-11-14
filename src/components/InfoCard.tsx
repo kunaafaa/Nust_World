@@ -55,6 +55,12 @@ export function heightJson(p: Place): string {
   );
 }
 
+/** The data/hostel-placement.ts entry of a template-based hostel, ready to paste back after editing. */
+export function placementJson(p: Place): string {
+  if (!p.placement) return '';
+  return `${JSON.stringify(p.placement.key)}: ${JSON.stringify(p.placement.values, null, 2)}`;
+}
+
 /** Closest other places (by straight line), for the "Nearby" list. */
 export function nearbyPlaces(p: Place, all: Place[], n = 4, maxM = 220) {
   return all
@@ -196,6 +202,7 @@ export function InfoCard() {
               <span className={hasMenu ? 'shrink-0' : 'truncate'}>
                 {sub}
                 {q.provisional ? ' · provisional shape' : ''}
+                {q.placement ? ' · approximate shape' : ''}
                 {!q.verified && !hasMenu ? ' · unverified' : ''}
               </span>
               {hasMenu && <MenuPill state={menu} />}
@@ -317,6 +324,32 @@ export function InfoCard() {
           <div>
             footprints: {q.footprints.length} · entrance: {q.entrance ? 'set' : 'none'}
           </div>
+          {q.placement && (
+            <div data-placement className="mt-1 border-t border-white/15 pt-1">
+              <div>template-based, approximate: {q.placement.templateName} footprint</div>
+              <div>
+                rotation {q.placement.values.rotationDeg}° · mirror{' '}
+                {String(q.placement.values.mirror)} · offset {q.placement.values.offsetM.join(', ')}{' '}
+                m
+              </div>
+              <div>
+                centre {q.placement.values.centre.join(', ')} ·{' '}
+                {q.placement.outsideM > 0
+                  ? `OUTSIDE the area by ${q.placement.outsideM} m`
+                  : 'inside the area'}
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard
+                    .writeText(placementJson(q) + ',')
+                    .then(() => useApp.getState().setToast('Placement JSON copied'));
+                }}
+                className="chunky mt-2 w-full bg-amber-300 px-3 py-2 text-xs font-extrabold text-slate-900"
+              >
+                Copy placement JSON
+              </button>
+            </div>
+          )}
           <button
             onClick={() => {
               navigator.clipboard

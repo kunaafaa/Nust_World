@@ -4,9 +4,10 @@ import { Html } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { buildGraph } from '@/lib/routing';
-import type { CampusData } from '@/lib/types';
+import type { CampusData, Place, Vec2 } from '@/lib/types';
 import { useApp } from '@/store/useApp';
 import { perf } from './perf';
+import { HOSTEL } from './theme';
 
 /** Statistics + cursor probes. Cheap enough to mount only when ?debug=1. */
 export function Probes() {
@@ -51,6 +52,38 @@ export function Probes() {
     }
   });
   return null;
+}
+
+/**
+ * Template-based hostel (data/hostel-placement.ts): an arrow pointing out of the entrance side, and the placement
+ * values, so a wrong orientation is easy to spot and correct ("mirror Rehmat", "rotate Razi 180").
+ */
+function EntranceArrow({ at, p }: { at: Vec2; p: Place }) {
+  const pl = p.placement!;
+  const [dx, dz] = pl.entranceDir;
+  const y = p.resolvedHeight + 1.5;
+  return (
+    <group position={[at[0], y, at[1]]} rotation={[0, -Math.atan2(dz, dx), 0]}>
+      <mesh position={[5, 0, 0]}>
+        <boxGeometry args={[10, 0.8, 0.8]} />
+        <meshBasicMaterial color={HOSTEL.debugArrow} depthTest={false} />
+      </mesh>
+      <mesh position={[11.5, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+        <coneGeometry args={[2.2, 4, 12]} />
+        <meshBasicMaterial color={HOSTEL.debugArrow} depthTest={false} />
+      </mesh>
+      <Html position={[14, 2, 0]} zIndexRange={[6, 0]} style={{ pointerEvents: 'none' }}>
+        <span
+          data-placement-debug={pl.key}
+          className="whitespace-nowrap rounded bg-black/75 px-1.5 py-0.5 font-mono text-[10px] text-cyan-200"
+        >
+          entrance · {pl.key} = {pl.templateName}, rot {pl.values.rotationDeg}°, mirror{' '}
+          {String(pl.values.mirror)}, offset [{pl.values.offsetM.join(', ')}]
+          {pl.outsideM > 0 ? `, OUTSIDE ${pl.outsideM} m` : ''}
+        </span>
+      </Html>
+    </group>
+  );
 }
 
 /** ?debug=1 overlay: footprints, label anchors, entrances, routing graph, building ids. */
@@ -120,6 +153,7 @@ export function DebugLayer({ data }: { data: CampusData }) {
               <meshBasicMaterial color="#06b6d4" />
             </mesh>
           )}
+          {p.placement && p.entrance && <EntranceArrow at={p.entrance} p={p} />}
         </group>
       ))}
       {ids.map((b) => {
