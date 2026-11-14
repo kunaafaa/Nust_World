@@ -132,7 +132,9 @@ export function handleFix(lon: number, lat: number, accuracy: number, t = Date.n
 
   if (wantCentre) {
     wantCentre = false;
-    cameraCommands.centerOn(pos[0], pos[1]);
+    // From the route preview on, the navigation controller owns the camera: a late first fix must not fly the
+    // view (that reset the user's pinch zoom to 170 m when GPS answered after Start).
+    if (useApp.getState().nav === 'IDLE') cameraCommands.centerOn(pos[0], pos[1]);
   }
   if (onFirstFix) {
     const cb = onFirstFix;

@@ -45,6 +45,11 @@ export const NAV_WALK_DIST = 170;
 const TOP = 0.02;
 const TILT = 0.85;
 const FOLLOW_LAMBDA = 6;
+/**
+ * Longest frame step the damping uses (s). Exponential damping is stable for any step, so this only guards against
+ * long hitches (tab switch); a tighter cap made flights 2 to 3x slower in real time on 5 to 10 fps devices.
+ */
+const MAX_STEP_S = 0.25;
 const RECENTRE_S = 0.4;
 
 /** Exposed so UI can request camera moves without touching three.js. */
@@ -67,7 +72,7 @@ const navAzimuth = (headingUp: boolean) =>
 
 export function CameraRig() {
   const controls = useRef<OrbitControlsImpl>(null);
-  const { camera, gl, raycaster } = useThree();
+  const { camera, gl, raycaster, events } = useThree();
   const anim = useRef<Anim | null>(null);
   const phase = useApp((s) => s.phase);
   const topDown = useApp((s) => s.topDown);
@@ -223,7 +228,9 @@ export function CameraRig() {
   // Navigation gestures: a one-finger drag (pan) or a two-finger twist (rotate) leaves NAV_FOLLOW for NAV_FREE.
   // A pinch or the mouse wheel only zooms and keeps following. Every touch resets the auto re-centre timer.
   useEffect(() => {
-    const el = gl.domElement;
+    // The same element OrbitControls listens on (drei: events.connected, else the canvas). Listening on the canvas
+    // alone missed gestures that start on a DOM overlay drawn over it (drei <Html>), which OrbitControls still gets.
+    const el = (events.connected as HTMLElement | null | undefined) ?? gl.domElement;
     const pts = new Map<number, { x0: number; y0: number; x: number; y: number }>();
     let twist0: number | null = null;
     let decided = false;
@@ -235,7 +242,7 @@ export function CameraRig() {
     // pinch that starts during the 400 ms navigation flight would be ignored. Runs in the capture phase, before
     // OrbitControls' own listener on the same element sees the event.
     const takeOver = () => {
-      if (!anim.current || useApp.getState().phase !== 'explore') return;
+      if (!anim.current || !isNavigating(useApp.getState().nav)) return;
       anim.current = null;
       if (controls.current) controls.current.enabled = true;
     };
@@ -292,7 +299,7 @@ export function CameraRig() {
       el.removeEventListener('pointercancel', up);
       el.removeEventListener('wheel', wheel, first);
     };
-  }, [gl]);
+  }, [gl, events.connected]);
 
   // Double tap / double click zoom-in at the tapped ground point.
   useEffect(() => {
@@ -349,7 +356,7 @@ export function CameraRig() {
         a.to.tz = navRuntime.shown![1];
       }
       const p = readPose();
-      const k = damp(a.lambda, Math.min(dt, 0.1));
+      const k = damp(a.lambda, Math.min(dt, MAX_STEP_S));
       const next = {
         tx: p.tx + (a.to.tx - p.tx) * k,
         tz: p.tz + (a.to.tz - p.tz) * k,
@@ -366,11 +373,14 @@ export function CameraRig() {
       if (done) {
         applyPose(a.to);
         anim.current = null;
+        // hand the camera back now, not on the next frame: with on-demand rendering (or a slow phone) the next
+        // frame can be hundreds of ms away, and OrbitControls drops a gesture that starts while it is disabled
+        c.enabled = true;
       }
     } else if (following) {
       // NAV_FOLLOW: centre on the dot, top-down (or the user's 3D choice), north/heading up. Zoom is the user's.
       const p = readPose();
-      const k = damp(FOLLOW_LAMBDA, Math.min(dt, 0.1));
+      const k = damp(FOLLOW_LAMBDA, Math.min(dt, MAX_STEP_S));
       const goalPolar = st.topDown ? TOP : TILT;
       const goalAz = wrapAz(navAzimuth(st.headingUp), p.az);
       const [sx, sz] = navRuntime.shown!;
@@ -417,7 +427,7 @@ export function CameraRig() {
     // Locate "follow" outside navigation: glide the view with the blue dot (read from the ref, not React state).
     const dotP = navRuntime.shown;
     if (st.locate === 'follow' && dotP && !anim.current && !isNavigating(st.nav)) {
-      const k = damp(3, Math.min(dt, 0.1));
+      const k = damp(3, Math.min(dt, MAX_STEP_S));
       const dx = (dotP[0] - c.target.x) * k,
         dz = (dotP[1] - c.target.z) * k;
       c.target.x += dx;

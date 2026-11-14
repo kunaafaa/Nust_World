@@ -150,7 +150,15 @@ test.describe('visual regression (390x844)', () => {
         content: '*{caret-color:transparent!important} canvas{visibility:hidden!important}',
       });
       await page.waitForTimeout(300);
-      const box = (await page.locator(SHEET).boundingBox())!;
+      // wait until the sheet has stopped moving (under load its spring can still be settling here)
+      let box = (await page.locator(SHEET).boundingBox())!;
+      for (let i = 0; i < 20; i++) {
+        await page.waitForTimeout(150);
+        const next = (await page.locator(SHEET).boundingBox())!;
+        const still = next.y === box.y && next.height === box.height;
+        box = next;
+        if (still) break;
+      }
       const vp = page.viewportSize()!;
       const y = Math.max(0, Math.round(box.y));
       await expect(page).toHaveScreenshot(`menu-${snap}.png`, {
