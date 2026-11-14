@@ -1,0 +1,893 @@
+{
+  "cafeId": "c3",
+  "name": "C3 Cafe",
+  "currency": "PKR",
+  "updatedAt": "2026-11-14T16:37:48.776Z",
+  "source": "https://nustcafe.vercel.app/assets/c3-BFhnERky.js",
+  "categories": [
+    {
+      "name": "RollParatha",
+      "items": [
+        {
+          "id": "1",
+          "name": "Chicken Tikka Boti Roll Paratha Normal",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "2",
+          "name": "Chicken Tikka Boti Roll Paratha Jumbo",
+          "price": 320,
+          "available": true
+        },
+        {
+          "id": "3",
+          "name": "Chicken Tikka Boti Cheese Roll Paratha Normal",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "4",
+          "name": "Chicken Tikka Boti Cheese Roll Paratha Jumbo",
+          "price": 360,
+          "available": true
+        },
+        {
+          "id": "5",
+          "name": "Chicken Malai Boti Roll Paratha Normal",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "6",
+          "name": "Chicken Malai Boti Roll Paratha Jumbo",
+          "price": 360,
+          "available": true
+        },
+        {
+          "id": "7",
+          "name": "Chicken Seekh Kabab Roll Paratha Normal",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "8",
+          "name": "Chicken Seekh Kabab Roll Paratha Jumbo",
+          "price": 320,
+          "available": true
+        },
+        {
+          "id": "9",
+          "name": "Chicken Cheese Seekh Kabab Roll Normal",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "10",
+          "name": "Chicken Cheese Seekh Kabab Roll Jumbo",
+          "price": 360,
+          "available": true
+        },
+        {
+          "id": "48",
+          "name": "Zinger Roll Paratha",
+          "price": 350,
+          "available": true
+        },
+        {
+          "id": "49",
+          "name": "Chicken Roll Paratha",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "BBQ",
+      "items": [
+        {
+          "id": "11",
+          "name": "Chicken Tikka Leg Piece",
+          "price": 380,
+          "available": true
+        },
+        {
+          "id": "12",
+          "name": "Chicken Boti Boneless 6pcs",
+          "price": 380,
+          "available": true
+        },
+        {
+          "id": "13",
+          "name": "Chicken Boti Boneless 12pcs",
+          "price": 750,
+          "available": true
+        },
+        {
+          "id": "14",
+          "name": "Chicken Malai Boti Boneless 6pcs",
+          "price": 460,
+          "available": true
+        },
+        {
+          "id": "15",
+          "name": "Chicken Malai Boti Boneless 12pcs",
+          "price": 900,
+          "available": true
+        },
+        {
+          "id": "16",
+          "name": "Seekh Kabab 3pcs",
+          "price": 400,
+          "available": true
+        },
+        {
+          "id": "17",
+          "name": "Seekh Kabab 6pcs",
+          "price": 800,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Salan",
+      "items": [
+        {
+          "id": "18",
+          "name": "Chicken Tikka Boti Karahi Half",
+          "price": 1000,
+          "available": true
+        },
+        {
+          "id": "19",
+          "name": "Chicken Tikka Boti Karahi Full",
+          "price": 1800,
+          "available": true
+        },
+        {
+          "id": "20",
+          "name": "Chicken Tikka Boti Karahi Boneless Half",
+          "price": 1300,
+          "available": true
+        },
+        {
+          "id": "21",
+          "name": "Chicken Tikka Boti Karahi Boneless Full",
+          "price": 2200,
+          "available": true
+        },
+        {
+          "id": "22",
+          "name": "Chicken White Karahi Bone Half",
+          "price": 1200,
+          "available": true
+        },
+        {
+          "id": "23",
+          "name": "Chicken White Karahi Bone Full",
+          "price": 2000,
+          "available": true
+        },
+        {
+          "id": "24",
+          "name": "Chicken White Karahi Boneless Half",
+          "price": 1400,
+          "available": true
+        },
+        {
+          "id": "25",
+          "name": "Chicken White Karahi Boneless Full",
+          "price": 2500,
+          "available": true
+        },
+        {
+          "id": "26",
+          "name": "Chicken Seekh Kabab Karahi Half",
+          "price": 1000,
+          "available": true
+        },
+        {
+          "id": "27",
+          "name": "Chicken Seekh Kabab Karahi Full",
+          "price": 1800,
+          "available": true
+        },
+        {
+          "id": "32",
+          "name": "Chicken Qorma",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "33",
+          "name": "Chicken Haleem",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "34",
+          "name": "Chicken White Qorma",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "35",
+          "name": "Daal Vegetable",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Rice",
+      "items": [
+        {
+          "id": "28",
+          "name": "Chicken Biryani",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "29",
+          "name": "Chicken Pulao",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "30",
+          "name": "Chicken Fried Rice",
+          "price": 400,
+          "available": true
+        },
+        {
+          "id": "31",
+          "name": "Egg Fried Rice",
+          "price": 240,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Chinese",
+      "items": [
+        {
+          "id": "36",
+          "name": "Chicken Corn Soup",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "39",
+          "name": "Chicken Chow Mein",
+          "price": 300,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Pasta",
+      "items": [
+        {
+          "id": "37",
+          "name": "Crunchy Pasta",
+          "price": 600,
+          "available": true
+        },
+        {
+          "id": "38",
+          "name": "BBQ Spaghetti Pasta",
+          "price": 600,
+          "available": true
+        },
+        {
+          "id": "40",
+          "name": "Alfredo Pasta",
+          "price": 600,
+          "available": true
+        },
+        {
+          "id": "41",
+          "name": "Pollo Romano",
+          "price": 600,
+          "available": true
+        },
+        {
+          "id": "42",
+          "name": "Mac n Cheese Pasta",
+          "price": 600,
+          "available": true
+        },
+        {
+          "id": "43",
+          "name": "Lasagna",
+          "price": 600,
+          "available": true
+        },
+        {
+          "id": "44",
+          "name": "Penne Pasta",
+          "price": 600,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Sandwich",
+      "items": [
+        {
+          "id": "45",
+          "name": "Panini Sandwich",
+          "price": 400,
+          "available": true
+        },
+        {
+          "id": "46",
+          "name": "Club Sandwich",
+          "price": 400,
+          "available": true
+        },
+        {
+          "id": "47",
+          "name": "Chicken Sandwich",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Shawarma",
+      "items": [
+        {
+          "id": "50",
+          "name": "Authentic Shawarma",
+          "price": 280,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Roll",
+      "items": [
+        {
+          "id": "51",
+          "name": "Special Wrap",
+          "price": 350,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Burger",
+      "items": [
+        {
+          "id": "52",
+          "name": "Zinger Burger",
+          "price": 380,
+          "available": true
+        },
+        {
+          "id": "53",
+          "name": "Zinger Burger With Fries",
+          "price": 470,
+          "available": true
+        },
+        {
+          "id": "54",
+          "name": "Zinger Burger with Cheese",
+          "price": 450,
+          "available": true
+        },
+        {
+          "id": "55",
+          "name": "Crispy Burger",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "56",
+          "name": "Fillet Burger",
+          "price": 400,
+          "available": true
+        },
+        {
+          "id": "57",
+          "name": "Grill Burger With Fries",
+          "price": 550,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Wings",
+      "items": [
+        {
+          "id": "58",
+          "name": "BBQ Wings",
+          "price": 700,
+          "available": true
+        },
+        {
+          "id": "59",
+          "name": "Honey Wings",
+          "price": 700,
+          "available": true
+        },
+        {
+          "id": "60",
+          "name": "Peri Peri Wings",
+          "price": 700,
+          "available": true
+        },
+        {
+          "id": "61",
+          "name": "Chicken Fried Wings",
+          "price": 580,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Fries",
+      "items": [
+        {
+          "id": "62",
+          "name": "Masala Fries",
+          "price": 130,
+          "available": true
+        },
+        {
+          "id": "63",
+          "name": "Garlic Mayo Fries",
+          "price": 160,
+          "available": true
+        },
+        {
+          "id": "64",
+          "name": "BBQ Fries",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "65",
+          "name": "Loaded Fries",
+          "price": 350,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Pizza",
+      "items": [
+        {
+          "id": "66",
+          "name": "Mini Pizza",
+          "price": 500,
+          "available": true
+        },
+        {
+          "id": "67",
+          "name": "Small Pizza",
+          "price": 800,
+          "available": true
+        },
+        {
+          "id": "68",
+          "name": "Medium Pizza",
+          "price": 1300,
+          "available": true
+        },
+        {
+          "id": "69",
+          "name": "Large Pizza",
+          "price": 1400,
+          "available": true
+        },
+        {
+          "id": "70",
+          "name": "Family Pizza",
+          "price": 1800,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Extra",
+      "items": [
+        {
+          "id": "71",
+          "name": "Extra Cheese",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "IceCream",
+      "items": [
+        {
+          "id": "72",
+          "name": "Cone Ice Cream Large",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "73",
+          "name": "Cone Ice Cream Medium",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "74",
+          "name": "Cone Ice Cream Small",
+          "price": 80,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "HotDrink",
+      "items": [
+        {
+          "id": "75",
+          "name": "Cappuccino Large",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "76",
+          "name": "Cappuccino Medium",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "77",
+          "name": "Hot Chocolate",
+          "price": 240,
+          "available": true
+        },
+        {
+          "id": "78",
+          "name": "Latte Coffee",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "79",
+          "name": "Black Coffee",
+          "price": 260,
+          "available": true
+        },
+        {
+          "id": "81",
+          "name": "Green Tea",
+          "price": 60,
+          "available": true
+        },
+        {
+          "id": "82",
+          "name": "Cardamom Tea",
+          "price": 120,
+          "available": true
+        },
+        {
+          "id": "83",
+          "name": "Pink Tea",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "84",
+          "name": "Tea Bag Chai",
+          "price": 80,
+          "available": true
+        },
+        {
+          "id": "114",
+          "name": "Doodh Patti",
+          "price": 80,
+          "available": true
+        },
+        {
+          "id": "118",
+          "name": "Shakar Tea",
+          "price": 100,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Shakes",
+      "items": [
+        {
+          "id": "80",
+          "name": "Cold Coffee with Ice Cream",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "85",
+          "name": "Vanilla Ice Cream Shake",
+          "price": 270,
+          "available": true
+        },
+        {
+          "id": "86",
+          "name": "Chocolate Ice Cream Shake",
+          "price": 270,
+          "available": true
+        },
+        {
+          "id": "87",
+          "name": "Special Oreo Ice Cream Shake",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "101",
+          "name": "Apple Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "102",
+          "name": "Banana Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "103",
+          "name": "Apple Banana Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "104",
+          "name": "Oreo Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "105",
+          "name": "Oreo Banana Shake",
+          "price": 220,
+          "available": true
+        },
+        {
+          "id": "106",
+          "name": "Dates Shake",
+          "price": 230,
+          "available": true
+        },
+        {
+          "id": "107",
+          "name": "Peach Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "108",
+          "name": "Banana Dates Shake",
+          "price": 220,
+          "available": true
+        },
+        {
+          "id": "109",
+          "name": "Chocolate Shake",
+          "price": 210,
+          "available": true
+        },
+        {
+          "id": "110",
+          "name": "Mixed Fruit Shake",
+          "price": 220,
+          "available": true
+        },
+        {
+          "id": "112",
+          "name": "Cold Coffee",
+          "price": 210,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Juices",
+      "items": [
+        {
+          "id": "88",
+          "name": "Slush",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "89",
+          "name": "Apple Juice",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "90",
+          "name": "Orange Juice",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "91",
+          "name": "Grapefruit Juice",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "92",
+          "name": "Sweet Lime Mitha Juice",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "93",
+          "name": "Pomegranate Juice",
+          "price": 350,
+          "available": true
+        },
+        {
+          "id": "94",
+          "name": "Mosambi Juice",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "96",
+          "name": "Peach Juice",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "98",
+          "name": "Carrot Juice",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "99",
+          "name": "ABC Juice",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "100",
+          "name": "OBC Juice",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Soda",
+      "items": [
+        {
+          "id": "95",
+          "name": "Mint Margarita",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "97",
+          "name": "Lemon Soda",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Dessert",
+      "items": [
+        {
+          "id": "111",
+          "name": "Mixed Fruit Box",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Bread",
+      "items": [
+        {
+          "id": "113",
+          "name": "Paratha",
+          "price": 70,
+          "available": true
+        },
+        {
+          "id": "119",
+          "name": "Quetta Paratha",
+          "price": 70,
+          "available": true
+        },
+        {
+          "id": "120",
+          "name": "Chicken Paratha",
+          "price": 240,
+          "available": true
+        },
+        {
+          "id": "121",
+          "name": "Chicken Cheese Paratha",
+          "price": 290,
+          "available": true
+        },
+        {
+          "id": "122",
+          "name": "Anda Paratha",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "123",
+          "name": "Omelet Paratha",
+          "price": 160,
+          "available": true
+        },
+        {
+          "id": "124",
+          "name": "Aloo Paratha",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "125",
+          "name": "Aloo Achari Paratha",
+          "price": 190,
+          "available": true
+        },
+        {
+          "id": "126",
+          "name": "Aloo Achari Cheese Paratha",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "127",
+          "name": "Aloo Chicken Cheese Paratha",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "128",
+          "name": "Malai Paratha",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "129",
+          "name": "Meetha Paratha",
+          "price": 100,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Sides",
+      "items": [
+        {
+          "id": "115",
+          "name": "Egg Fried",
+          "price": 60,
+          "available": true
+        },
+        {
+          "id": "116",
+          "name": "Omelet",
+          "price": 80,
+          "available": true
+        },
+        {
+          "id": "117",
+          "name": "Cheese Omelet",
+          "price": 120,
+          "available": true
+        }
+      ]
+    }
+  ]
+}

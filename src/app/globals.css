@@ -97,3 +97,244 @@ a:focus-visible {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ───────── Cafe menu (place card) ─────────
+   Colours, easing and durations arrive as --m-* variables set from scene/theme.ts (MENU_THEME);
+   everything else is the card's own --ink / --ink-soft / --glass-* tokens. */
+.menu {
+  margin-top: 12px;
+}
+.menu-rule {
+  display: block;
+  height: 0;
+  margin: 3px 0 4px;
+  border-top: 1.5px solid var(--m-accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--m-accent) 60%, transparent);
+  opacity: 0.85;
+}
+.menu-pill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border: 1.5px solid color-mix(in srgb, var(--m-accent) 70%, transparent);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--m-accent);
+}
+.menu-chips {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--m-chip-h);
+  margin: 0 -16px;
+  padding: 0 16px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  background: var(--glass-solid);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.menu-chip {
+  position: relative;
+  flex: none;
+  height: 36px;
+  padding: 0 14px;
+  border: 1.5px solid color-mix(in srgb, var(--m-accent) 55%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background var(--m-dur) var(--m-ease),
+    box-shadow var(--m-dur) var(--m-ease),
+    border-color var(--m-dur) var(--m-ease),
+    color var(--m-dur) var(--m-ease);
+}
+.menu-chip::after {
+  content: '';
+  position: absolute;
+  inset: -4px -2px; /* 44 px touch target */
+}
+.menu-chip-on {
+  border-color: var(--m-accent);
+  background: color-mix(in srgb, var(--m-accent) 16%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--m-accent) 40%, transparent);
+  color: var(--ink);
+}
+.menu-search {
+  position: relative;
+  margin: 4px 0 2px;
+}
+.menu-search input {
+  width: 100%;
+  height: 44px;
+  padding: 0 44px 0 16px;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  transition:
+    border-color var(--m-dur) var(--m-ease),
+    box-shadow var(--m-dur) var(--m-ease);
+}
+.menu-search input::placeholder {
+  color: var(--ink-soft);
+}
+.menu-search input:focus {
+  border-color: var(--m-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--m-accent) 40%, transparent);
+}
+.menu-search-x {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.menu-cat {
+  position: sticky;
+  top: var(--m-chip-h);
+  z-index: 2;
+  margin: 0 -16px;
+  padding: 10px 16px 6px;
+  border-bottom: 1px solid color-mix(in srgb, var(--m-accent) 35%, transparent);
+  background: var(--glass-solid);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.menu-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.menu-row-off {
+  opacity: 0.55;
+}
+.menu-name {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.menu-desc {
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.menu-price {
+  flex: none;
+  min-width: 3ch;
+  color: var(--m-accent);
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+.menu-variants,
+.menu-tag {
+  display: inline-block;
+  margin: 4px 6px 0 0;
+  padding: 0 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.menu-variants {
+  border-color: color-mix(in srgb, var(--m-accent) 55%, transparent);
+  color: var(--m-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.menu-tag {
+  color: var(--ink-soft);
+}
+.menu-updated,
+.menu-soon,
+.menu-empty {
+  padding: 10px 0 4px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.menu-updated {
+  margin-top: 8px;
+  text-align: center;
+}
+.menu-soon,
+.menu-empty {
+  font-style: italic;
+}
+/* skeleton: dim outlined bars with a soft pulse (no spinners) */
+.menu-skel {
+  display: block;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  animation: menu-pulse var(--m-pulse) var(--m-ease) infinite alternate;
+}
+.menu-pill.menu-skel {
+  width: 112px;
+  border-color: var(--glass-border);
+}
+.menu-skel-chips {
+  display: flex;
+  gap: 8px;
+  height: var(--m-chip-h);
+  align-items: center;
+}
+.menu-skel-chip {
+  height: 36px;
+}
+.menu-skel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 56px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.menu-skel-bar {
+  height: 14px;
+}
+.menu-skel-price {
+  width: 36px;
+  height: 14px;
+}
+@keyframes menu-pulse {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-skel {
+    animation: none;
+    opacity: 0.7;
+  }
+}

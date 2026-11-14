@@ -196,14 +196,21 @@ export function BottomSheet({
     const el = body.current;
     if (!el) return;
     let startY = 0,
+      startX = 0,
       active = false;
     const ts = (e: TouchEvent) => {
       startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
       active = false;
     };
     const tm = (e: TouchEvent) => {
       const cy = e.touches[0].clientY;
-      if (!active && cy - startY > 6 && el.scrollTop <= 0) {
+      if (
+        !active &&
+        cy - startY > 6 &&
+        cy - startY > Math.abs(e.touches[0].clientX - startX) &&
+        el.scrollTop <= 0
+      ) {
         active = true;
         begin(cy);
       }
@@ -267,6 +274,7 @@ export function BottomSheet({
       </div>
       <div
         ref={body}
+        data-sheet-body
         className="min-h-0 flex-1 overflow-y-auto px-4"
         style={{
           overscrollBehavior: 'contain',

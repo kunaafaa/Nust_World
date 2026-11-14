@@ -17,6 +17,8 @@ export interface Landmark {
   entrance?: { lat: number; lng: number } | null;
   aliases: string[];
   description: string;
+  /** Key of data/menus/<menuId>.json (cafes only) */
+  menuId?: string;
   verified: boolean;
 }
 
@@ -285,8 +287,9 @@ export const landmarks: Landmark[] = [
     lat: 33.643003,
     lng: 72.988117,
     entrance: null,
-    aliases: ['Concordia 2 (C2)'],
+    aliases: ['Concordia 2 (C2)', 'C2', 'C2 Cafe'],
     description: 'Info coming soon',
+    menuId: 'c2',
     verified: false,
   },
   {
@@ -298,8 +301,9 @@ export const landmarks: Landmark[] = [
     lat: 33.646496,
     lng: 72.990236,
     entrance: null,
-    aliases: ['Concordia-1'],
+    aliases: ['Concordia-1', 'C1', 'C1 Cafe'],
     description: 'Info coming soon',
+    menuId: 'c1',
     verified: false,
   },
   {
@@ -900,8 +904,9 @@ export const landmarks: Landmark[] = [
     lat: 33.641879,
     lng: 72.993942,
     entrance: null,
-    aliases: ['C-3', 'South Edge Café'],
+    aliases: ['C-3', 'C3', 'C3 Cafe', 'South Edge Café'],
     description: 'Info coming soon',
+    menuId: 'c3',
     verified: false,
   },
   {

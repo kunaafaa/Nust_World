@@ -31,6 +31,8 @@ export interface LandmarkInput {
   entrance?: { lat: number; lng: number } | null;
   aliases: string[];
   description: string;
+  /** Key of data/menus/<menuId>.json (cafes only) */
+  menuId?: string;
   verified: boolean;
 }
 
@@ -49,6 +51,8 @@ export interface Place {
   category: Category;
   aliases: string[];
   description: string;
+  /** Key of data/menus/<menuId>.json (cafes only) */
+  menuId?: string;
   verified: boolean;
   offCampus: boolean;
   levels?: number;

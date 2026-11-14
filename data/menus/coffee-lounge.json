@@ -1,0 +1,819 @@
+{
+  "cafeId": "coffee-lounge",
+  "name": "Coffee Lounge",
+  "currency": "PKR",
+  "updatedAt": "2026-11-14T16:37:48.776Z",
+  "source": "https://nustcafe.vercel.app/assets/coffee-lounge-BlmRQGk4.js",
+  "categories": [
+    {
+      "name": "Chinese",
+      "items": [
+        {
+          "id": "1",
+          "name": "Chicken Chili Dry",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "2",
+          "name": "Dragon Chicken",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "3",
+          "name": "Kung Pao Chicken",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "4",
+          "name": "Hot Garlic Chicken",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "5",
+          "name": "Schezwan Chicken",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "6",
+          "name": "Mongolian Chicken",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "10",
+          "name": "Separate Chowmein",
+          "price": 300,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Combo",
+      "items": [
+        {
+          "id": "7",
+          "name": "Gravy With Rice",
+          "price": 540,
+          "available": true
+        },
+        {
+          "id": "8",
+          "name": "Gravy With Chowmein",
+          "price": 580,
+          "available": true
+        },
+        {
+          "id": "9",
+          "name": "Gravy With Combo",
+          "price": 620,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "RollParatha",
+      "items": [
+        {
+          "id": "11",
+          "name": "Chicken Roll Paratha",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "12",
+          "name": "Chicken Cheese Roll Paratha",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "13",
+          "name": "Zinger Roll",
+          "price": 350,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Pizza",
+      "items": [
+        {
+          "id": "14",
+          "name": "Small 7 Inches Pizza",
+          "price": 500,
+          "available": true
+        },
+        {
+          "id": "15",
+          "name": "Medium 11 Inches Pizza",
+          "price": 1000,
+          "available": true
+        },
+        {
+          "id": "16",
+          "name": "Large 13 Inches Pizza",
+          "price": 1300,
+          "available": true
+        },
+        {
+          "id": "17",
+          "name": "Xl 15 Inches Pizza",
+          "price": 1500,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Rice",
+      "items": [
+        {
+          "id": "18",
+          "name": "Chicken Biryani",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "19",
+          "name": "Biryani With Chicken",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "20",
+          "name": "Chicken Pulao",
+          "price": 280,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Salan",
+      "items": [
+        {
+          "id": "21",
+          "name": "Beef Vegetable Chanay Full",
+          "price": 900,
+          "available": true
+        },
+        {
+          "id": "22",
+          "name": "Chicken Haleem",
+          "price": 900,
+          "available": true
+        },
+        {
+          "id": "23",
+          "name": "Chicken Karahi 850 Gms",
+          "price": 600,
+          "available": true
+        },
+        {
+          "id": "24",
+          "name": "Chicken Karahi Half 400 Gms",
+          "price": 900,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "HotDrink",
+      "items": [
+        {
+          "id": "25",
+          "name": "Chai",
+          "price": 80,
+          "available": true
+        },
+        {
+          "id": "28",
+          "name": "Malao",
+          "price": 110,
+          "available": true
+        },
+        {
+          "id": "30",
+          "name": "Green Tea",
+          "price": 50,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Coffee",
+      "items": [
+        {
+          "id": "26",
+          "name": "Cappuccino Latte",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "27",
+          "name": "Black Coffee",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "29",
+          "name": "Coffee 3 In 1",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Juices",
+      "items": [
+        {
+          "id": "31",
+          "name": "Apple Juice",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "32",
+          "name": "Pineapple Juice",
+          "price": 270,
+          "available": true
+        },
+        {
+          "id": "33",
+          "name": "Peach Juice",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "34",
+          "name": "Carrot Juice",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "36",
+          "name": "Orange Juice",
+          "price": 200,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        {
+          "id": "35",
+          "name": "Lemon Mint",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Shakes",
+      "items": [
+        {
+          "id": "37",
+          "name": "Mango Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "38",
+          "name": "Apple Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "39",
+          "name": "Pineapple Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "40",
+          "name": "Peach Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "41",
+          "name": "Banana Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "42",
+          "name": "Strawberry Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "43",
+          "name": "Oreo Shake",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "44",
+          "name": "Oreo Banana Shake",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "45",
+          "name": "Chocolate Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "46",
+          "name": "Chocolate Banana Shake",
+          "price": 230,
+          "available": true
+        },
+        {
+          "id": "47",
+          "name": "Milo Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "48",
+          "name": "Date Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "109",
+          "name": "Mango Ice Cream Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "110",
+          "name": "Strawberry Ice Cream Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "111",
+          "name": "Chocolate Ice Cream Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "112",
+          "name": "Vanilla Ice Cream Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "113",
+          "name": "Oreo Ice Cream Shake",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "114",
+          "name": "Milo Ice Cream Shake",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "115",
+          "name": "Coconut Ice Cream Shake",
+          "price": 320,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Fries",
+      "items": [
+        {
+          "id": "49",
+          "name": "Regular Fries",
+          "price": 180,
+          "available": true
+        },
+        {
+          "id": "50",
+          "name": "Large Fries",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "51",
+          "name": "Garlic Mayo Fries",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "52",
+          "name": "Special Fries",
+          "price": 320,
+          "available": true
+        },
+        {
+          "id": "53",
+          "name": "Peri Peri Fries",
+          "price": 320,
+          "available": true
+        },
+        {
+          "id": "54",
+          "name": "Oyster Fries",
+          "price": 450,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Wings",
+      "items": [
+        {
+          "id": "55",
+          "name": "Crispy Chicken Wings",
+          "price": 450,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Burger",
+      "items": [
+        {
+          "id": "56",
+          "name": "Zinger Burger",
+          "price": 400,
+          "available": true
+        },
+        {
+          "id": "57",
+          "name": "Grilled Chicken Burger",
+          "price": 450,
+          "available": true
+        },
+        {
+          "id": "58",
+          "name": "Classic Burger",
+          "price": 350,
+          "available": true
+        },
+        {
+          "id": "59",
+          "name": "Mushroom Melt Burger",
+          "price": 520,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Sandwich",
+      "items": [
+        {
+          "id": "60",
+          "name": "Club Sandwich",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "61",
+          "name": "Chicken Sandwich",
+          "price": 350,
+          "available": true
+        },
+        {
+          "id": "62",
+          "name": "Bbq Sandwich",
+          "price": 350,
+          "available": true
+        },
+        {
+          "id": "63",
+          "name": "Chicken Fajita Sandwich",
+          "price": 400,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Pasta",
+      "items": [
+        {
+          "id": "64",
+          "name": "Fettuccine Pasta R",
+          "price": 540,
+          "available": true
+        },
+        {
+          "id": "65",
+          "name": "Fettuccine Pasta L",
+          "price": 1020,
+          "available": true
+        },
+        {
+          "id": "66",
+          "name": "Grilled Chicken Pasta",
+          "price": 590,
+          "available": true
+        },
+        {
+          "id": "67",
+          "name": "Mac And Cheese Regular",
+          "price": 550,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Snacks",
+      "items": [
+        {
+          "id": "68",
+          "name": "Corn Dogs 1 Pc",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "69",
+          "name": "Corn Dogs 2 Pcs",
+          "price": 500,
+          "available": true
+        },
+        {
+          "id": "88",
+          "name": "Plain Samosa",
+          "price": 50,
+          "available": true
+        },
+        {
+          "id": "89",
+          "name": "Aloo Samosa",
+          "price": 50,
+          "available": true
+        },
+        {
+          "id": "90",
+          "name": "Chicken Samosa",
+          "price": 60,
+          "available": true
+        },
+        {
+          "id": "91",
+          "name": "Vegetable Samosa",
+          "price": 50,
+          "available": true
+        },
+        {
+          "id": "92",
+          "name": "Pakora Plate",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Bread",
+      "items": [
+        {
+          "id": "70",
+          "name": "Lachho Paratha",
+          "price": 60,
+          "available": true
+        },
+        {
+          "id": "71",
+          "name": "Chicken Paratha",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "72",
+          "name": "Aloo Paratha",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "73",
+          "name": "Chicken Cheese Paratha",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "74",
+          "name": "Aloo Cheese Paratha",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Breakfast",
+      "items": [
+        {
+          "id": "75",
+          "name": "Omelette",
+          "price": 100,
+          "available": true
+        },
+        {
+          "id": "76",
+          "name": "Fried Egg",
+          "price": 70,
+          "available": true
+        },
+        {
+          "id": "77",
+          "name": "Half Fry Egg",
+          "price": 70,
+          "available": true
+        },
+        {
+          "id": "78",
+          "name": "Cheese Omelette",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "79",
+          "name": "Mushroom Omelette",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "80",
+          "name": "Mushroom Cheese Omelette",
+          "price": 220,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Shawarma",
+      "items": [
+        {
+          "id": "81",
+          "name": "Pak Authentic Shawarma",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "82",
+          "name": "Shawarma Ladz Wrap Medium",
+          "price": 350,
+          "available": true
+        },
+        {
+          "id": "83",
+          "name": "Shawarma Ladz Wrap Large",
+          "price": 450,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Extra",
+      "items": [
+        {
+          "id": "84",
+          "name": "Cheese Extra",
+          "price": 70,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Dessert",
+      "items": [
+        {
+          "id": "85",
+          "name": "Barfi Gola",
+          "price": 100,
+          "available": true
+        },
+        {
+          "id": "86",
+          "name": "Special Gola",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "87",
+          "name": "Special Falooda",
+          "price": 200,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Sides",
+      "items": [
+        {
+          "id": "93",
+          "name": "Samosa Chat Single",
+          "price": 110,
+          "available": true
+        },
+        {
+          "id": "94",
+          "name": "Samosa Chat Double",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "95",
+          "name": "Dahi Phulki",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "96",
+          "name": "Chana Chat",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "97",
+          "name": "Fruit Chat",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "98",
+          "name": "Cream Chat",
+          "price": 280,
+          "available": true
+        },
+        {
+          "id": "99",
+          "name": "Gol Gappay 7 Pieces",
+          "price": 180,
+          "available": true
+        },
+        {
+          "id": "100",
+          "name": "Gol Gappay 10 Pieces",
+          "price": 240,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "IceCream",
+      "items": [
+        {
+          "id": "101",
+          "name": "Mango Ice Cream Single",
+          "price": 110,
+          "available": true
+        },
+        {
+          "id": "102",
+          "name": "Strawberry Ice Cream Single",
+          "price": 110,
+          "available": true
+        },
+        {
+          "id": "103",
+          "name": "Chocolate Ice Cream Single",
+          "price": 130,
+          "available": true
+        },
+        {
+          "id": "104",
+          "name": "Vanilla Ice Cream Single",
+          "price": 110,
+          "available": true
+        },
+        {
+          "id": "105",
+          "name": "Mango Ice Cream Double Scoop",
+          "price": 220,
+          "available": true
+        },
+        {
+          "id": "106",
+          "name": "Strawberry Ice Cream Double Scoop",
+          "price": 220,
+          "available": true
+        },
+        {
+          "id": "107",
+          "name": "Chocolate Ice Cream Double Scoop",
+          "price": 260,
+          "available": true
+        },
+        {
+          "id": "108",
+          "name": "Vanilla Ice Cream Double Scoop",
+          "price": 220,
+          "available": true
+        }
+      ]
+    }
+  ]
+}

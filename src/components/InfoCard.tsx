@@ -7,7 +7,9 @@ import { unproject } from '@/lib/geo';
 import type { Place } from '@/lib/types';
 import { haptic } from '@/lib/haptics';
 import { useApp } from '@/store/useApp';
+import { useMenu } from '@/hooks/useMenu';
 import { BottomSheet } from './BottomSheet';
+import { MenuPill, MenuSection, useMenuVars } from './MenuSection';
 
 const COMING = 'Info coming soon';
 const REPORT_EMAIL = process.env.NEXT_PUBLIC_REPORT_EMAIL ?? '';
@@ -102,6 +104,8 @@ export function InfoCard() {
     if (p) setLast(p);
   }, [p]);
   const q = p ?? last;
+  const menu = useMenu(q?.menuId);
+  const menuVars = useMenuVars();
 
   const share = async () => {
     if (!q) return;
@@ -132,6 +136,8 @@ export function InfoCard() {
     });
   };
   if (!q) return null;
+  const isCafe = q.category === 'food';
+  const hasMenu = menu.status !== 'none';
   const sub = [CAT_LABEL[q.category], !q.flat && q.levels ? `${q.levels} floors` : null]
     .filter(Boolean)
     .join(' · ');
@@ -153,10 +159,14 @@ export function InfoCard() {
             <h2 className="truncate text-[17px] font-extrabold leading-tight text-[var(--ink)]">
               {q.shortName}
             </h2>
-            <p className="truncate text-[13px] font-semibold text-[var(--ink-soft)]">
-              {sub}
-              {q.provisional ? ' · provisional shape' : ''}
-              {!q.verified ? ' · unverified' : ''}
+            {hasMenu && <span className="menu-rule" style={menuVars} aria-hidden />}
+            <p className="flex items-center gap-1.5 text-[13px] font-semibold text-[var(--ink-soft)]">
+              <span className={hasMenu ? 'shrink-0' : 'truncate'}>
+                {sub}
+                {q.provisional ? ' · provisional shape' : ''}
+                {!q.verified && !hasMenu ? ' · unverified' : ''}
+              </span>
+              {hasMenu && <MenuPill state={menu} />}
             </p>
           </div>
           <button
@@ -189,16 +199,34 @@ export function InfoCard() {
         </div>
       }
     >
-      <p
-        className={`pt-1 text-sm ${q.description === COMING ? 'italic text-[var(--ink-soft)]' : 'text-[var(--ink)]'}`}
-      >
-        {q.description || COMING}
-      </p>
+      {!(isCafe && q.description === COMING) && (
+        <p
+          className={`pt-1 text-sm ${q.description === COMING ? 'italic text-[var(--ink-soft)]' : 'text-[var(--ink)]'}`}
+        >
+          {q.description || COMING}
+        </p>
+      )}
       <dl className="mt-2">
-        {!q.flat && <Row label="Floors" value={q.levels} />}
+        {/* cafes with an unknown floor count skip the placeholder row so the menu gets the room */}
+        {!q.flat && !(isCafe && q.levels === undefined) && <Row label="Floors" value={q.levels} />}
         <Row label="Hours" />
-        <Row label="Entrance" value={q.entrance ? 'Marked on map' : 'Approximate (nearest path)'} />
+        {/* cafes: the menu comes straight after the hours, entrance moves below it */}
+        {!isCafe && (
+          <Row
+            label="Entrance"
+            value={q.entrance ? 'Marked on map' : 'Approximate (nearest path)'}
+          />
+        )}
       </dl>
+      {isCafe && <MenuSection state={menu} soon />}
+      {isCafe && (
+        <dl className="mt-2">
+          <Row
+            label="Entrance"
+            value={q.entrance ? 'Marked on map' : 'Approximate (nearest path)'}
+          />
+        </dl>
+      )}
 
       <div className="mt-3 grid grid-cols-3 gap-2">
         <button

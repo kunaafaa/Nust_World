@@ -75,6 +75,15 @@ export const CAT_LINE: Record<string, string> = {
   other: '#8fa3bf',
 };
 
+/** Menu section of the place card. The accent is the food category colour; day mode needs a darker one to stay readable on the light sheet. */
+export const MENU_THEME = {
+  accent: CAT_LINE.food,
+  accentDay: '#7a5200',
+  ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
+  durFast: '160ms',
+  durPulse: '1600ms',
+} as const;
+
 /** Production edge: marsh style, campus border glow, context-ring roads. All colours live here (locked Night Outline look). */
 export const EDGE = {
   marsh: '#1e4a52',

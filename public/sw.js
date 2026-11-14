@@ -1,8 +1,9 @@
 /* NUST World service worker: the campus works offline after the first visit.
    - App shell + map data are precached.
-   - Everything else same-origin is cached as you browse (stale-while-revalidate).
+   - Everything else same-origin is cached as you browse (stale-while-revalidate). That includes the cafe menu
+     chunks, which the app fetches once when idle after first load (see lib/menu.ts warmMenus) so they open offline.
    Bump VERSION to force clients to refresh their cache. */
-const VERSION = 'v3-edge';
+const VERSION = 'v4-menus';
 const CACHE = `nust-world-${VERSION}`;
 const PRECACHE = ['/', '/data/nust-full.geojson', '/data/topo-merge.json', '/data/topo-trees.json', '/data/topo-terrain.json', '/data/campus-boundary.geojson', '/data/context-roads.json', '/manifest.webmanifest', '/icon.svg', '/icon-512.png'];
 

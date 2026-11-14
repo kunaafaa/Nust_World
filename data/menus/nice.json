@@ -1,0 +1,345 @@
+{
+  "cafeId": "nice",
+  "name": "Nice Cafe",
+  "currency": "PKR",
+  "updatedAt": "2026-11-14T16:37:48.776Z",
+  "source": "https://nustcafe.vercel.app/assets/nice-DGPfXpyp.js",
+  "categories": [
+    {
+      "name": "Shakes",
+      "items": [
+        {
+          "id": "1",
+          "name": "Apple Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "2",
+          "name": "Banana Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "3",
+          "name": "Apple Banana Shake",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "4",
+          "name": "Strawberry Shake",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "5",
+          "name": "Mango Shake",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Bread",
+      "items": [
+        {
+          "id": "6",
+          "name": "Aalo Paratha",
+          "price": 120,
+          "available": true
+        },
+        {
+          "id": "7",
+          "name": "Cheese Paratha",
+          "price": 200,
+          "available": true
+        },
+        {
+          "id": "8",
+          "name": "Chicken Paratha",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "9",
+          "name": "Simple Paratha",
+          "price": 60,
+          "available": true
+        },
+        {
+          "id": "11",
+          "name": "Bread Slice",
+          "price": 25,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Sides",
+      "items": [
+        {
+          "id": "10",
+          "name": "Egg Omelte",
+          "price": 60,
+          "available": true
+        },
+        {
+          "id": "18",
+          "name": "Aalo Samosa",
+          "price": 50,
+          "available": true
+        },
+        {
+          "id": "19",
+          "name": "Chicken Samosa",
+          "price": 70,
+          "available": true
+        },
+        {
+          "id": "20",
+          "name": "Vegetable Samosa",
+          "price": 50,
+          "available": true
+        },
+        {
+          "id": "30",
+          "name": "Single Samosa Chat",
+          "price": 100,
+          "available": true
+        },
+        {
+          "id": "31",
+          "name": "Double Samosa Chat",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Shawarma",
+      "items": [
+        {
+          "id": "12",
+          "name": "Chicken Shawarma",
+          "price": 190,
+          "available": true
+        },
+        {
+          "id": "13",
+          "name": "Chicken Cheese Shawarma",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "14",
+          "name": "Zinger Shawarma",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "15",
+          "name": "Zinger Cheese Shawarma",
+          "price": 360,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Burger",
+      "items": [
+        {
+          "id": "16",
+          "name": "Zinger Burger",
+          "price": 300,
+          "available": true
+        },
+        {
+          "id": "17",
+          "name": "Zinger Cheese Burger",
+          "price": 360,
+          "available": true
+        },
+        {
+          "id": "41",
+          "name": "Chicken Burger",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "42",
+          "name": "Chicken Chese Burger",
+          "price": 310,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Roll",
+      "items": [
+        {
+          "id": "21",
+          "name": "Chicken Roll",
+          "price": 70,
+          "available": true
+        },
+        {
+          "id": "22",
+          "name": "Vegetable Roll",
+          "price": 50,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "HotDrink",
+      "items": [
+        {
+          "id": "23",
+          "name": "Tea",
+          "price": 80,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Rice",
+      "items": [
+        {
+          "id": "24",
+          "name": "Chicken Biryani",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "25",
+          "name": "Chicken Pulaao",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "26",
+          "name": "Beef Pulaao",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "27",
+          "name": "Haleem Chawal",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "29",
+          "name": "Plain Rice",
+          "price": 170,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Chinese",
+      "items": [
+        {
+          "id": "28",
+          "name": "Chinese Rice",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "38",
+          "name": "Chicken Chowmien",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Sandwich",
+      "items": [
+        {
+          "id": "32",
+          "name": "Omelet Shami Sandwich",
+          "price": 150,
+          "available": true
+        },
+        {
+          "id": "33",
+          "name": "Omelet Sandwich",
+          "price": 100,
+          "available": true
+        },
+        {
+          "id": "34",
+          "name": "Shami Sandwich",
+          "price": 100,
+          "available": true
+        },
+        {
+          "id": "35",
+          "name": "Omelet Shami Cheese Sandwich",
+          "price": 240,
+          "available": true
+        },
+        {
+          "id": "36",
+          "name": "Club Sandwich",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "37",
+          "name": "Chicken Sandwich",
+          "price": 150,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Pasta",
+      "items": [
+        {
+          "id": "39",
+          "name": "Chicken Macroni",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "40",
+          "name": "Pasta",
+          "price": 250,
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "RollParatha",
+      "items": [
+        {
+          "id": "43",
+          "name": "Chicken Paratha Roll",
+          "price": 250,
+          "available": true
+        },
+        {
+          "id": "44",
+          "name": "Chicken Cheese Paratha Roll",
+          "price": 310,
+          "available": true
+        },
+        {
+          "id": "45",
+          "name": "Zinger Paratha Roll",
+          "price": 320,
+          "available": true
+        },
+        {
+          "id": "46",
+          "name": "Zinger Cheese Paratha Roll",
+          "price": 380,
+          "available": true
+        }
+      ]
+    }
+  ]
+}

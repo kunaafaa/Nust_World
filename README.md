@@ -76,6 +76,21 @@ What it adds on top of OSM, all switchable in `data/topo-overrides.json` (or `?t
 - Rebuild: `npm run topo-merge` (writes `public/data/topo-*.json`, `data/topo-buildings.geojson`). Full counts and decisions: `docs/topo-merge-report.md`.
 - The **toposection** (a single 1-D cross-section) stays reference only and is not used: `docs/toposection-report.md`.
 
+## Cafe menus
+
+Tap a cafe on the map and its menu appears inside the place card: "Menu · N items" at peek, category chips and the first items at half, everything at full. Items only: no cart, no ordering, no link out.
+
+| | |
+| --- | --- |
+| Data | `data/menus/<cafeId>.json` (one file per cafe: `cafeId, name, currency, updatedAt, source, categories[{name, items[{id, name, price, description?, variants?, available, tags?}]}]`) |
+| Refresh | `npm run menus` re-reads https://nustcafe.vercel.app and rewrites every `data/menus/*.json` and `docs/menu-notes.md`. It tries `/api/menu/<id>` first (used automatically if that API ever appears) and falls back to the site's public menu chunk. No keys, no login. |
+| Link to the map | `menuId` on a landmark in `src/data/landmarks.ts` (C1 = Concordia-1, C2 = Concordia 2 (C2), C3 = South Edge Café). Add a cafe: give its landmark a `menuId` and add one line to `LOADERS` in `src/lib/menu.ts`. |
+| Loading | Each menu is a dynamic import, fetched only when its card opens. After the first load (idle, production only) the three menu chunks are fetched once so the service worker caches them for offline use. |
+| Style | `MENU_THEME` in `src/scene/theme.ts` (accent = food colour, day accent, easing, durations) plus the card's own `--ink` / `--glass-*` tokens; CSS in `globals.css` under "Cafe menu". |
+| Tests | `tests/menus.test.ts` (parser), `tests/menu.test.ts` (price format, filter, links), `e2e/menu.spec.ts` (Playwright, uses your installed Chrome: `npm run build && npm run test:e2e`; baselines in `e2e/__screenshots__`, update with `npm run test:e2e -- --update-snapshots` only for intended UI changes). |
+
+Source caveats (details in `docs/menu-notes.md`): the site has no descriptions, variants, tags or availability, so every item is `available: true`; category names are copied exactly as stored (for example `RollParatha`); `updatedAt` is when the script last ran.
+
 ## Decisions I made (so you can overrule them)
 
 1. **Outline buildings replace solid ones**, per the brief. Faces stay at 7 % opacity so taps still pick buildings.

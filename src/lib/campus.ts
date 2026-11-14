@@ -414,6 +414,7 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
       category: lm.category,
       aliases: [...aliases],
       description: lm.description,
+      menuId: lm.menuId,
       verified: lm.verified,
       offCampus: !!lm.offCampus,
       levels: lm.levels,

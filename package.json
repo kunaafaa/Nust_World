@@ -19,9 +19,12 @@
     "topo": "tsx scripts/topo-fit.ts && tsx scripts/topo-compare.ts",
     "boundary": "tsx scripts/build-boundary.ts",
     "cleanup-report": "tsx scripts/geometry-cleanup.ts",
+    "menus": "tsx scripts/fetch-menus.ts",
+    "test:e2e": "playwright test",
     "topo-merge": "tsx scripts/build-topo-merge.ts"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
