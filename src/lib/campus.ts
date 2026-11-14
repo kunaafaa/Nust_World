@@ -356,13 +356,14 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
     hiddenOff = 0;
 
   for (const lm of landmarks) {
-    const b = byOsm.get(lm.osmId);
-    claimed.add(lm.osmId);
+    const isPoint = lm.osmType === 'node';
+    const b = isPoint ? undefined : byOsm.get(lm.osmId);
+    if (!isPoint) claimed.add(lm.osmId); // node ids live in a different id space from ways
     if (hidden.has(lm.id)) {
       if (b) b.name = '__removed__';
       continue;
     }
-    const f = featByOsm.get(lm.osmId);
+    const f = isPoint ? undefined : featByOsm.get(lm.osmId);
     const r = resolveHeight(lm.osmId, f?.tags ?? {}, lm.category, lm);
     if (isUnitLabel(lm.name)) {
       // room/unit label: part of a hostel block, never a place
@@ -392,7 +393,7 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
         offCampus: !!lm.offCampus,
         name: lm.name,
       });
-    } else noFootprint.push(lm.id);
+    } else if (!isPoint) noFootprint.push(lm.id);
     if (lm.offCampus) hiddenOff++;
     heightSources[r.source] = (heightSources[r.source] ?? 0) + 1;
     const aliases = new Set(
@@ -422,10 +423,11 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
       entrance: lm.entrance ? project(lm.entrance.lng, lm.entrance.lat) : null,
       pos,
       footprints: b ? [b.footprint] : [],
-      resolvedHeight: r.h,
-      heightSource: r.source,
+      resolvedHeight: isPoint ? 0 : r.h,
+      heightSource: isPoint ? 'n/a' : r.source,
       heightEstimated: r.estimated && !!b,
-      flat: false,
+      flat: isPoint,
+      ...(isPoint ? { point: true } : {}),
     });
   }
   const hasPlace = (name: string, near?: Vec2, within = 80) =>

@@ -44,21 +44,29 @@ export function SelectionRing({ data }: { data: CampusData }) {
   );
 }
 
-/** 3D pins for gates and ATMs (flat, footprint-less features). Everything else is labelled by LabelLayer. */
+/**
+ * 3D pins for gates, ATMs and point landmarks (OSM nodes with no outline, e.g. a cafe inside a larger building).
+ * Point landmarks get a smaller pin, low enough that their normal label sits above it. Everything else is
+ * labelled by LabelLayer.
+ */
 export function Pins({ data }: { data: CampusData }) {
   const category = useApp((s) => s.category);
   const night = useApp((s) => s.night);
   const group = useRef<THREE.Group>(null);
   const pinned = useMemo(
     () =>
-      data.places.filter((p) => !p.offCampus && (p.category === 'gate' || p.category === 'atm')),
+      data.places.filter(
+        (p) => !p.offCampus && (p.category === 'gate' || p.category === 'atm' || p.point),
+      ),
     [data],
   );
   useFrame(({ clock }) => {
     group.current?.children.forEach((c, i) => {
       const q = pinned[i];
       c.position.y =
-        7 + Math.sin(clock.elapsedTime * 2 + i) * 0.6 + (q ? groundY(q.pos[0], q.pos[1]) : 0);
+        (q?.point ? 2.6 : 7) +
+        Math.sin(clock.elapsedTime * 2 + i) * (q?.point ? 0.3 : 0.6) +
+        (q ? groundY(q.pos[0], q.pos[1]) : 0);
     });
   });
   return (
@@ -66,7 +74,8 @@ export function Pins({ data }: { data: CampusData }) {
       {pinned.map((p) => (
         <group
           key={p.id}
-          position={[p.pos[0], 7, p.pos[1]]}
+          position={[p.pos[0], p.point ? 2.6 : 7, p.pos[1]]}
+          scale={p.point ? 0.6 : 1}
           visible={!category || p.category === category}
         >
           <mesh

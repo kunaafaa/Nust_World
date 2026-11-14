@@ -108,6 +108,21 @@ export function Map2D({ data }: { data: CampusData }) {
             />
           );
         })}
+      {data.places
+        .filter((p) => p.point && !p.offCampus)
+        .map((p) => (
+          <circle
+            key={p.id}
+            cx={p.pos[0]}
+            cy={p.pos[1]}
+            r={view.w / (p.id === selectedId ? 110 : 160)}
+            fill={CAT_COLOR[p.category]}
+            stroke="#fff"
+            strokeWidth={view.w / 600}
+            onClick={() => useApp.getState().select(p.id)}
+            style={{ cursor: 'pointer' }}
+          />
+        ))}
       {route && (
         <path
           d={path(route.path)}

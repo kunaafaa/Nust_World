@@ -85,7 +85,9 @@ export function LocateButton() {
 export function Footer() {
   const ts = useApp((s) => s.data?.report.timestamp);
   const sheet = useApp((s) => s.sheetPx > 0);
+  const panel = useApp((s) => !!s.selectedId || s.navOpen || s.settingsOpen);
   const shot = useApp((s) => s.screenshot);
+  const { side, w } = useSideLayout();
   const [line, setLine] = useState(true);
   useEffect(() => {
     if (!line) return;
@@ -93,37 +95,65 @@ export function Footer() {
     return () => clearTimeout(t);
   }, [line]);
   if (shot) return null;
+  // Side layout: the sheet is a left panel, so the credit starts to its right (same width rule as BottomSheet).
+  const left = side && panel ? Math.min(w >= 768 ? 380 : 300, w * 0.4) + 24 : 0;
   return (
     <>
       <p
+        style={left ? { left } : undefined}
         className={`pointer-events-none absolute inset-x-0 bottom-[calc(0.15rem+var(--sab))] z-10 truncate px-3 text-center text-[9px] leading-tight text-white/70 transition-opacity duration-700 ${line && !sheet ? 'opacity-100' : 'opacity-0'}`}
       >
         © OpenStreetMap contributors · Overture Maps Foundation · terrain/canopy data CC BY 4.0 (per
         the export licence files) · Map data updated {fmtDate(ts)}
       </p>
-      {!sheet && (
+      {/* Portrait only: in the side layout the button lives in the controls stack (see Controls). */}
+      {!side && !sheet && (
         <button
           aria-label="About and attribution"
           onClick={() => useApp.setState({ aboutOpen: true })}
           className="glass absolute bottom-[calc(0.75rem+var(--sab))] left-3 z-20 flex h-11 w-11 items-center justify-center rounded-full text-[var(--ink)]"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            aria-hidden
-          >
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 11v6M12 7.5v.01" />
-          </svg>
+          <InfoIcon />
         </button>
       )}
     </>
   );
+}
+
+export function InfoIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v6M12 7.5v.01" />
+    </svg>
+  );
+}
+
+/** Same rule as BottomSheet's `side`: wide or short screens put sheets in a left panel. */
+const SIDE_QUERY = '(min-width: 768px), (max-height: 499px)';
+export function useSideLayout() {
+  const [v, setV] = useState({ side: false, w: 390 });
+  useEffect(() => {
+    const mq = window.matchMedia(SIDE_QUERY);
+    const read = () => setV({ side: mq.matches, w: window.innerWidth });
+    read();
+    mq.addEventListener('change', read);
+    window.addEventListener('resize', read);
+    return () => {
+      mq.removeEventListener('change', read);
+      window.removeEventListener('resize', read);
+    };
+  }, []);
+  return v;
 }
 
 export function About() {

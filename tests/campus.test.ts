@@ -18,7 +18,23 @@ describe('nust-full pipeline', () => {
         needsOutline: r.needsOutline.length,
       }),
     );
-    expect(r.landmarks).toBe(71);
+    expect(r.landmarks).toBe(72);
+  });
+  it('point landmarks (OSM nodes) become one flat, tappable place with their menu', () => {
+    const cl = data.places.filter((p) => /coffee lounge/i.test(p.name));
+    expect(cl).toHaveLength(1); // the landmark replaces the generic cafe point
+    expect(cl[0]).toMatchObject({
+      id: 'coffee-lounge-8601',
+      source: 'landmark',
+      category: 'food',
+      menuId: 'coffee-lounge',
+      point: true,
+      flat: true,
+      footprints: [],
+    });
+    expect(cl[0].aliases).toContain('coffee lounge');
+    // every other landmark is unchanged: none is a point
+    expect(data.places.filter((p) => p.point).map((p) => p.id)).toEqual(['coffee-lounge-8601']);
   });
   it('matches every landmark by osmId', () => {
     expect(data.report.noFootprint).toEqual([]);

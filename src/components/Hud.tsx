@@ -5,7 +5,7 @@ import { camState } from '@/scene/camState';
 import { useEffect, useRef, useState } from 'react';
 import { unproject } from '@/lib/geo';
 import { perf } from '@/scene/perf';
-import { LocateButton } from './Chrome';
+import { InfoIcon, LocateButton, useSideLayout } from './Chrome';
 
 function RoundBtn({
   label,
@@ -74,6 +74,7 @@ export function Controls() {
   const topDown = useApp((s) => s.topDown);
   const sheetPx = useApp((s) => s.sheetPx);
   const searching = useApp((s) => s.searchOpen);
+  const { side } = useSideLayout();
   const [vh, setVh] = useState(800);
   useEffect(() => {
     const r = () => setVh(window.innerHeight);
@@ -83,11 +84,13 @@ export function Controls() {
   }, []);
   // hidden when a sheet is (nearly) full height; the CSS var follows the sheet while it is dragged
   if (searching || sheetPx > vh * 0.7) return null;
+  // Side layout (landscape/desktop): the sheet is a left panel, so the stack stays at the bottom-right instead of
+  // riding up by --sheet-h, which pushed it into the Settings button on short screens.
+  const bottom = side
+    ? 'calc(var(--sab) + 72px)'
+    : `calc(var(--sheet-h, 0px) + var(--sab) + ${sheetPx > 0 ? 16 : 72}px)`;
   return (
-    <div
-      className="absolute right-3 z-10 flex flex-col gap-2"
-      style={{ bottom: `calc(var(--sheet-h, 0px) + var(--sab) + ${sheetPx > 0 ? 16 : 72}px)` }}
-    >
+    <div className="absolute right-3 z-10 flex flex-col gap-2" style={{ bottom }}>
       <Compass />
       <RoundBtn
         label={topDown ? 'Switch to 3D view' : 'Switch to 2D top-down view'}
@@ -97,6 +100,14 @@ export function Controls() {
         {topDown ? '3D' : '2D'}
       </RoundBtn>
       <LocateButton />
+      {side && (
+        <RoundBtn
+          label="About and attribution"
+          onClick={() => useApp.setState({ aboutOpen: true })}
+        >
+          <InfoIcon />
+        </RoundBtn>
+      )}
     </div>
   );
 }

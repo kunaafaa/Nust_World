@@ -28,21 +28,51 @@ async function openCard(page: Page, id: string) {
 }
 
 /** Drag the sheet handle: peek -> half is a tap, full is a drag up. */
-async function snapTo(page: Page, snap: 'peek' | 'half' | 'full') {
+/** Wait until the sheet has stopped moving (its spring can still be running on a slow software-GL runner). */
+async function settle(page: Page) {
   const handle = page.locator(SHEET).locator('[data-handle]');
-  const box = (await handle.boundingBox())!;
-  const x = box.x + box.width / 2;
-  const y = box.y + box.height / 2;
-  if (snap === 'peek') return;
-  if (snap === 'half') {
-    await page.mouse.click(x, y);
-  } else {
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    await page.mouse.move(x, 40, { steps: 12 });
-    await page.mouse.up();
+  let last = -1;
+  for (let i = 0; i < 40; i++) {
+    const y = Math.round((await handle.boundingBox())?.y ?? -1);
+    if (y === last) return;
+    last = y;
+    await page.waitForTimeout(150);
   }
-  await page.waitForTimeout(700);
+}
+
+/** Visible sheet height for a snap (same maths as snapOffsets in BottomSheet.tsx). */
+function snapHeight(vp: { width: number; height: number }, snap: 'half' | 'full') {
+  const side = vp.width >= 768 || vp.height < 500;
+  const full = side ? Math.max(200, vp.height - 136) : Math.round(vp.height * 0.9);
+  return snap === 'full' ? full : Math.min(full, Math.round(vp.height * (side ? 0.55 : 0.45)));
+}
+
+/**
+ * Drag the sheet handle: peek -> half is a tap, full is a drag up. The gesture is retried if the sheet did not end
+ * at the requested snap (on the slow software-GL runner a gesture can land while the sheet is still springing).
+ */
+async function snapTo(page: Page, snap: 'peek' | 'half' | 'full') {
+  if (snap === 'peek') return;
+  const vp = page.viewportSize()!;
+  const want = snapHeight(vp, snap);
+  const visible = async () => vp.height - (await page.locator(SHEET).boundingBox())!.y;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await settle(page);
+    if (Math.abs((await visible()) - want) < 12) return;
+    const box = (await page.locator(SHEET).locator('[data-handle]').boundingBox())!;
+    const x = box.x + box.width / 2;
+    const y = box.y + box.height / 2;
+    if (snap === 'half') {
+      await page.mouse.click(x, y);
+    } else {
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x, 40, { steps: 12 });
+      await page.mouse.up();
+    }
+    await page.waitForTimeout(700);
+  }
+  await settle(page);
 }
 
 for (const size of SIZES) {

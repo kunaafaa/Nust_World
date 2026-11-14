@@ -19,6 +19,8 @@ export interface Landmark {
   description: string;
   /** Key of data/menus/<menuId>.json (cafes only) */
   menuId?: string;
+  /** 'node' = a point in OSM (no outline): drawn as a small marker, osmId is the node id */
+  osmType?: 'node';
   verified: boolean;
 }
 
@@ -290,6 +292,21 @@ export const landmarks: Landmark[] = [
     aliases: ['Concordia 2 (C2)', 'C2', 'C2 Cafe'],
     description: 'Info coming soon',
     menuId: 'c2',
+    verified: false,
+  },
+  {
+    id: 'coffee-lounge-8601',
+    osmId: 13155098601,
+    osmType: 'node',
+    name: 'Coffee Lounge',
+    shortName: 'Coffee Lounge',
+    category: 'food',
+    lat: 33.6475751,
+    lng: 72.9908389,
+    entrance: null,
+    aliases: ['Coffee Lounge', 'coffee lounge'],
+    description: 'Info coming soon',
+    menuId: 'coffee-lounge',
     verified: false,
   },
   {

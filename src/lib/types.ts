@@ -33,6 +33,8 @@ export interface LandmarkInput {
   description: string;
   /** Key of data/menus/<menuId>.json (cafes only) */
   menuId?: string;
+  /** 'node' = a point in OSM (no outline): drawn as a small marker, osmId is the node id */
+  osmType?: 'node';
   verified: boolean;
 }
 
@@ -71,6 +73,8 @@ export interface Place {
   provisional?: boolean;
   /** Known to exist (point in OSM) but has no outline at all */
   needsOutline?: boolean;
+  /** Point landmark (OSM node): drawn as a small marker in its category colour, tappable */
+  point?: boolean;
 }
 
 export interface BuildingShape {

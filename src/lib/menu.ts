@@ -32,6 +32,7 @@ const LOADERS: Record<string, () => Promise<{ default: unknown }>> = {
   c2: () => import('../../data/menus/c2.json'),
   c3: () => import('../../data/menus/c3.json'),
   retro: () => import('../../data/menus/retro.json'),
+  'coffee-lounge': () => import('../../data/menus/coffee-lounge.json'),
 };
 export const MENU_IDS = Object.keys(LOADERS);
 
