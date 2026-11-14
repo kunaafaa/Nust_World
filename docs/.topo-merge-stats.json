@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07T12:32:18.649Z",
+ "generated": "2026-11-14T19:29:15.970Z",
  "overtureRelease": "2026-10-21.0",
  "overtureDirect": {
   "total": 2314,
@@ -31,7 +31,7 @@
   "noOsm": 174,
   "skippedUnder100": 130,
   "additions": 16,
-  "hostelFootprints": 0,
+  "hostelFootprints": 1,
   "additionsByConfidence": {
    "low": 14,
    "medium": 2
@@ -269,14 +269,7 @@
    }
   ],
   "replacedProvisional": [],
-  "deferredHostels": [
-   {
-    "place": "Razi Hostel",
-    "id": "overture/a84586b2-ff5a-427d-9146-b3851e58ff82",
-    "areaM2": 1704,
-    "upstream": "Microsoft ML Buildings"
-   }
-  ],
+  "deferredHostels": [],
   "osmHostelsHandledByOsm": [
    "Fatima I",
    "Fatima III",
@@ -291,7 +284,8 @@
    "Ghazali 1",
    "Ghazali 2",
    "Liaquat",
-   "Rumi I"
+   "Rumi I",
+   "Razi Hostel Area"
   ]
  },
  "additionsList": [

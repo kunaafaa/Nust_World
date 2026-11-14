@@ -97,3 +97,26 @@ export const EDGE = {
   /** metres: context-ring roads fade out over this range beyond the boundary */
   contextRange: 400,
 } as const;
+
+/**
+ * Hostels. Area polygons (hostel areas, not buildings) are a faint dashed outline only. The accents tint a hostel's
+ * outline once its footprint is matched to a name with certainty (none is yet: see docs/needs-osm-outline.md).
+ */
+export const HOSTEL = {
+  areaEdge: CAT_LINE.hostel,
+  areaEdgeOpacity: 0.35,
+  /** metres: dash, gap and ribbon width of the area boundary */
+  areaDash: 2.5,
+  areaGap: 3,
+  areaWidth: 0.3,
+  accentRazi: '#d2b277',
+  accentRehmat: '#d89b7e',
+} as const;
+
+/** Accent for a named hostel building ("Razi 1", "Rehmat Hostel"); never for an area place. */
+export function hostelAccent(name?: string): string | undefined {
+  if (!name || /\barea\b/i.test(name)) return undefined;
+  if (/\brehmat\b|\brahmat\b/i.test(name)) return HOSTEL.accentRehmat;
+  if (/\brazi\b/i.test(name)) return HOSTEL.accentRazi;
+  return undefined;
+}

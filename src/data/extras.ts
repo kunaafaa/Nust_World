@@ -8,7 +8,20 @@ export const EASTER_EGGS: { id: string; lonLat: [number, number]; label: string 
  * Search-only shorthand keyed by OSM id. These never appear as facts in the UI;
  * add real aliases to landmarks.ts to make them official.
  */
-export const SEARCH_HINTS: Record<number, string[]> = {};
+export const SEARCH_HINTS: Record<number, string[]> = {
+  // Razi Hostel Area (way/209855481) holds Rehmat Hostel and Razi 1. Neither has a confirmed outline yet, so
+  // searching for either lands on the area (see docs/needs-osm-outline.md).
+  209855481: [
+    'Rehmat Hostel',
+    'Razi 1',
+    'rehmat',
+    'rahmat',
+    'razi',
+    'razi 1',
+    'razi hostel',
+    'razi hostels',
+  ],
+};
 
 /** Landmarks removed from the rendered map entirely (footprint, label and search). */
 export const HIDDEN_LANDMARK_IDS = ['sada-walon-ki-jhoprian-7994'];

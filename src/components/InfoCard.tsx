@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { track } from '@vercel/analytics';
 import { landmarks } from '@/data/landmarks';
+import { PHOTOS } from '@/data/photos';
 import { CAT_COLOR, CAT_LABEL } from '@/lib/colors';
 import { unproject } from '@/lib/geo';
 import type { Place } from '@/lib/types';
@@ -74,6 +75,26 @@ function report(p: Place) {
   }
 }
 
+/** Photo from /public/photos (listed in data/photos.ts) or a clean placeholder. Never a remote image. */
+function PhotoSlot({ id, name }: { id: string; name: string }) {
+  const src = PHOTOS[id];
+  return (
+    <figure
+      data-photo-slot
+      className="mt-2 flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-black/15 bg-black/5"
+    >
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={name} className="h-full w-full object-cover" loading="lazy" />
+      ) : (
+        <figcaption className="text-xs font-semibold italic text-[var(--ink-soft)]">
+          No photo yet
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
 function Row({ label, value }: { label: string; value?: string | number }) {
   const missing = value === undefined || value === '';
   return (
@@ -130,7 +151,12 @@ export function InfoCard() {
     if (!q) return;
     haptic(12);
     useApp.getState().set({
-      to: { id: q.id, name: q.shortName, pos: q.entrance ?? q.pos, approx: !q.entrance },
+      to: {
+        id: q.id,
+        name: q.shortName,
+        pos: q.entrance ?? q.pos,
+        approx: !q.entrance || !!q.entranceApprox,
+      },
       navOpen: true,
       navSnap: 'peek',
     });
@@ -138,7 +164,16 @@ export function InfoCard() {
   if (!q) return null;
   const isCafe = q.category === 'food';
   const hasMenu = menu.status !== 'none';
-  const sub = [CAT_LABEL[q.category], !q.flat && q.levels ? `${q.levels} floors` : null]
+  const floors = q.levels ? `${q.levels}${q.levelsEstimated ? ' (estimated)' : ''}` : undefined;
+  const entrance = q.entrance
+    ? q.entranceApprox
+      ? 'Approximate, unverified'
+      : 'Marked on map'
+    : 'Approximate (nearest path)';
+  const sub = [
+    CAT_LABEL[q.category],
+    !q.flat && q.levels ? `${q.levels} floors${q.levelsEstimated ? ' (est.)' : ''}` : null,
+  ]
     .filter(Boolean)
     .join(' · ');
 
@@ -206,25 +241,18 @@ export function InfoCard() {
           {q.description || COMING}
         </p>
       )}
+      {q.photoSlot && <PhotoSlot id={q.id} name={q.shortName} />}
       <dl className="mt-2">
         {/* cafes with an unknown floor count skip the placeholder row so the menu gets the room */}
-        {!q.flat && !(isCafe && q.levels === undefined) && <Row label="Floors" value={q.levels} />}
+        {!q.flat && !(isCafe && q.levels === undefined) && <Row label="Floors" value={floors} />}
         <Row label="Hours" />
         {/* cafes: the menu comes straight after the hours, entrance moves below it */}
-        {!isCafe && (
-          <Row
-            label="Entrance"
-            value={q.entrance ? 'Marked on map' : 'Approximate (nearest path)'}
-          />
-        )}
+        {!isCafe && <Row label="Entrance" value={entrance} />}
       </dl>
       {isCafe && <MenuSection state={menu} soon />}
       {isCafe && (
         <dl className="mt-2">
-          <Row
-            label="Entrance"
-            value={q.entrance ? 'Marked on map' : 'Approximate (nearest path)'}
-          />
+          <Row label="Entrance" value={entrance} />
         </dl>
       )}
 

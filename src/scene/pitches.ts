@@ -35,7 +35,9 @@ export function pitchMarkings(a: Area): Marking {
   ];
   const out: Marking = { lines: [], strips: [] };
   const outline = rect(-hl, -hw, hl, hw);
-  const sport = a.sport ?? '';
+  // OSM sometimes names a court without tagging its sport (e.g. "Basketball Court" near Razi is leisure=playground)
+  const sport =
+    a.sport ?? /basketball|tennis|volleyball|cricket/i.exec(a.name ?? '')?.[0].toLowerCase() ?? '';
   const k = Math.min(1, L / 100, Wd / 64); // shrink factor for football-sized furniture on small pitches
 
   if (sport === 'soccer') {

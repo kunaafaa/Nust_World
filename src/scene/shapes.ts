@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { orientedBox } from '@/lib/geo';
+import { centroid, orientedBox, pointInPolygon } from '@/lib/geo';
 import type { BuildingShape, Vec2 } from '@/lib/types';
 
 /** Walls: footprint (with holes) extruded to `height`, base at y = 0. */
@@ -106,8 +106,63 @@ export function roofParts(b: BuildingShape): THREE.BufferGeometry[] {
     case 'gabled':
       out.push(gable(L, W, W * 0.25, y));
       break;
+    case 'hostel-template':
+      return hostelTemplateParts(b);
   }
   return out.map((g) => placed(g, m));
+}
+
+/**
+ * Hostel template decoration (approximate, unverified): on top of the real, unsimplified footprint add
+ *  - a curved canopy on 4 columns just outside the entrance bay (the edge facing the loop driveway), and
+ *  - a half-cylinder drum with a row of small square vents on the roof just inside that bay.
+ * Needs `b.entrance`; without it only the plain flat-roofed footprint is drawn. Geometry is in world coordinates.
+ */
+export function hostelTemplateParts(b: BuildingShape): THREE.BufferGeometry[] {
+  const e = b.entrance;
+  if (!e || b.footprint.length < 4) return [];
+  const [cx, cz] = centroid(b.footprint);
+  let ux = e[0] - cx,
+    uz = e[1] - cz;
+  const ul = Math.hypot(ux, uz) || 1;
+  ux /= ul;
+  uz /= ul;
+  // local frame: x along the entrance edge, z pointing out of the building, origin at the entrance point
+  const basis = new THREE.Matrix4().makeBasis(
+    new THREE.Vector3(-uz, 0, ux),
+    new THREE.Vector3(0, 1, 0),
+    new THREE.Vector3(ux, 0, uz),
+  );
+  const at = (dz: number) => basis.clone().setPosition(e[0] + ux * dz, 0, e[1] + uz * dz);
+  const out: THREE.BufferGeometry[] = [];
+  const canopyH = 3.4;
+  // canopy: 4 columns + a shallow curved shell, 7 m wide, reaching 4.5 m out from the wall
+  const cm = at(0);
+  for (const [x, z] of [
+    [-3, 0.8],
+    [3, 0.8],
+    [-3, 4.2],
+    [3, 4.2],
+  ]) {
+    const c = new THREE.CylinderGeometry(0.18, 0.2, canopyH, 8);
+    c.translate(x, canopyH / 2, z);
+    out.push(placed(c, cm));
+  }
+  for (const g of vault(7.2, 4.8, 0.7, canopyH, 2.5)) out.push(placed(g, cm));
+  // drum on the roof 6 m inside the bay, only if that point is really on this roof
+  const din = 6;
+  const dp: Vec2 = [e[0] - ux * din, e[1] - uz * din];
+  if (pointInPolygon(dp, [b.footprint])) {
+    const dm = at(-din);
+    const y = b.height;
+    for (const g of vault(7, 3.6, 1.6, y)) out.push(placed(g, dm));
+    for (let i = 0; i < 5; i++) {
+      const v = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+      v.translate(-2.4 + i * 1.2, y + 1.6 + 0.25, 0);
+      out.push(placed(v, dm));
+    }
+  }
+  return out;
 }
 
 /** Main Office: columned portico on the long face, central drum + dome, lower wings. Stylised, not surveyed. */

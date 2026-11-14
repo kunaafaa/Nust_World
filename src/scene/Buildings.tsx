@@ -10,7 +10,7 @@ import type { BuildingShape, CampusData, Place } from '@/lib/types';
 import { useApp } from '@/store/useApp';
 import { groundY, terrainActive } from '@/lib/terrain';
 import { LANDMARK_SHAPES, extrudeWalls, roofParts } from './shapes';
-import { CAT_LINE } from './theme';
+import { CAT_LINE, hostelAccent } from './theme';
 
 const LINE_PX = 1.5;
 const FACE_OPACITY = 0.07;
@@ -64,7 +64,14 @@ function build(data: CampusData, showOff: boolean): Built {
     if (!geoms.length) continue;
     const place = b.placeId ? placeById.get(b.placeId) : undefined;
     const cat = b.offCampus ? 'offcampus' : b.unit ? 'hostel' : (place?.category ?? 'other');
-    const color = new THREE.Color(b.offCampus ? OFF_CAMPUS : (CAT_LINE[cat] ?? CAT_LINE.other));
+    const color = new THREE.Color(
+      b.offCampus
+        ? OFF_CAMPUS
+        : (b.accent ??
+            (cat === 'hostel' ? hostelAccent(place?.name) : undefined) ??
+            CAT_LINE[cat] ??
+            CAT_LINE.other),
+    );
     const merged = mergeGeometries(geoms, false);
     if (!merged) continue;
     // Terrain on: each building sits level on the lowest ground under its footprint (the uphill side sinks in).

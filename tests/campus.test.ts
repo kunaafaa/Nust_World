@@ -63,10 +63,25 @@ describe('nust-full pipeline', () => {
     ])
       expect(ids).toContain(n);
   });
-  it('generates provisional blocks for hostel areas, flagged', () => {
+  it('hostel areas are never extruded: dashed boundary + a flat, searchable area place', () => {
     const names = data.report.provisional.map((p) => p.name).sort();
-    expect(names).toEqual(['Razi Hostel']);
-    expect(data.buildings.filter((b) => b.provisional).length).toBe(1);
+    expect(names).toEqual(['Razi Hostel Area']);
+    expect(data.buildings.filter((b) => b.provisional).length).toBe(0);
+    const areas = data.bare.filter((a) => a.kind === 'hostelArea').map((a) => a.name);
+    expect(areas).toEqual(
+      expect.arrayContaining([
+        'Razi Hostel Area',
+        'Ghazali Hostel Area',
+        'Attar Hostel Area',
+        'Rumi Hostel Area',
+        'Fatima Hostels Area',
+      ]),
+    );
+    const razi = data.places.find((p) => p.id === 'prov-razi-hostel')!;
+    expect(razi).toMatchObject({ flat: true, footprints: [], category: 'hostel', verified: false });
+    const al = razi.aliases.map((a) => a.toLowerCase());
+    for (const a of ['rehmat', 'rahmat', 'razi', 'razi 1', 'razi hostel', 'razi hostels'])
+      expect(al).toContain(a);
   });
   it('alias variants (Zakaria, Rahmat, Salon)', () => {
     const z = data.places.find((p) => /zakariya/i.test(p.name))!;

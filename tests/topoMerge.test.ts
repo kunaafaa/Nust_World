@@ -93,9 +93,33 @@ describe('topo merge: rules', () => {
     expect(ghazali.footprint).toEqual(original.footprint);
     expect(ghazali.flags?.[0]).toMatch(/differ by/);
   });
+  it('Razi Hostel Area: the one real outline (Overture / Microsoft ML) is extruded as is, 4 x 3.0 m', () => {
+    const h = merge.hostels.find((x) => x.areaId === 'way/209855481')!;
+    expect(h.upstream).toBe('Microsoft ML Buildings');
+    expect(h.incomplete).toBe(true); // the rest exist only in the excluded Google upstream
+    const b = merged.buildings.find((x) => x.id === `topo:${h.id}`)!;
+    expect(b.footprint.length).toBe(h.ring.length); // never simplified
+    expect(b.height).toBeCloseTo(12);
+    expect(b.roofType).toBe('hostel-template');
+    expect(b.entrance).toBeDefined();
+    expect(b.flags).toContain('curved central block: height unverified');
+    const p = merged.places.find((x) => x.id === 'prov-razi-hostel')!;
+    expect(p).toMatchObject({
+      levels: 4,
+      levelsEstimated: true,
+      entranceApprox: true,
+      flat: false,
+      verified: false,
+      category: 'hostel',
+    });
+    // the label sits on the building, not on the area centre
+    expect(pointInRing(p.pos, b.footprint)).toBe(true);
+    // nothing else in the map is a hostel area block
+    expect(merged.buildings.filter((x) => x.id.endsWith('-prov'))).toHaveLength(0);
+  });
   it('rule 5: heights are not taken from the topo data', () => {
     for (const b of merged.buildings.filter((x) => x.id.startsWith('topo:')))
-      expect(b.heightSource).toBe('category default (provisional)');
+      expect(b.heightSource).toMatch(/^(category default \(provisional\)|heights\.ts: )/);
     const by = (d: typeof base) => new Map(d.buildings.map((b) => [b.id, b.height]));
     const bm = by(base);
     for (const [id, h] of by(merged)) if (bm.has(id)) expect(h).toBe(bm.get(id));

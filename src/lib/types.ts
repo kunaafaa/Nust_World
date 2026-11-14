@@ -75,6 +75,12 @@ export interface Place {
   needsOutline?: boolean;
   /** Point landmark (OSM node): drawn as a small marker in its category colour, tappable */
   point?: boolean;
+  /** Floor count is an estimate (e.g. from photos), shown as "4 (estimated)" */
+  levelsEstimated?: boolean;
+  /** `entrance` is an approximate, unverified position (not surveyed) */
+  entranceApprox?: boolean;
+  /** Show a photo slot on the card (photos only from /public/photos, placeholder when missing) */
+  photoSlot?: boolean;
 }
 
 export interface BuildingShape {
@@ -95,6 +101,10 @@ export interface BuildingShape {
   /** Numeric room/unit label (e.g. "205"): drawn as a hostel-tinted block, never searchable */
   unit?: boolean;
   provisional?: boolean;
+  /** Approximate entrance on the footprint edge (scene metres), used by the 'hostel-template' roof decoration */
+  entrance?: Vec2;
+  /** Outline colour override (a theme token), e.g. a hostel accent */
+  accent?: string;
 }
 
 export interface Polyline {

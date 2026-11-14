@@ -9,7 +9,7 @@ import { dashes, drape, mergeAll, polygonGeometry, ribbon } from './geom';
 import { groundY, terrainActive } from '@/lib/terrain';
 import { pitchMarkings } from './pitches';
 import { sceneModel } from './model';
-import { COL, EDGE, FOOT_WIDTH, LAYER, ROAD_WIDTH, type LayerName } from './theme';
+import { COL, EDGE, FOOT_WIDTH, HOSTEL, LAYER, ROAD_WIDTH, type LayerName } from './theme';
 import { edgeFade, setEdgeField, type EdgeKind } from './edge';
 
 /** Every ground layer is its own merged mesh: fixed height + renderOrder + polygonOffset so nothing z-fights. */
@@ -71,10 +71,21 @@ export function Environment({ data }: { data: CampusData }) {
       .filter((r) => r.roundabout)
       .map((r) => ribbon(closed(r.points), 0.35, markY));
     const bay = parkingLines(model.parked.lines);
+    // Hostel areas (driveway, parking, lawns around the hostels) are not buildings: no fill, no height, only a
+    // faint dashed boundary on the ground.
+    const hostelEdge: (THREE.BufferGeometry | null)[] = [];
+    for (const a of data.bare)
+      if (a.kind === 'hostelArea')
+        for (const d of dashes(closed(a.points), HOSTEL.areaDash, HOSTEL.areaGap))
+          hostelEdge.push(ribbon(d, HOSTEL.areaWidth, markY));
 
     const flat = {
       base: null as THREE.BufferGeometry | null,
-      bare: fills([...data.bare], 'bare'),
+      bare: fills(
+        data.bare.filter((a) => a.kind !== 'hostelArea'),
+        'bare',
+      ),
+      hostelEdge: mergeAll(hostelEdge),
       grass: fills(
         data.green.filter((g) => !isForest(g.kind)),
         'grass',
@@ -178,6 +189,11 @@ export function Environment({ data }: { data: CampusData }) {
       cricket: layerMat(COL.cricketStrip, 'mark'),
       lane: layerMat(COL.lane, 'mark', {}, 'road'),
       bay: layerMat(COL.parkingLine, 'mark'),
+      hostelEdge: layerMat(HOSTEL.areaEdge, 'mark', {
+        transparent: true,
+        opacity: HOSTEL.areaEdgeOpacity,
+        depthWrite: false,
+      }),
       ground: new THREE.MeshStandardMaterial({ color: COL.base, roughness: 1 }),
     }),
     [],
@@ -232,6 +248,7 @@ export function Environment({ data }: { data: CampusData }) {
       {layer(geo.pitchLines, mats.mark, 12, 'pitch-lines')}
       {layer(geo.bay, mats.bay, 12, 'bay-lines')}
       {layer(geo.centre, mats.lane, 12, 'centre-lines')}
+      {layer(geo.hostelEdge, mats.hostelEdge, 12, 'hostel-area-edge')}
       {borderPts && (
         <>
           <Line

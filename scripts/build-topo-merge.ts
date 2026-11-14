@@ -197,7 +197,7 @@ const conf = (c: Cls): 'high' | 'medium' | 'low' =>
 
 // ── hostel areas / named points ──
 const hostelAreas = ours.bare.filter(
-  (a) => a.kind === 'residential' && /hostel/i.test(a.name ?? ''),
+  (a) => a.kind === 'hostelArea' && /hostel/i.test(a.name ?? ''),
 );
 const HOSTEL_NAME =
   /hostel|ghazali|attar|liaquat|rumi|razi|fatima|rehmat|rahmat|zakar|hajveri|ayesha|khadija|zainab|amna|villas/i;
@@ -238,7 +238,12 @@ for (const c of cls) {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '');
-    const existing = osmNamedHostels.find((p) => p.name.toLowerCase() === name.toLowerCase());
+    // by name, or (area places are named after the full OSM area name) by the area's OSM id
+    const existing = osmNamedHostels.find(
+      (p) =>
+        p.name.toLowerCase() === name.toLowerCase() ||
+        (!pt && p.source === 'provisional' && `way/${p.osmId}` === ar!.id),
+    );
     const placeId = existing ? existing.id : `topo-${slugId}`;
     if (isExcluded) {
       groupExcluded.add(placeId);
@@ -281,15 +286,16 @@ for (const c of cls) {
   });
   action.set(o.id, 'added (provisional)');
 }
-// A hostel group is applied only if NONE of its outlines were excluded: a partial set would replace the provisional
-// block with some of the buildings and silently drop the rest. Deferred groups keep what they had before.
-const deferredHostels = hostels.filter((h) => groupExcluded.has(h.placeId));
-for (const h of deferredHostels)
-  action.set(
-    h.id,
-    `hostel footprint deferred: other outlines in "${h.placeName}" are excluded by override`,
-  );
-hostels = hostels.filter((h) => !groupExcluded.has(h.placeId));
+// Hostel areas are no longer drawn as a provisional block (only a dashed boundary), so a partial set of real
+// outlines hides nothing: apply the outlines that are allowed, and record that the group is incomplete.
+const deferredHostels: typeof hostels = [];
+for (const h of hostels)
+  if (groupExcluded.has(h.placeId))
+    action.set(
+      h.id,
+      `hostel footprint: ${h.placeName} (group incomplete: other outlines are excluded by override)`,
+    );
+hostels = hostels.map((h) => (groupExcluded.has(h.placeId) ? { ...h, incomplete: true } : h));
 // Razi etc: provisional blocks from an area polygon are replaced only where real outlines were found in that area
 const provisionalAreas = ours.places.filter((p) => p.provisional && p.category === 'hostel');
 const replacedProvisional = provisionalAreas

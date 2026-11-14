@@ -1,7 +1,7 @@
 import { EXTRA_NAME_DENYLIST, HIDDEN_LANDMARK_IDS, SEARCH_HINTS } from '@/data/extras';
 import { DEFAULT_FLOOR_HEIGHT_M, HEIGHTS, type RoofType } from '@/data/heights';
 import { nameVariants } from './aliases';
-import { centroid, dist, insetRing, pointInPolygon, polygonArea, polylabel, project } from './geo';
+import { centroid, dist, pointInPolygon, polygonArea, polylabel, project } from './geo';
 import { parseHeight, parseOsm, type OsmFeature, type RawOsm } from './osm';
 import type {
   Area,
@@ -271,7 +271,7 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
       water.push({ ...area, kind: 'wetland' });
     } else if (t.landuse === 'residential' && nm && /hostel/i.test(nm)) {
       hostelAreas.push(f);
-      bare.push({ ...area, kind: 'residential' });
+      bare.push({ ...area, kind: 'hostelArea' });
     } else if (
       t.leisure === 'park' ||
       t.leisure === 'garden' ||
@@ -321,7 +321,7 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
     const [outer, ...holes] = f.geom.rings;
     const isContainer = hostelCentres.some((c) => c.id !== f.id && pointInPolygon(c.pos, [outer]));
     if (isContainer) {
-      bare.push({ id: f.id, kind: 'residential', points: outer, holes, name: f.tags.name });
+      bare.push({ id: f.id, kind: 'hostelArea', points: outer, holes, name: f.tags.name });
       containers.push(f.tags.name ?? f.id);
       continue;
     }
@@ -492,10 +492,12 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
       );
       continue;
     }
-    const ring = insetRing(outer, 3) ?? outer;
+    // An area polygon is never extruded: it is drawn as a faint dashed boundary (kind 'hostelArea') and gets a
+    // flat, searchable place. Real building outlines (OSM, or the topo merge) attach to this place later.
     const id = `prov-${slug(nm)}`;
-    const r = resolveHeight(f.num, {}, 'hostel');
-    const aliases = new Set([nm, ...nameVariants(nm)]);
+    const full = f.tags.name ?? nm;
+    const aliases = new Set([nm, full, ...nameVariants(nm), ...(SEARCH_HINTS[f.num] ?? [])]);
+    for (const a of [...aliases]) for (const v of nameVariants(a)) aliases.add(v);
     for (const p of hostelPoints) {
       if (p.geom.kind === 'point' && pointInPolygon(p.geom.p, [outer])) {
         const pn = p.tags.name!;
@@ -504,39 +506,31 @@ export function buildCampus({ osm, landmarks }: CampusInputs): CampusData {
         consumedPoints.add(p.id);
       }
     }
-    raw.push({
-      id: `${f.id}-prov`,
-      osmId: f.num,
-      name: nm,
-      footprint: ring,
-      holes: [],
-      height: r.h,
-      heightSource: 'category default (provisional)',
-      roofType: 'flat',
-      placeId: id,
-      provisional: true,
-    });
+    const [cx, cz] = polylabel([outer], 0.5);
     places.push({
       id,
       source: 'provisional',
       osmId: f.num,
-      name: nm,
-      shortName: nm,
+      name: full,
+      shortName: full,
       category: 'hostel',
       aliases: [...aliases],
       description: 'Info coming soon',
       verified: false,
       offCampus: false,
-      pos: polylabel([ring], 0.5),
-      footprints: [ring],
-      resolvedHeight: r.h,
-      heightSource: 'category default (provisional)',
+      pos: [cx, cz],
+      footprints: [],
+      resolvedHeight: 0,
+      heightSource: 'n/a (area only)',
       heightEstimated: true,
-      flat: false,
-      provisional: true,
+      flat: true,
+      needsOutline: true,
+      photoSlot: true,
     });
-    provisional.push({ id, name: nm, areaM2: Math.round(Math.abs(polygonArea(ring))) });
-    needsOutline.push(`${nm} (area ${f.id}): provisional block drawn from the area polygon`);
+    provisional.push({ id, name: full, areaM2: Math.round(Math.abs(polygonArea(outer))) });
+    needsOutline.push(
+      `${full} (area ${f.id}): no OSM building outline inside; area drawn as a dashed boundary`,
+    );
   }
   for (const p of hostelPoints) {
     if (consumedPoints.has(p.id) || p.geom.kind !== 'point') continue;

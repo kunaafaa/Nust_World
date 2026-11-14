@@ -7,6 +7,7 @@
  * Terrain/canopy (CC BY 4.0, per the export licence files) feed the tree and terrain layers.
  */
 import overridesJson from '../../data/topo-overrides.json';
+import { DEFAULT_FLOOR_HEIGHT_M, HEIGHTS } from '../data/heights';
 import { GLOBAL_OFFSET } from './config';
 import { nameVariants } from './aliases';
 import { DEFAULT_HEIGHT, FOOT_KINDS, ROAD_KINDS } from './campus';
@@ -31,6 +32,8 @@ export interface MergeHostel extends MergeBuilding {
   /** area = inside an OSM hostel area polygon; point = contains a named OSM point */
   via: 'area' | 'point';
   areaId: string;
+  /** Other outlines of the same group exist only in an excluded upstream (e.g. Google Open Buildings) */
+  incomplete?: boolean;
 }
 export interface MergeRoad {
   id: string;
@@ -73,6 +76,43 @@ const toScene = (p: LL): Vec2 => {
   return GLOBAL_OFFSET.enabled ? [x + GLOBAL_OFFSET.east, z - GLOBAL_OFFSET.north] : [x, z];
 };
 const ring = (r: LL[]): Vec2[] => r.map(toScene);
+
+function segDist(p: Vec2, a: Vec2, b: Vec2): number {
+  const dx = b[0] - a[0],
+    dz = b[1] - a[1];
+  const l2 = dx * dx + dz * dz;
+  const t = l2 ? Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dz) / l2)) : 0;
+  return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dz);
+}
+
+/**
+ * Point on a footprint's edge closest to a driveway (service road), sampled every metre: the approximate entrance on
+ * the side facing the drive. Undefined when no driveway is within 40 m. Approximate by design, never surveyed.
+ */
+export function edgeFacing(fp: Vec2[], drives: Polyline[], maxM = 40): Vec2 | undefined {
+  let best: Vec2 | undefined,
+    bd = maxM;
+  const near = drives.filter((r) =>
+    r.points.some((q) => fp.some((p) => Math.hypot(p[0] - q[0], p[1] - q[1]) < maxM + 60)),
+  );
+  for (let i = 0; i < fp.length - 1; i++) {
+    const a = fp[i],
+      b = fp[i + 1];
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1])));
+    for (let k = 0; k <= n; k++) {
+      const p: Vec2 = [a[0] + ((b[0] - a[0]) * k) / n, a[1] + ((b[1] - a[1]) * k) / n];
+      for (const r of near)
+        for (let j = 0; j < r.points.length - 1; j++) {
+          const d = segDist(p, r.points[j], r.points[j + 1]);
+          if (d < bd) {
+            bd = d;
+            best = p;
+          }
+        }
+    }
+  }
+  return best;
+}
 
 export interface TopoReport {
   additions: number;
@@ -175,23 +215,52 @@ export function applyTopoMerge(
       const rings = hs.map((h) => ring(h.ring));
       const existing = places.findIndex((p) => p.id === placeId);
       const name = hs[0].placeName;
-      // the provisional block drawn from the area polygon goes away once real outlines exist
+      // heights.ts entry for the OSM hostel area these outlines sit in (the outlines carry no OSM id themselves)
+      const areaNum = Number(/\d+$/.exec(hs[0].areaId)?.[0]);
+      const he = HEIGHTS.find((h) => h.osmId === areaNum);
+      const height = he?.floors
+        ? he.floors * (he.floorHeightM ?? DEFAULT_FLOOR_HEIGHT_M)
+        : DEFAULT_HEIGHT.hostel;
+      const heightSource = he?.floors
+        ? `heights.ts: ${he.floors} floors x ${he.floorHeightM ?? DEFAULT_FLOOR_HEIGHT_M} m (${he.source}, unverified)`
+        : 'category default (provisional)';
+      const roofType = he?.roofType ?? 'flat';
+      const drive = roads.filter((r) => r.kind === 'service' && !r.provisional);
+      // any leftover provisional block for this place goes away once real outlines exist
       buildings = buildings.filter((b) => !(b.placeId === placeId && b.provisional && !b.source));
-      const shapes: BuildingShape[] = hs.map((h, k) => ({
-        id: `topo:${h.id}`,
-        osmId: 0,
-        name,
-        footprint: rings[k],
-        holes: [],
-        height: DEFAULT_HEIGHT.hostel,
-        heightSource: 'category default (provisional)',
-        roofType: 'flat',
-        placeId,
-        provisional: true,
-        source: `${h.source}: ${h.upstream}`,
-      }));
+      const shapes: BuildingShape[] = hs.map((h, k) => {
+        const flags = [
+          `outline from ${h.source}: ${h.upstream} (${h.confidence} confidence)`,
+          ...(h.incomplete
+            ? ['other buildings in this area are not drawn (their outlines are excluded)']
+            : []),
+          ...(roofType === 'hostel-template'
+            ? [
+                'curved central block: height unverified',
+                'drum, vents and entrance canopy: approximate decoration',
+                'entrance: approximate, unverified (edge facing the loop driveway)',
+              ]
+            : []),
+        ];
+        return {
+          id: `topo:${h.id}`,
+          osmId: 0,
+          name,
+          footprint: rings[k],
+          holes: [],
+          height,
+          heightSource,
+          roofType,
+          placeId,
+          provisional: true,
+          source: `${h.source}: ${h.upstream}`,
+          flags,
+          entrance: roofType === 'hostel-template' ? edgeFacing(rings[k], drive) : undefined,
+        };
+      });
       buildings.push(...shapes);
       const biggest = rings.reduce((a, r) => (r.length >= a.length ? r : a), rings[0]);
+      const bigShape = shapes[rings.indexOf(biggest)];
       if (existing >= 0)
         places[existing] = {
           ...places[existing],
@@ -201,6 +270,11 @@ export function applyTopoMerge(
           needsOutline: false,
           provisional: true,
           source: places[existing].source === 'extra' ? 'topo' : places[existing].source,
+          resolvedHeight: height,
+          heightSource,
+          heightEstimated: !he?.floors,
+          ...(he?.floors ? { levels: he.floors, levelsEstimated: true } : {}),
+          ...(bigShape.entrance ? { entrance: bigShape.entrance, entranceApprox: true } : {}),
         };
       else
         places.push({
