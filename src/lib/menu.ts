@@ -6,6 +6,8 @@ export interface MenuVariant {
 }
 export interface MenuItem {
   id: string;
+  /** stable `<cafeId>/<slug>` used for food ratings (data/menus/item-keys.json) */
+  key?: string;
   name: string;
   price: number;
   description?: string;

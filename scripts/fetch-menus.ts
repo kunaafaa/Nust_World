@@ -4,21 +4,50 @@
  *   1. public API   https://nustcafe.vercel.app/api/menu/<id>   (JSON only; today it does not exist)
  *   2. the cafe's public JS chunk referenced by the site's main bundle (what the page itself renders from)
  * Nothing is invented or rounded. No keys, no logins, no private URLs.
+ *
+ * Every item also gets a stable rating key from data/menus/item-keys.json (see assignItemKeys).
+ * `npm run menus -- --keys-only` adds keys to the menus already on disk without touching the network.
  */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import {
+  assignItemKeys,
   buildMenu,
   menuNotes,
   parseCafeChunk,
   parseCafeList,
   rawFromApi,
+  type ItemKeyMap,
   type Menu,
   type RawItem,
 } from './lib/menus';
 
 const BASE = process.env.NUSTCAFE_URL ?? 'https://nustcafe.vercel.app';
 const ROOT = path.resolve(__dirname, '..');
+const MENU_DIR = path.join(ROOT, 'data', 'menus');
+const KEY_FILE = path.join(MENU_DIR, 'item-keys.json');
+
+function loadKeys(): ItemKeyMap {
+  return existsSync(KEY_FILE) ? (JSON.parse(readFileSync(KEY_FILE, 'utf8')) as ItemKeyMap) : {};
+}
+function saveKeys(map: ItemKeyMap) {
+  const sorted = Object.fromEntries(Object.entries(map).sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(KEY_FILE, JSON.stringify(sorted, null, 2) + '\n');
+}
+
+function keysOnly() {
+  let map = loadKeys();
+  for (const f of readdirSync(MENU_DIR).filter(
+    (n) => n.endsWith('.json') && n !== 'item-keys.json',
+  )) {
+    const file = path.join(MENU_DIR, f);
+    const r = assignItemKeys(JSON.parse(readFileSync(file, 'utf8')) as Menu, map);
+    map = r.map;
+    writeFileSync(file, JSON.stringify(r.menu, null, 2) + '\n');
+    console.log(`${f.padEnd(20)} ${r.added.length} new keys`);
+  }
+  saveKeys(map);
+}
 
 async function get(url: string) {
   const r = await fetch(url, { headers: { 'user-agent': 'nust-world-menu-sync' } });
@@ -34,11 +63,12 @@ async function main() {
   const cafes = parseCafeList(bundle);
   if (!cafes.length) throw new Error('no cafes found in the main bundle (site changed?)');
 
-  const dir = path.join(ROOT, 'data', 'menus');
+  const dir = MENU_DIR;
   mkdirSync(dir, { recursive: true });
   const now = new Date().toISOString();
   const menus: Menu[] = [];
   const problems: string[] = [];
+  let keys = loadKeys();
 
   for (const c of cafes) {
     let raw: RawItem[] | null = null;
@@ -66,7 +96,12 @@ async function main() {
       raw = parseCafeChunk(await r.text());
       source = url;
     }
-    const menu = buildMenu({ cafeId: c.id, name: c.name, source, updatedAt: now }, raw);
+    const keyed = assignItemKeys(
+      buildMenu({ cafeId: c.id, name: c.name, source, updatedAt: now }, raw),
+      keys,
+    );
+    keys = keyed.map;
+    const menu = keyed.menu;
     menus.push(menu);
     writeFileSync(path.join(dir, `${c.id}.json`), JSON.stringify(menu, null, 2) + '\n');
     const n = menu.categories.reduce((s, k) => s + k.items.length, 0);
@@ -74,6 +109,7 @@ async function main() {
       `${c.id.padEnd(14)} ${String(n).padStart(4)} items  ${menu.categories.length} categories  <- ${source}`,
     );
   }
+  saveKeys(keys);
   if (problems.length) console.warn('\nProblems:\n' + problems.join('\n'));
 
   // docs/menu-notes.md (generated part)
@@ -119,7 +155,9 @@ async function main() {
   writeFileSync(path.join(ROOT, 'docs', 'menu-notes.md'), lines.join('\n'));
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (process.argv.includes('--keys-only')) keysOnly();
+else
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

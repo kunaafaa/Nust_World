@@ -12,7 +12,8 @@
           "id": "1",
           "name": "Fries",
           "price": 130,
-          "available": true
+          "available": true,
+          "key": "retro/fries"
         }
       ]
     },
@@ -23,7 +24,8 @@
           "id": "2",
           "name": "Club sandwich",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "retro/club-sandwich"
         }
       ]
     },
@@ -34,13 +36,15 @@
           "id": "3",
           "name": "Zinger burger with fries",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "retro/zinger-burger-with-fries"
         },
         {
           "id": "5",
           "name": "Double Maza Burger",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "retro/double-maza-burger"
         }
       ]
     },
@@ -51,7 +55,8 @@
           "id": "4",
           "name": "Pizza pasta",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/pizza-pasta"
         }
       ]
     },
@@ -62,85 +67,99 @@
           "id": "6",
           "name": "Mcdonald pizza",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "retro/mcdonald-pizza"
         },
         {
           "id": "7",
           "name": "Malai boti pizza",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "retro/malai-boti-pizza"
         },
         {
           "id": "8",
           "name": "Chicken cheese stuffed pizza",
           "price": 1000,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-cheese-stuffed-pizza"
         },
         {
           "id": "29",
           "name": "El Special Pizza",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "retro/el-special-pizza"
         },
         {
           "id": "30",
           "name": "Papcroni Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/papcroni-pizza"
         },
         {
           "id": "31",
           "name": "Sausages Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/sausages-pizza"
         },
         {
           "id": "32",
           "name": "Chapli kabab Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/chapli-kabab-pizza"
         },
         {
           "id": "33",
           "name": "Supreme Pizza",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "retro/supreme-pizza"
         },
         {
           "id": "34",
           "name": "Bar B Q Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/bar-b-q-pizza"
         },
         {
           "id": "35",
           "name": "Grill Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/grill-pizza"
         },
         {
           "id": "36",
           "name": "Chicken Tikka Pizza",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-tikka-pizza"
         },
         {
           "id": "37",
           "name": "Crown Crust Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/crown-crust-pizza"
         },
         {
           "id": "38",
           "name": "Smoke Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/smoke-pizza"
         },
         {
           "id": "39",
           "name": "Chicken Fajita Pizza",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-fajita-pizza"
         }
       ]
     },
@@ -151,7 +170,8 @@
           "id": "9",
           "name": "Tortilla wrap",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "retro/tortilla-wrap"
         }
       ]
     },
@@ -162,25 +182,29 @@
           "id": "10",
           "name": "Apple juice",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "retro/apple-juice"
         },
         {
           "id": "11",
           "name": "Strawberry juice",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "retro/strawberry-juice"
         },
         {
           "id": "12",
           "name": "lasi",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "retro/lasi"
         },
         {
           "id": "16",
           "name": "Peach juice",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "retro/peach-juice"
         }
       ]
     },
@@ -191,49 +215,57 @@
           "id": "13",
           "name": "Tikka jumbo roll",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "retro/tikka-jumbo-roll"
         },
         {
           "id": "14",
           "name": "Malai boti jumbo roll",
           "price": 600,
-          "available": true
+          "available": true,
+          "key": "retro/malai-boti-jumbo-roll"
         },
         {
           "id": "41",
           "name": "Seekh kabab",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "retro/seekh-kabab"
         },
         {
           "id": "42",
           "name": "Malai Boti Roll",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "retro/malai-boti-roll"
         },
         {
           "id": "43",
           "name": "BBQ Roll Paratha",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "retro/bbq-roll-paratha"
         },
         {
           "id": "44",
           "name": "Chicken Tikka Roll",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-tikka-roll"
         },
         {
           "id": "45",
           "name": "Chicken Paratha Roll",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-paratha-roll"
         },
         {
           "id": "46",
           "name": "Chicken Mayo Garlic Roll",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-mayo-garlic-roll"
         }
       ]
     },
@@ -244,13 +276,15 @@
           "id": "15",
           "name": "Dhai ballah",
           "price": 170,
-          "available": true
+          "available": true,
+          "key": "retro/dhai-ballah"
         },
         {
           "id": "28",
           "name": "EGG Omelet",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "retro/egg-omelet"
         }
       ]
     },
@@ -261,7 +295,8 @@
           "id": "17",
           "name": "Peach shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "retro/peach-shake"
         }
       ]
     },
@@ -272,13 +307,15 @@
           "id": "18",
           "name": "Chicken Biryani",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-biryani"
         },
         {
           "id": "19",
           "name": "Chicken Pulao",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-pulao"
         }
       ]
     },
@@ -289,19 +326,22 @@
           "id": "20",
           "name": "Chicken Tikka Piece",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-tikka-piece"
         },
         {
           "id": "21",
           "name": "Chicken Malai Boti (8 Piece)",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-malai-boti-8-piece"
         },
         {
           "id": "22",
           "name": "Chicken Seekh Kabab (4 Piece)",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-seekh-kabab-4-piece"
         }
       ]
     },
@@ -312,31 +352,36 @@
           "id": "23",
           "name": "Aloo Paratha",
           "price": 140,
-          "available": true
+          "available": true,
+          "key": "retro/aloo-paratha"
         },
         {
           "id": "24",
           "name": "Aloo Cheese Paratha",
           "price": 210,
-          "available": true
+          "available": true,
+          "key": "retro/aloo-cheese-paratha"
         },
         {
           "id": "25",
           "name": "Cheese Paratha",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "retro/cheese-paratha"
         },
         {
           "id": "26",
           "name": "Chicken Cheese Paratha",
           "price": 320,
-          "available": true
+          "available": true,
+          "key": "retro/chicken-cheese-paratha"
         },
         {
           "id": "27",
           "name": "Simple Paratha",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "retro/simple-paratha"
         }
       ]
     },
@@ -347,7 +392,8 @@
           "id": "40",
           "name": "Extra Topping/Cheese",
           "price": 140,
-          "available": true
+          "available": true,
+          "key": "retro/extra-topping-cheese"
         }
       ]
     }

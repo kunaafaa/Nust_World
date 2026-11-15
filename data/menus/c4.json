@@ -12,109 +12,127 @@
           "id": "1",
           "name": "Chicken Roll Paratha",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-roll-paratha"
         },
         {
           "id": "2",
           "name": "Chicken Cheese Roll Paratha",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-cheese-roll-paratha"
         },
         {
           "id": "3",
           "name": "Seekh Kebab Roll",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/seekh-kebab-roll"
         },
         {
           "id": "33",
           "name": "Chicken Paratha Roll",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-paratha-roll"
         },
         {
           "id": "34",
           "name": "Chicken Cheese Paratha Roll",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-cheese-paratha-roll"
         },
         {
           "id": "35",
           "name": "Chicken Egg Paratha Roll",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-egg-paratha-roll"
         },
         {
           "id": "36",
           "name": "Zinger Paratha Roll",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/zinger-paratha-roll"
         },
         {
           "id": "37",
           "name": "Jumbo Roll Paratha",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "c4/jumbo-roll-paratha"
         },
         {
           "id": "38",
           "name": "Boom Boom Roll",
           "price": 460,
-          "available": true
+          "available": true,
+          "key": "c4/boom-boom-roll"
         },
         {
           "id": "39",
           "name": "Chicken Hard Spicy Roll",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-hard-spicy-roll"
         },
         {
           "id": "40",
           "name": "Chicken Cheese Roll",
           "price": 360,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-cheese-roll"
         },
         {
           "id": "41",
           "name": "Chicken Mayo Garlic Roll",
           "price": 360,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-mayo-garlic-roll"
         },
         {
           "id": "42",
           "name": "Chicken Mayo with Cheese Roll",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-mayo-with-cheese-roll"
         },
         {
           "id": "43",
           "name": "Malai Roll Paratha",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c4/malai-roll-paratha"
         },
         {
           "id": "44",
           "name": "Malai Jumbo Roll Paratha",
           "price": 440,
-          "available": true
+          "available": true,
+          "key": "c4/malai-jumbo-roll-paratha"
         },
         {
           "id": "45",
           "name": "Malai Boom Boom Roll Paratha",
           "price": 530,
-          "available": true
+          "available": true,
+          "key": "c4/malai-boom-boom-roll-paratha"
         },
         {
           "id": "46",
           "name": "Malai Boom Boom With Cheese Roll",
           "price": 550,
-          "available": true
+          "available": true,
+          "key": "c4/malai-boom-boom-with-cheese-roll"
         },
         {
           "id": "47",
           "name": "Malai Boom Boom Cheese with Garlic",
           "price": 600,
-          "available": true
+          "available": true,
+          "key": "c4/malai-boom-boom-cheese-with-garlic"
         }
       ]
     },
@@ -125,19 +143,22 @@
           "id": "4",
           "name": "Chicken Shawarma",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-shawarma"
         },
         {
           "id": "52",
           "name": "Chicken Cheese Shawarma",
           "price": 310,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-cheese-shawarma"
         },
         {
           "id": "53",
           "name": "Shawarma Platter",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "c4/shawarma-platter"
         }
       ]
     },
@@ -148,49 +169,57 @@
           "id": "5",
           "name": "Chana Chaat",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c4/chana-chaat"
         },
         {
           "id": "6",
           "name": "Dahi Bhalla",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c4/dahi-bhalla"
         },
         {
           "id": "7",
           "name": "Samosa Chaat",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "c4/samosa-chaat"
         },
         {
           "id": "15",
           "name": "Aloo Samosa",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "c4/aloo-samosa"
         },
         {
           "id": "16",
           "name": "Chicken Samosa",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-samosa"
         },
         {
           "id": "19",
           "name": "Shami Kebab",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "c4/shami-kebab"
         },
         {
           "id": "27",
           "name": "Omelette",
           "price": 80,
-          "available": true
+          "available": true,
+          "key": "c4/omelette"
         },
         {
           "id": "28",
           "name": "Fried Egg",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "c4/fried-egg"
         }
       ]
     },
@@ -201,7 +230,8 @@
           "id": "8",
           "name": "Chicken Dumplings",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-dumplings"
         }
       ]
     },
@@ -212,7 +242,8 @@
           "id": "9",
           "name": "Seasonal Fruit Juices",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/seasonal-fruit-juices"
         }
       ]
     },
@@ -223,31 +254,36 @@
           "id": "10",
           "name": "Zinger Burger",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/zinger-burger"
         },
         {
           "id": "11",
           "name": "Chicken Patty Burger",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-patty-burger"
         },
         {
           "id": "12",
           "name": "Shami Burger",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c4/shami-burger"
         },
         {
           "id": "13",
           "name": "Shami Egg Burger",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "c4/shami-egg-burger"
         },
         {
           "id": "14",
           "name": "Chapli Kabab Burger",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/chapli-kabab-burger"
         }
       ]
     },
@@ -258,13 +294,15 @@
           "id": "17",
           "name": "Chicken Roll",
           "price": 70,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-roll"
         },
         {
           "id": "18",
           "name": "Vegetable Roll",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "c4/vegetable-roll"
         }
       ]
     },
@@ -275,13 +313,15 @@
           "id": "20",
           "name": "Chicken Biryani",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-biryani"
         },
         {
           "id": "21",
           "name": "Pulao",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "c4/pulao"
         }
       ]
     },
@@ -292,13 +332,15 @@
           "id": "22",
           "name": "Spaghetti",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c4/spaghetti"
         },
         {
           "id": "23",
           "name": "Macaroni",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c4/macaroni"
         }
       ]
     },
@@ -309,13 +351,15 @@
           "id": "24",
           "name": "Fries",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c4/fries"
         },
         {
           "id": "25",
           "name": "Loaded Fries",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c4/loaded-fries"
         }
       ]
     },
@@ -326,7 +370,8 @@
           "id": "26",
           "name": "Chanay",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c4/chanay"
         }
       ]
     },
@@ -337,7 +382,8 @@
           "id": "29",
           "name": "Paratha",
           "price": 80,
-          "available": true
+          "available": true,
+          "key": "c4/paratha"
         }
       ]
     },
@@ -348,19 +394,22 @@
           "id": "30",
           "name": "Tea",
           "price": 80,
-          "available": true
+          "available": true,
+          "key": "c4/tea"
         },
         {
           "id": "31",
           "name": "Cardamom Tea",
           "price": 100,
-          "available": true
+          "available": true,
+          "key": "c4/cardamom-tea"
         },
         {
           "id": "32",
           "name": "Coffee",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c4/coffee"
         }
       ]
     },
@@ -371,25 +420,29 @@
           "id": "48",
           "name": "Chicken Seekh Boti",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-seekh-boti"
         },
         {
           "id": "49",
           "name": "Chicken Malai Boti",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-malai-boti"
         },
         {
           "id": "50",
           "name": "Chicken Tikka (Chest)",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-tikka-chest"
         },
         {
           "id": "51",
           "name": "Chicken Tikka (Leg)",
           "price": 420,
-          "available": true
+          "available": true,
+          "key": "c4/chicken-tikka-leg"
         }
       ]
     },
@@ -400,7 +453,8 @@
           "id": "54",
           "name": "Cheese",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "c4/cheese"
         }
       ]
     }

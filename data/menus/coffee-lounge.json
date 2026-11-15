@@ -12,43 +12,50 @@
           "id": "1",
           "name": "Chicken Chili Dry",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-chili-dry"
         },
         {
           "id": "2",
           "name": "Dragon Chicken",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/dragon-chicken"
         },
         {
           "id": "3",
           "name": "Kung Pao Chicken",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/kung-pao-chicken"
         },
         {
           "id": "4",
           "name": "Hot Garlic Chicken",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/hot-garlic-chicken"
         },
         {
           "id": "5",
           "name": "Schezwan Chicken",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/schezwan-chicken"
         },
         {
           "id": "6",
           "name": "Mongolian Chicken",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mongolian-chicken"
         },
         {
           "id": "10",
           "name": "Separate Chowmein",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/separate-chowmein"
         }
       ]
     },
@@ -59,19 +66,22 @@
           "id": "7",
           "name": "Gravy With Rice",
           "price": 540,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/gravy-with-rice"
         },
         {
           "id": "8",
           "name": "Gravy With Chowmein",
           "price": 580,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/gravy-with-chowmein"
         },
         {
           "id": "9",
           "name": "Gravy With Combo",
           "price": 620,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/gravy-with-combo"
         }
       ]
     },
@@ -82,19 +92,22 @@
           "id": "11",
           "name": "Chicken Roll Paratha",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-roll-paratha"
         },
         {
           "id": "12",
           "name": "Chicken Cheese Roll Paratha",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-cheese-roll-paratha"
         },
         {
           "id": "13",
           "name": "Zinger Roll",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/zinger-roll"
         }
       ]
     },
@@ -105,25 +118,29 @@
           "id": "14",
           "name": "Small 7 Inches Pizza",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/small-7-inches-pizza"
         },
         {
           "id": "15",
           "name": "Medium 11 Inches Pizza",
           "price": 1000,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/medium-11-inches-pizza"
         },
         {
           "id": "16",
           "name": "Large 13 Inches Pizza",
           "price": 1300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/large-13-inches-pizza"
         },
         {
           "id": "17",
           "name": "Xl 15 Inches Pizza",
           "price": 1500,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/xl-15-inches-pizza"
         }
       ]
     },
@@ -134,19 +151,22 @@
           "id": "18",
           "name": "Chicken Biryani",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-biryani"
         },
         {
           "id": "19",
           "name": "Biryani With Chicken",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/biryani-with-chicken"
         },
         {
           "id": "20",
           "name": "Chicken Pulao",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-pulao"
         }
       ]
     },
@@ -157,25 +177,29 @@
           "id": "21",
           "name": "Beef Vegetable Chanay Full",
           "price": 900,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/beef-vegetable-chanay-full"
         },
         {
           "id": "22",
           "name": "Chicken Haleem",
           "price": 900,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-haleem"
         },
         {
           "id": "23",
           "name": "Chicken Karahi 850 Gms",
           "price": 600,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-karahi-850-gms"
         },
         {
           "id": "24",
           "name": "Chicken Karahi Half 400 Gms",
           "price": 900,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-karahi-half-400-gms"
         }
       ]
     },
@@ -186,19 +210,22 @@
           "id": "25",
           "name": "Chai",
           "price": 80,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chai"
         },
         {
           "id": "28",
           "name": "Malao",
           "price": 110,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/malao"
         },
         {
           "id": "30",
           "name": "Green Tea",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/green-tea"
         }
       ]
     },
@@ -209,19 +236,22 @@
           "id": "26",
           "name": "Cappuccino Latte",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/cappuccino-latte"
         },
         {
           "id": "27",
           "name": "Black Coffee",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/black-coffee"
         },
         {
           "id": "29",
           "name": "Coffee 3 In 1",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/coffee-3-in-1"
         }
       ]
     },
@@ -232,31 +262,36 @@
           "id": "31",
           "name": "Apple Juice",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/apple-juice"
         },
         {
           "id": "32",
           "name": "Pineapple Juice",
           "price": 270,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/pineapple-juice"
         },
         {
           "id": "33",
           "name": "Peach Juice",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/peach-juice"
         },
         {
           "id": "34",
           "name": "Carrot Juice",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/carrot-juice"
         },
         {
           "id": "36",
           "name": "Orange Juice",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/orange-juice"
         }
       ]
     },
@@ -267,7 +302,8 @@
           "id": "35",
           "name": "Lemon Mint",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/lemon-mint"
         }
       ]
     },
@@ -278,115 +314,134 @@
           "id": "37",
           "name": "Mango Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mango-shake"
         },
         {
           "id": "38",
           "name": "Apple Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/apple-shake"
         },
         {
           "id": "39",
           "name": "Pineapple Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/pineapple-shake"
         },
         {
           "id": "40",
           "name": "Peach Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/peach-shake"
         },
         {
           "id": "41",
           "name": "Banana Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/banana-shake"
         },
         {
           "id": "42",
           "name": "Strawberry Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/strawberry-shake"
         },
         {
           "id": "43",
           "name": "Oreo Shake",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/oreo-shake"
         },
         {
           "id": "44",
           "name": "Oreo Banana Shake",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/oreo-banana-shake"
         },
         {
           "id": "45",
           "name": "Chocolate Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chocolate-shake"
         },
         {
           "id": "46",
           "name": "Chocolate Banana Shake",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chocolate-banana-shake"
         },
         {
           "id": "47",
           "name": "Milo Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/milo-shake"
         },
         {
           "id": "48",
           "name": "Date Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/date-shake"
         },
         {
           "id": "109",
           "name": "Mango Ice Cream Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mango-ice-cream-shake"
         },
         {
           "id": "110",
           "name": "Strawberry Ice Cream Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/strawberry-ice-cream-shake"
         },
         {
           "id": "111",
           "name": "Chocolate Ice Cream Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chocolate-ice-cream-shake"
         },
         {
           "id": "112",
           "name": "Vanilla Ice Cream Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/vanilla-ice-cream-shake"
         },
         {
           "id": "113",
           "name": "Oreo Ice Cream Shake",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/oreo-ice-cream-shake"
         },
         {
           "id": "114",
           "name": "Milo Ice Cream Shake",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/milo-ice-cream-shake"
         },
         {
           "id": "115",
           "name": "Coconut Ice Cream Shake",
           "price": 320,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/coconut-ice-cream-shake"
         }
       ]
     },
@@ -397,37 +452,43 @@
           "id": "49",
           "name": "Regular Fries",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/regular-fries"
         },
         {
           "id": "50",
           "name": "Large Fries",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/large-fries"
         },
         {
           "id": "51",
           "name": "Garlic Mayo Fries",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/garlic-mayo-fries"
         },
         {
           "id": "52",
           "name": "Special Fries",
           "price": 320,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/special-fries"
         },
         {
           "id": "53",
           "name": "Peri Peri Fries",
           "price": 320,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/peri-peri-fries"
         },
         {
           "id": "54",
           "name": "Oyster Fries",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/oyster-fries"
         }
       ]
     },
@@ -438,7 +499,8 @@
           "id": "55",
           "name": "Crispy Chicken Wings",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/crispy-chicken-wings"
         }
       ]
     },
@@ -449,25 +511,29 @@
           "id": "56",
           "name": "Zinger Burger",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/zinger-burger"
         },
         {
           "id": "57",
           "name": "Grilled Chicken Burger",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/grilled-chicken-burger"
         },
         {
           "id": "58",
           "name": "Classic Burger",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/classic-burger"
         },
         {
           "id": "59",
           "name": "Mushroom Melt Burger",
           "price": 520,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mushroom-melt-burger"
         }
       ]
     },
@@ -478,25 +544,29 @@
           "id": "60",
           "name": "Club Sandwich",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/club-sandwich"
         },
         {
           "id": "61",
           "name": "Chicken Sandwich",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-sandwich"
         },
         {
           "id": "62",
           "name": "Bbq Sandwich",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/bbq-sandwich"
         },
         {
           "id": "63",
           "name": "Chicken Fajita Sandwich",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-fajita-sandwich"
         }
       ]
     },
@@ -507,25 +577,29 @@
           "id": "64",
           "name": "Fettuccine Pasta R",
           "price": 540,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/fettuccine-pasta-r"
         },
         {
           "id": "65",
           "name": "Fettuccine Pasta L",
           "price": 1020,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/fettuccine-pasta-l"
         },
         {
           "id": "66",
           "name": "Grilled Chicken Pasta",
           "price": 590,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/grilled-chicken-pasta"
         },
         {
           "id": "67",
           "name": "Mac And Cheese Regular",
           "price": 550,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mac-and-cheese-regular"
         }
       ]
     },
@@ -536,43 +610,50 @@
           "id": "68",
           "name": "Corn Dogs 1 Pc",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/corn-dogs-1-pc"
         },
         {
           "id": "69",
           "name": "Corn Dogs 2 Pcs",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/corn-dogs-2-pcs"
         },
         {
           "id": "88",
           "name": "Plain Samosa",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/plain-samosa"
         },
         {
           "id": "89",
           "name": "Aloo Samosa",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/aloo-samosa"
         },
         {
           "id": "90",
           "name": "Chicken Samosa",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-samosa"
         },
         {
           "id": "91",
           "name": "Vegetable Samosa",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/vegetable-samosa"
         },
         {
           "id": "92",
           "name": "Pakora Plate",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/pakora-plate"
         }
       ]
     },
@@ -583,31 +664,36 @@
           "id": "70",
           "name": "Lachho Paratha",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/lachho-paratha"
         },
         {
           "id": "71",
           "name": "Chicken Paratha",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-paratha"
         },
         {
           "id": "72",
           "name": "Aloo Paratha",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/aloo-paratha"
         },
         {
           "id": "73",
           "name": "Chicken Cheese Paratha",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chicken-cheese-paratha"
         },
         {
           "id": "74",
           "name": "Aloo Cheese Paratha",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/aloo-cheese-paratha"
         }
       ]
     },
@@ -618,37 +704,43 @@
           "id": "75",
           "name": "Omelette",
           "price": 100,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/omelette"
         },
         {
           "id": "76",
           "name": "Fried Egg",
           "price": 70,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/fried-egg"
         },
         {
           "id": "77",
           "name": "Half Fry Egg",
           "price": 70,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/half-fry-egg"
         },
         {
           "id": "78",
           "name": "Cheese Omelette",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/cheese-omelette"
         },
         {
           "id": "79",
           "name": "Mushroom Omelette",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mushroom-omelette"
         },
         {
           "id": "80",
           "name": "Mushroom Cheese Omelette",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mushroom-cheese-omelette"
         }
       ]
     },
@@ -659,19 +751,22 @@
           "id": "81",
           "name": "Pak Authentic Shawarma",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/pak-authentic-shawarma"
         },
         {
           "id": "82",
           "name": "Shawarma Ladz Wrap Medium",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/shawarma-ladz-wrap-medium"
         },
         {
           "id": "83",
           "name": "Shawarma Ladz Wrap Large",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/shawarma-ladz-wrap-large"
         }
       ]
     },
@@ -682,7 +777,8 @@
           "id": "84",
           "name": "Cheese Extra",
           "price": 70,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/cheese-extra"
         }
       ]
     },
@@ -693,19 +789,22 @@
           "id": "85",
           "name": "Barfi Gola",
           "price": 100,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/barfi-gola"
         },
         {
           "id": "86",
           "name": "Special Gola",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/special-gola"
         },
         {
           "id": "87",
           "name": "Special Falooda",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/special-falooda"
         }
       ]
     },
@@ -716,49 +815,57 @@
           "id": "93",
           "name": "Samosa Chat Single",
           "price": 110,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/samosa-chat-single"
         },
         {
           "id": "94",
           "name": "Samosa Chat Double",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/samosa-chat-double"
         },
         {
           "id": "95",
           "name": "Dahi Phulki",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/dahi-phulki"
         },
         {
           "id": "96",
           "name": "Chana Chat",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chana-chat"
         },
         {
           "id": "97",
           "name": "Fruit Chat",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/fruit-chat"
         },
         {
           "id": "98",
           "name": "Cream Chat",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/cream-chat"
         },
         {
           "id": "99",
           "name": "Gol Gappay 7 Pieces",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/gol-gappay-7-pieces"
         },
         {
           "id": "100",
           "name": "Gol Gappay 10 Pieces",
           "price": 240,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/gol-gappay-10-pieces"
         }
       ]
     },
@@ -769,49 +876,57 @@
           "id": "101",
           "name": "Mango Ice Cream Single",
           "price": 110,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mango-ice-cream-single"
         },
         {
           "id": "102",
           "name": "Strawberry Ice Cream Single",
           "price": 110,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/strawberry-ice-cream-single"
         },
         {
           "id": "103",
           "name": "Chocolate Ice Cream Single",
           "price": 130,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chocolate-ice-cream-single"
         },
         {
           "id": "104",
           "name": "Vanilla Ice Cream Single",
           "price": 110,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/vanilla-ice-cream-single"
         },
         {
           "id": "105",
           "name": "Mango Ice Cream Double Scoop",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/mango-ice-cream-double-scoop"
         },
         {
           "id": "106",
           "name": "Strawberry Ice Cream Double Scoop",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/strawberry-ice-cream-double-scoop"
         },
         {
           "id": "107",
           "name": "Chocolate Ice Cream Double Scoop",
           "price": 260,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/chocolate-ice-cream-double-scoop"
         },
         {
           "id": "108",
           "name": "Vanilla Ice Cream Double Scoop",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "coffee-lounge/vanilla-ice-cream-double-scoop"
         }
       ]
     }

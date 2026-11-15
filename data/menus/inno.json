@@ -12,37 +12,43 @@
           "id": "1",
           "name": "Zinger Burger",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "inno/zinger-burger"
         },
         {
           "id": "2",
           "name": "Chicken Burger",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-burger"
         },
         {
           "id": "3",
           "name": "Crispy Patty Burger",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/crispy-patty-burger"
         },
         {
           "id": "4",
           "name": "Grilled Burger",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "inno/grilled-burger"
         },
         {
           "id": "5",
           "name": "Egg Shami Burger",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "inno/egg-shami-burger"
         },
         {
           "id": "6",
           "name": "Afghani Burger",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "inno/afghani-burger"
         }
       ]
     },
@@ -53,67 +59,78 @@
           "id": "7",
           "name": "Zinger Roll",
           "price": 330,
-          "available": true
+          "available": true,
+          "key": "inno/zinger-roll"
         },
         {
           "id": "33",
           "name": "Tikka Boti Roll Paratha Small",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/tikka-boti-roll-paratha-small"
         },
         {
           "id": "34",
           "name": "Tikka Boti Roll Paratha Large",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "inno/tikka-boti-roll-paratha-large"
         },
         {
           "id": "35",
           "name": "Seekh Kabab Roll Paratha Small",
           "price": 190,
-          "available": true
+          "available": true,
+          "key": "inno/seekh-kabab-roll-paratha-small"
         },
         {
           "id": "36",
           "name": "Seekh Kabab Roll Paratha Large",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "inno/seekh-kabab-roll-paratha-large"
         },
         {
           "id": "37",
           "name": "Reshmi Kabab Roll Paratha Small",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/reshmi-kabab-roll-paratha-small"
         },
         {
           "id": "38",
           "name": "Reshmi Kabab Roll Paratha Large",
           "price": 330,
-          "available": true
+          "available": true,
+          "key": "inno/reshmi-kabab-roll-paratha-large"
         },
         {
           "id": "39",
           "name": "Green Boti Roll Paratha Small",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "inno/green-boti-roll-paratha-small"
         },
         {
           "id": "40",
           "name": "Green Boti Roll Paratha Large",
           "price": 330,
-          "available": true
+          "available": true,
+          "key": "inno/green-boti-roll-paratha-large"
         },
         {
           "id": "41",
           "name": "Achari Boti Roll Paratha Small",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "inno/achari-boti-roll-paratha-small"
         },
         {
           "id": "42",
           "name": "Achari Boti Roll Paratha Large",
           "price": 330,
-          "available": true
+          "available": true,
+          "key": "inno/achari-boti-roll-paratha-large"
         }
       ]
     },
@@ -124,25 +141,29 @@
           "id": "8",
           "name": "Zinger Shawarma",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "inno/zinger-shawarma"
         },
         {
           "id": "9",
           "name": "Chicken Shawarma",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-shawarma"
         },
         {
           "id": "10",
           "name": "Afghani Shawarma",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "inno/afghani-shawarma"
         },
         {
           "id": "11",
           "name": "Shawarma Platter",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "inno/shawarma-platter"
         }
       ]
     },
@@ -153,7 +174,8 @@
           "id": "12",
           "name": "Chicken Wings",
           "price": 330,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-wings"
         }
       ]
     },
@@ -164,7 +186,8 @@
           "id": "13",
           "name": "Chicken Sandwich",
           "price": 190,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-sandwich"
         }
       ]
     },
@@ -175,31 +198,36 @@
           "id": "14",
           "name": "Fries Regular",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "inno/fries-regular"
         },
         {
           "id": "15",
           "name": "Mayo Fries",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/mayo-fries"
         },
         {
           "id": "16",
           "name": "Loaded Fries",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/loaded-fries"
         },
         {
           "id": "17",
           "name": "Pizza Fries",
           "price": 370,
-          "available": true
+          "available": true,
+          "key": "inno/pizza-fries"
         },
         {
           "id": "18",
           "name": "Smoke Pizza Fries",
           "price": 420,
-          "available": true
+          "available": true,
+          "key": "inno/smoke-pizza-fries"
         }
       ]
     },
@@ -210,85 +238,99 @@
           "id": "19",
           "name": "Tikka Boti Half",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/tikka-boti-half"
         },
         {
           "id": "20",
           "name": "Tikka Boti Full",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "inno/tikka-boti-full"
         },
         {
           "id": "21",
           "name": "Malai Boti Half",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/malai-boti-half"
         },
         {
           "id": "22",
           "name": "Malai Boti Full",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/malai-boti-full"
         },
         {
           "id": "23",
           "name": "Achari Boti Half",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/achari-boti-half"
         },
         {
           "id": "24",
           "name": "Achari Boti Full",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/achari-boti-full"
         },
         {
           "id": "25",
           "name": "Green Boti Half",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/green-boti-half"
         },
         {
           "id": "26",
           "name": "Green Boti Full",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/green-boti-full"
         },
         {
           "id": "27",
           "name": "Seekh Kabab Half",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "inno/seekh-kabab-half"
         },
         {
           "id": "28",
           "name": "Seekh Kabab Full",
           "price": 600,
-          "available": true
+          "available": true,
+          "key": "inno/seekh-kabab-full"
         },
         {
           "id": "29",
           "name": "Reshmi Kabab Half",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/reshmi-kabab-half"
         },
         {
           "id": "30",
           "name": "Reshmi Kabab Full",
           "price": 750,
-          "available": true
+          "available": true,
+          "key": "inno/reshmi-kabab-full"
         },
         {
           "id": "31",
           "name": "Chest Piece",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "inno/chest-piece"
         },
         {
           "id": "32",
           "name": "Leg Piece",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "inno/leg-piece"
         }
       ]
     },
@@ -299,109 +341,127 @@
           "id": "43",
           "name": "Plain Paratha",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "inno/plain-paratha"
         },
         {
           "id": "46",
           "name": "Lahori Kulcha",
           "price": 25,
-          "available": true
+          "available": true,
+          "key": "inno/lahori-kulcha"
         },
         {
           "id": "47",
           "name": "Tandoori Paratha",
           "price": 30,
-          "available": true
+          "available": true,
+          "key": "inno/tandoori-paratha"
         },
         {
           "id": "48",
           "name": "Roghni Naan",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "inno/roghni-naan"
         },
         {
           "id": "49",
           "name": "Meetha Paratha",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "inno/meetha-paratha"
         },
         {
           "id": "50",
           "name": "Kalonji Naan",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "inno/kalonji-naan"
         },
         {
           "id": "51",
           "name": "Aloo Naan",
           "price": 80,
-          "available": true
+          "available": true,
+          "key": "inno/aloo-naan"
         },
         {
           "id": "52",
           "name": "Aloo Achari Naan",
           "price": 90,
-          "available": true
+          "available": true,
+          "key": "inno/aloo-achari-naan"
         },
         {
           "id": "53",
           "name": "Aloo Cheese Naan",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "inno/aloo-cheese-naan"
         },
         {
           "id": "54",
           "name": "Chicken Naan",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-naan"
         },
         {
           "id": "55",
           "name": "Garlic Naan",
           "price": 120,
-          "available": true
+          "available": true,
+          "key": "inno/garlic-naan"
         },
         {
           "id": "56",
           "name": "Chicken Cheese Naan",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-cheese-naan"
         },
         {
           "id": "57",
           "name": "Chicken Achari Naan",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-achari-naan"
         },
         {
           "id": "58",
           "name": "Keema Naan",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "inno/keema-naan"
         },
         {
           "id": "59",
           "name": "Keema Cheese Naan",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/keema-cheese-naan"
         },
         {
           "id": "60",
           "name": "Keema Achari Naan",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/keema-achari-naan"
         },
         {
           "id": "61",
           "name": "Roti",
           "price": 20,
-          "available": true
+          "available": true,
+          "key": "inno/roti"
         },
         {
           "id": "62",
           "name": "Naan",
           "price": 25,
-          "available": true
+          "available": true,
+          "key": "inno/naan"
         }
       ]
     },
@@ -412,19 +472,22 @@
           "id": "44",
           "name": "Cheese",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "inno/cheese"
         },
         {
           "id": "45",
           "name": "Garlic Mayo",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "inno/garlic-mayo"
         },
         {
           "id": "73",
           "name": "Raita",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "inno/raita"
         }
       ]
     },
@@ -435,31 +498,36 @@
           "id": "63",
           "name": "Pizza Small",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "inno/pizza-small"
         },
         {
           "id": "64",
           "name": "Pizza Medium",
           "price": 1050,
-          "available": true
+          "available": true,
+          "key": "inno/pizza-medium"
         },
         {
           "id": "65",
           "name": "Pizza Large",
           "price": 1400,
-          "available": true
+          "available": true,
+          "key": "inno/pizza-large"
         },
         {
           "id": "66",
           "name": "Pizza X-Large",
           "price": 1700,
-          "available": true
+          "available": true,
+          "key": "inno/pizza-x-large"
         },
         {
           "id": "71",
           "name": "Pizza Roll",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/pizza-roll"
         }
       ]
     },
@@ -470,25 +538,29 @@
           "id": "67",
           "name": "White Sauce Pasta",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/white-sauce-pasta"
         },
         {
           "id": "68",
           "name": "Red Sauce Pasta",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/red-sauce-pasta"
         },
         {
           "id": "69",
           "name": "Cheesy Penne Pasta",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "inno/cheesy-penne-pasta"
         },
         {
           "id": "76",
           "name": "Chicken Macaroni",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-macaroni"
         }
       ]
     },
@@ -499,13 +571,15 @@
           "id": "70",
           "name": "Chicken Chowmein",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-chowmein"
         },
         {
           "id": "75",
           "name": "Chicken Manchurian",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-manchurian"
         }
       ]
     },
@@ -516,37 +590,43 @@
           "id": "72",
           "name": "Samosa",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "inno/samosa"
         },
         {
           "id": "85",
           "name": "Fruit Chaat",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/fruit-chaat"
         },
         {
           "id": "86",
           "name": "Chana Salad",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/chana-salad"
         },
         {
           "id": "87",
           "name": "Samosa Chaat",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "inno/samosa-chaat"
         },
         {
           "id": "88",
           "name": "Chana Chaat",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "inno/chana-chaat"
         },
         {
           "id": "89",
           "name": "Dahi Bhallay",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "inno/dahi-bhallay"
         }
       ]
     },
@@ -557,7 +637,8 @@
           "id": "74",
           "name": "Chicken Biryani",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/chicken-biryani"
         }
       ]
     },
@@ -568,31 +649,36 @@
           "id": "77",
           "name": "Banana Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/banana-shake"
         },
         {
           "id": "78",
           "name": "Apple Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/apple-shake"
         },
         {
           "id": "79",
           "name": "Dates Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/dates-shake"
         },
         {
           "id": "80",
           "name": "Oreo Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/oreo-shake"
         },
         {
           "id": "81",
           "name": "Cold Coffee",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/cold-coffee"
         }
       ]
     },
@@ -603,19 +689,22 @@
           "id": "82",
           "name": "Apple Juice",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/apple-juice"
         },
         {
           "id": "83",
           "name": "ABC Juice",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "inno/abc-juice"
         },
         {
           "id": "84",
           "name": "Orange Juice",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "inno/orange-juice"
         }
       ]
     }

@@ -168,6 +168,57 @@ export function buildMenu(
 }
 
 /**
+ * Stable item keys for food ratings: `<cafeId>/<slug>`. The site's own ids are positions in its list and change
+ * when items are added, so ratings are keyed on names instead, through data/menus/item-keys.json:
+ *   { "<cafeId>": { "<category>|<item name>": "<cafeId>/<slug>" } }
+ * Existing entries are never changed or removed, so a key always means the same dish and is never reused.
+ * When the cafe renames a dish, point the new "<category>|<name>" at the old key by hand to keep its ratings.
+ */
+export type ItemKeyMap = Record<string, Record<string, string>>;
+
+export function slugify(s: string, max = 80): string {
+  const out = s
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, max)
+    .replace(/-+$/g, '');
+  return out || 'item';
+}
+
+export const ITEM_KEY_RE = /^[a-z0-9-]{1,40}\/[a-z0-9~-]{1,120}$/;
+
+export function assignItemKeys(
+  menu: Menu,
+  map: ItemKeyMap,
+): { menu: Menu; map: ItemKeyMap; added: string[] } {
+  const cafe = { ...(map[menu.cafeId] ?? {}) };
+  const taken = new Set(Object.values(cafe));
+  const added: string[] = [];
+  const categories = menu.categories.map((c) => ({
+    ...c,
+    items: c.items.map((i) => {
+      const ref = `${c.name}|${i.name}`;
+      let key = cafe[ref];
+      if (!key) {
+        const base = `${menu.cafeId}/${slugify(i.name)}`;
+        const alt = `${menu.cafeId}/${slugify(c.name, 39)}~${slugify(i.name)}`;
+        key = !taken.has(base) ? base : alt;
+        for (let n = 2; taken.has(key); n++) key = `${alt}-${n}`;
+        cafe[ref] = key;
+        taken.add(key);
+        added.push(key);
+      }
+      return { ...i, key };
+    }),
+  }));
+  const sorted = Object.fromEntries(Object.entries(cafe).sort(([a], [b]) => a.localeCompare(b)));
+  return { menu: { ...menu, categories }, map: { ...map, [menu.cafeId]: sorted }, added };
+}
+
+/**
  * Accept a public API payload if (and only if) it looks like a menu: `{ items: [...] }`,
  * a bare array, or `{ categories: [{ name, items }] }`. Returns null for anything else.
  */

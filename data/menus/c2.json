@@ -12,79 +12,92 @@
           "id": "1",
           "name": "Donuts",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/donuts"
         },
         {
           "id": "2",
           "name": "Icing Cupcake",
           "price": 170,
-          "available": true
+          "available": true,
+          "key": "c2/icing-cupcake"
         },
         {
           "id": "3",
           "name": "Chocolate Brownie",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c2/chocolate-brownie"
         },
         {
           "id": "4",
           "name": "Cream Roll",
           "price": 160,
-          "available": true
+          "available": true,
+          "key": "c2/cream-roll"
         },
         {
           "id": "5",
           "name": "Chocolate Eclair",
           "price": 170,
-          "available": true
+          "available": true,
+          "key": "c2/chocolate-eclair"
         },
         {
           "id": "6",
           "name": "Chocolate Chip Cake Slice",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "c2/chocolate-chip-cake-slice"
         },
         {
           "id": "7",
           "name": "Pastry",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "c2/pastry"
         },
         {
           "id": "12",
           "name": "Brownie",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "c2/brownie"
         },
         {
           "id": "19",
           "name": "Filled Donut",
           "price": 240,
-          "available": true
+          "available": true,
+          "key": "c2/filled-donut"
         },
         {
           "id": "20",
           "name": "Cookies",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "c2/cookies"
         },
         {
           "id": "24",
           "name": "Banana Bread",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "c2/banana-bread"
         },
         {
           "id": "27",
           "name": "Mini Donut",
           "price": 130,
-          "available": true
+          "available": true,
+          "key": "c2/mini-donut"
         },
         {
           "id": "34",
           "name": "Chocolate Mousse Large",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "c2/chocolate-mousse-large"
         }
       ]
     },
@@ -95,67 +108,78 @@
           "id": "8",
           "name": "Mini Pizza",
           "price": 240,
-          "available": true
+          "available": true,
+          "key": "c2/mini-pizza"
         },
         {
           "id": "83",
           "name": "Chicken Tikka Pizza Small",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-tikka-pizza-small"
         },
         {
           "id": "84",
           "name": "Chicken Tikka Pizza Medium",
           "price": 800,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-tikka-pizza-medium"
         },
         {
           "id": "85",
           "name": "Chicken Tikka Pizza Large",
           "price": 1200,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-tikka-pizza-large"
         },
         {
           "id": "86",
           "name": "C2 Special Pizza Small",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "c2/c2-special-pizza-small"
         },
         {
           "id": "87",
           "name": "C2 Special Pizza Medium",
           "price": 1000,
-          "available": true
+          "available": true,
+          "key": "c2/c2-special-pizza-medium"
         },
         {
           "id": "88",
           "name": "C2 Special Pizza Large",
           "price": 1400,
-          "available": true
+          "available": true,
+          "key": "c2/c2-special-pizza-large"
         },
         {
           "id": "104",
           "name": "Tikka Pizza Small",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "c2/tikka-pizza-small"
         },
         {
           "id": "105",
           "name": "Tikka Pizza Medium",
           "price": 870,
-          "available": true
+          "available": true,
+          "key": "c2/tikka-pizza-medium"
         },
         {
           "id": "106",
           "name": "Tikka Pizza Large",
           "price": 1300,
-          "available": true
+          "available": true,
+          "key": "c2/tikka-pizza-large"
         },
         {
           "id": "107",
           "name": "Tikka Pizza XL",
           "price": 1500,
-          "available": true
+          "available": true,
+          "key": "c2/tikka-pizza-xl"
         }
       ]
     },
@@ -166,67 +190,78 @@
           "id": "9",
           "name": "Hot Dog Cheese Burger",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "c2/hot-dog-cheese-burger"
         },
         {
           "id": "15",
           "name": "Chicken Zinger Burger",
           "price": 320,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-zinger-burger"
         },
         {
           "id": "21",
           "name": "Afghani Burger Double",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c2/afghani-burger-double"
         },
         {
           "id": "22",
           "name": "Afghani Burger Single",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c2/afghani-burger-single"
         },
         {
           "id": "23",
           "name": "Afghani Burger Plain",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/afghani-burger-plain"
         },
         {
           "id": "72",
           "name": "Tikka Burger",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c2/tikka-burger"
         },
         {
           "id": "73",
           "name": "Egg Shami Burger",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "c2/egg-shami-burger"
         },
         {
           "id": "74",
           "name": "Shami Burger",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/shami-burger"
         },
         {
           "id": "75",
           "name": "Chicken Cheese Burger",
           "price": 340,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-cheese-burger"
         },
         {
           "id": "76",
           "name": "Grilled Chicken Burger",
           "price": 420,
-          "available": true
+          "available": true,
+          "key": "c2/grilled-chicken-burger"
         },
         {
           "id": "77",
           "name": "Chapli Kebab Burger",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c2/chapli-kebab-burger"
         }
       ]
     },
@@ -237,55 +272,64 @@
           "id": "10",
           "name": "Chicken Tikka Sandwich",
           "price": 230,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-tikka-sandwich"
         },
         {
           "id": "11",
           "name": "Chicken Sandwich",
           "price": 210,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-sandwich"
         },
         {
           "id": "16",
           "name": "Chicken Cheese Croissant Sandwich",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-cheese-croissant-sandwich"
         },
         {
           "id": "35",
           "name": "Panini Sandwich",
           "price": 320,
-          "available": true
+          "available": true,
+          "key": "c2/panini-sandwich"
         },
         {
           "id": "38",
           "name": "Fried Sandwich",
           "price": 240,
-          "available": true
+          "available": true,
+          "key": "c2/fried-sandwich"
         },
         {
           "id": "70",
           "name": "Tikka Sandwich 2 Pieces",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/tikka-sandwich-2-pieces"
         },
         {
           "id": "71",
           "name": "Tikka Sandwich 4 Pieces",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c2/tikka-sandwich-4-pieces"
         },
         {
           "id": "81",
           "name": "Chicken Mayo Sandwich",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-mayo-sandwich"
         },
         {
           "id": "82",
           "name": "Club Sandwich",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c2/club-sandwich"
         }
       ]
     },
@@ -296,49 +340,57 @@
           "id": "13",
           "name": "Chicken Patties",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-patties"
         },
         {
           "id": "14",
           "name": "Chicken Cheese Patties",
           "price": 170,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-cheese-patties"
         },
         {
           "id": "17",
           "name": "Chicken Shashlik Stick",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-shashlik-stick"
         },
         {
           "id": "36",
           "name": "Chicken Bread",
           "price": 190,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-bread"
         },
         {
           "id": "37",
           "name": "Pizza Roll",
           "price": 190,
-          "available": true
+          "available": true,
+          "key": "c2/pizza-roll"
         },
         {
           "id": "52",
           "name": "Pakora Half",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/pakora-half"
         },
         {
           "id": "57",
           "name": "Samosa",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "c2/samosa"
         },
         {
           "id": "58",
           "name": "Roll",
           "price": 70,
-          "available": true
+          "available": true,
+          "key": "c2/roll"
         }
       ]
     },
@@ -349,13 +401,15 @@
           "id": "18",
           "name": "Chicken Shawarma",
           "price": 240,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-shawarma"
         },
         {
           "id": "78",
           "name": "Chicken Cheese Shawarma",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-cheese-shawarma"
         }
       ]
     },
@@ -366,43 +420,50 @@
           "id": "25",
           "name": "Green Tea",
           "price": 50,
-          "available": true
+          "available": true,
+          "key": "c2/green-tea"
         },
         {
           "id": "28",
           "name": "Nestea",
           "price": 110,
-          "available": true
+          "available": true,
+          "key": "c2/nestea"
         },
         {
           "id": "29",
           "name": "Coffee",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/coffee"
         },
         {
           "id": "30",
           "name": "Tea Single Tea Bag",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "c2/tea-single-tea-bag"
         },
         {
           "id": "31",
           "name": "Tea Double Tea Bag",
           "price": 70,
-          "available": true
+          "available": true,
+          "key": "c2/tea-double-tea-bag"
         },
         {
           "id": "32",
           "name": "Nes Ice Tea",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/nes-ice-tea"
         },
         {
           "id": "33",
           "name": "Hot Chocolate",
           "price": 240,
-          "available": true
+          "available": true,
+          "key": "c2/hot-chocolate"
         }
       ]
     },
@@ -413,25 +474,29 @@
           "id": "26",
           "name": "French Fries OPPA",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c2/french-fries-oppa"
         },
         {
           "id": "50",
           "name": "Small Fries",
           "price": 130,
-          "available": true
+          "available": true,
+          "key": "c2/small-fries"
         },
         {
           "id": "51",
           "name": "Large Fries",
           "price": 240,
-          "available": true
+          "available": true,
+          "key": "c2/large-fries"
         },
         {
           "id": "108",
           "name": "Loaded Fries",
           "price": 370,
-          "available": true
+          "available": true,
+          "key": "c2/loaded-fries"
         }
       ]
     },
@@ -442,67 +507,78 @@
           "id": "39",
           "name": "Paratha",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "c2/paratha"
         },
         {
           "id": "40",
           "name": "Paratha Cheese",
           "price": 120,
-          "available": true
+          "available": true,
+          "key": "c2/paratha-cheese"
         },
         {
           "id": "41",
           "name": "Aloo Paratha",
           "price": 140,
-          "available": true
+          "available": true,
+          "key": "c2/aloo-paratha"
         },
         {
           "id": "42",
           "name": "Aloo Paratha Cheese",
           "price": 210,
-          "available": true
+          "available": true,
+          "key": "c2/aloo-paratha-cheese"
         },
         {
           "id": "43",
           "name": "Chicken Paratha",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-paratha"
         },
         {
           "id": "44",
           "name": "Chicken Roll Paratha",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-roll-paratha"
         },
         {
           "id": "45",
           "name": "Chicken Cheese Roll Paratha",
           "price": 270,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-cheese-roll-paratha"
         },
         {
           "id": "46",
           "name": "Lachha Paratha",
           "price": 100,
-          "available": true
+          "available": true,
+          "key": "c2/lachha-paratha"
         },
         {
           "id": "47",
           "name": "Fried Omelette",
           "price": 60,
-          "available": true
+          "available": true,
+          "key": "c2/fried-omelette"
         },
         {
           "id": "48",
           "name": "Omelette Cheese",
           "price": 120,
-          "available": true
+          "available": true,
+          "key": "c2/omelette-cheese"
         },
         {
           "id": "49",
           "name": "Bread Slice",
           "price": 30,
-          "available": true
+          "available": true,
+          "key": "c2/bread-slice"
         }
       ]
     },
@@ -513,55 +589,64 @@
           "id": "53",
           "name": "Chicken Tikka Piece",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-tikka-piece"
         },
         {
           "id": "54",
           "name": "Chicken Malai Boti 8 Pieces",
           "price": 500,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-malai-boti-8-pieces"
         },
         {
           "id": "55",
           "name": "Chicken Malai Boti 5 Pieces",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-malai-boti-5-pieces"
         },
         {
           "id": "56",
           "name": "Chicken Seekh Kebab 4 Pieces",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-seekh-kebab-4-pieces"
         },
         {
           "id": "65",
           "name": "Chicken Tikka Boti Plate",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-tikka-boti-plate"
         },
         {
           "id": "66",
           "name": "Chicken Tikka Masala Boti Plate",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-tikka-masala-boti-plate"
         },
         {
           "id": "67",
           "name": "Chicken Achari Boti Plate",
           "price": 380,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-achari-boti-plate"
         },
         {
           "id": "68",
           "name": "Chicken Reshmi Kebab",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-reshmi-kebab"
         },
         {
           "id": "69",
           "name": "Chicken Bala Leg Piece",
           "price": 180,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-bala-leg-piece"
         }
       ]
     },
@@ -572,49 +657,57 @@
           "id": "59",
           "name": "Chicken Roll Paratha Spicy",
           "price": 260,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-roll-paratha-spicy"
         },
         {
           "id": "60",
           "name": "Chicken Mayo Roll Paratha",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-mayo-roll-paratha"
         },
         {
           "id": "61",
           "name": "Chicken Jumbo Roll Paratha",
           "price": 300,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-jumbo-roll-paratha"
         },
         {
           "id": "62",
           "name": "Chicken Jumbo Cheese Roll Paratha",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-jumbo-cheese-roll-paratha"
         },
         {
           "id": "63",
           "name": "Chicken Malai Boti Roll Paratha",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-malai-boti-roll-paratha"
         },
         {
           "id": "64",
           "name": "Chicken Seekh Kebab Roll Paratha",
           "price": 260,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-seekh-kebab-roll-paratha"
         },
         {
           "id": "79",
           "name": "Zinger Roll Paratha",
           "price": 320,
-          "available": true
+          "available": true,
+          "key": "c2/zinger-roll-paratha"
         },
         {
           "id": "80",
           "name": "Zinger Roll Paratha Cheese",
           "price": 370,
-          "available": true
+          "available": true,
+          "key": "c2/zinger-roll-paratha-cheese"
         }
       ]
     },
@@ -625,49 +718,57 @@
           "id": "89",
           "name": "Apple Banana Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/apple-banana-shake"
         },
         {
           "id": "90",
           "name": "Banana Oreo Shake",
           "price": 210,
-          "available": true
+          "available": true,
+          "key": "c2/banana-oreo-shake"
         },
         {
           "id": "91",
           "name": "Date Shake",
           "price": 220,
-          "available": true
+          "available": true,
+          "key": "c2/date-shake"
         },
         {
           "id": "92",
           "name": "Mango Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/mango-shake"
         },
         {
           "id": "93",
           "name": "Milo Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/milo-shake"
         },
         {
           "id": "94",
           "name": "Cold Coffee Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/cold-coffee-shake"
         },
         {
           "id": "95",
           "name": "Chocolate Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/chocolate-shake"
         },
         {
           "id": "96",
           "name": "Oreo Shake",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/oreo-shake"
         }
       ]
     },
@@ -678,43 +779,50 @@
           "id": "97",
           "name": "Apple Juice",
           "price": 280,
-          "available": true
+          "available": true,
+          "key": "c2/apple-juice"
         },
         {
           "id": "98",
           "name": "Pineapple Juice",
           "price": 270,
-          "available": true
+          "available": true,
+          "key": "c2/pineapple-juice"
         },
         {
           "id": "99",
           "name": "Pomegranate Juice",
           "price": 450,
-          "available": true
+          "available": true,
+          "key": "c2/pomegranate-juice"
         },
         {
           "id": "100",
           "name": "Carrot Juice",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/carrot-juice"
         },
         {
           "id": "101",
           "name": "Peach Juice",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/peach-juice"
         },
         {
           "id": "102",
           "name": "Lemon Mint Juice",
           "price": 150,
-          "available": true
+          "available": true,
+          "key": "c2/lemon-mint-juice"
         },
         {
           "id": "103",
           "name": "Orange Juice",
           "price": 200,
-          "available": true
+          "available": true,
+          "key": "c2/orange-juice"
         }
       ]
     },
@@ -725,13 +833,15 @@
           "id": "109",
           "name": "Tortilla Wrap",
           "price": 350,
-          "available": true
+          "available": true,
+          "key": "c2/tortilla-wrap"
         },
         {
           "id": "112",
           "name": "Chicken Wrap",
           "price": 250,
-          "available": true
+          "available": true,
+          "key": "c2/chicken-wrap"
         }
       ]
     },
@@ -742,13 +852,15 @@
           "id": "110",
           "name": "C2 Special Pasta",
           "price": 430,
-          "available": true
+          "available": true,
+          "key": "c2/c2-special-pasta"
         },
         {
           "id": "111",
           "name": "Creamy Chicken Pasta",
           "price": 400,
-          "available": true
+          "available": true,
+          "key": "c2/creamy-chicken-pasta"
         }
       ]
     }
