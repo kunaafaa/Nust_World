@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 /**
  * Rehmat Hostel and Razi 1: template-based copies of the Ghazali 1 / Ghazali 2 footprints (data/hostel-placement.ts).

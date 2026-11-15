@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import { mkdirSync } from 'node:fs';
 
 const SHEET = '[data-sheet][aria-label$="details"]';

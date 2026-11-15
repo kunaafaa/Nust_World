@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { Analytics } from '@vercel/analytics/next';
+import { connection } from 'next/server';
+import { SafeAnalytics } from '@/components/SafeAnalytics';
 import './globals.css';
 import { RegisterSW } from '@/components/RegisterSW';
 
@@ -47,7 +48,12 @@ export const viewport: Viewport = {
   themeColor: '#070d1c',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/**
+ * Rendered per request (connection()) so Next.js can put the CSP nonce from src/proxy.ts on its scripts, on every
+ * page including the 404.
+ */
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  await connection();
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
@@ -72,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         {children}
         <RegisterSW />
-        <Analytics />
+        <SafeAnalytics />
       </body>
     </html>
   );

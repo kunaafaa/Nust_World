@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 const SHEET = '[data-sheet][aria-label$="details"]';
 const SIZES = [

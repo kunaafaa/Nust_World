@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 const SHEET = '[data-sheet][aria-label$="details"]';
 const C1 = 'concordia-1-6900';

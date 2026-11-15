@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 /**
  * Navigation mode on a phone (390x844), with a simulated GPS walk (?simulate=gate1&walk=1). The simulator starts at
