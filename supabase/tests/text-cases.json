@@ -1,0 +1,29 @@
+{
+  "_comment": "Shared by tests/reviewText.test.ts for both the client check (textCheck.ts) and the database (public.text_violation). null = allowed.",
+  "cases": [
+    ["", null],
+    ["Great biryani, long queue at 1 pm", null],
+    ["Tea is Rs 120 and the samosa 1500? no way", null],
+    ["Open till 11:30, best paratha on campus", null],
+    ["Classic chai, passable sandwich", null],
+    ["Shitake? no, just mushrooms", null],
+    ["بہت اچھا کھانا", null],
+    ["Room 4, floor 2, block 3 (ask at 2 pm)", null],
+    ["see https://example.org for the menu", "link"],
+    ["order at www.cafe.pk", "link"],
+    ["menu on cafe.com tonight", "link"],
+    ["cafe dot com has it", "link"],
+    ["mail me ali@seecs.edu.pk", "email"],
+    ["ali (at) gmail", "email"],
+    ["call 0300 1234567", "phone"],
+    ["call +92-300-123-4567", "phone"],
+    ["whatsapp (0300)123.45.67", "phone"],
+    ["this place is shit", "blocked"],
+    ["SH1T food", "blocked"],
+    ["fuuuuck the queue", "blocked"],
+    ["what a b!tch of a line", "blocked"],
+    ["total m0therfucker of a day", "blocked"],
+    ["ha​ram​i", "control"],
+    ["bad\u0007bell", "control"]
+  ]
+}
