@@ -11,22 +11,46 @@ Last updated 2026-11-15.
 | 0A+ Camera gesture fixes         | **Done**         | 73cc409   | Found by the e2e suite: pinch dropped after a flight, late first-fix recentre, slow flights at low fps. |
 | 0B Razi/Rehmat reuse Ghazali     | **Done**         | 74dd737   | `data/hostel-placement.ts`; Rehmat = Ghazali 1, Razi 1 = Ghazali 2; 127 unit, 56/56 e2e.                |
 | 1 Reviews and food ratings       | **Done**         | 4 commits | Off by default. 177 unit (RLS in pglite), 65/65 e2e. Setup: `docs/REVIEWS_SETUP.md`. First load +2 KB.  |
-| 2 Security hardening             | Next             |           |                                                                                                         |
-| 3 Cleanup and readability        | Not started      |           |                                                                                                         |
-| Final gate + OVERNIGHT_REPORT.md | Not started      |           |                                                                                                         |
+| 2 Security hardening             | **Done**         | see below | Findings and status: `docs/SECURITY_REVIEW.md`. Gate: lint, typecheck, unit, build, full e2e.           |
+| 3 Cleanup and readability        | **Postponed**    |           | Until after the Supabase setup and the review popup work. Nothing was moved or deleted.                 |
+| Final gate + OVERNIGHT_REPORT.md | **Postponed**    |           | Same: after Supabase and the review popup.                                                              |
 
 Blockers: none. Things that need the owner are in `docs/NEEDS_FROM_ME.md` (Supabase project and allowed email
-domains, for reviews).
+domains, for reviews; `NEXT_PUBLIC_DEV_TOOLS=0` once field testing is over).
 
-Notes for Phase 2:
+### Phase 2 summary
 
-- `?reviews=memory` (demo store) still works in production. Put it behind `NEXT_PUBLIC_DEV_TOOLS` along with
-  `?debug=1` and the others.
-- Magic-link sign-in returns with `?code=` in the URL. The URL allow-list must keep it.
-- The CSP must allow `connect-src` to the Supabase URL when it is set.
+Nonce CSP + security headers (`src/proxy.ts`, `src/lib/security/headers.ts`), e2e fails on any CSP violation
+(`e2e/fixtures.ts`); one URL parser with allow-lists and `NEXT_PUBLIC_DEV_TOOLS` (`src/lib/urlParams.ts`); secret
+scan of the tree and full history + `npm run check-secrets`; `npm audit fix` (non-breaking), CI and Dependabot;
+service worker v5; safe storage; privacy e2e test; analytics URL sanitising; client payload checks and write budget;
+reviews error boundary; `SECURITY.md`. Open and accepted: xmldom advisories via the dev-only `osmtogeojson`,
+`style-src 'unsafe-inline'`, `/` rendered per request.
 
-Notes for Phase 3: `e2e/reviews.spec.ts` and `e2e/menu.spec.ts` both define `settle()` and the sheet-snap helpers;
-move them into one shared e2e helper.
+### Phase 3 notes (for when it resumes)
+
+- `e2e/reviews.spec.ts` and `e2e/menu.spec.ts` both define `settle()` and the sheet-snap helpers; move them into one
+  shared e2e helper (`e2e/fixtures.ts` now exists).
+- Files over about 300 lines: `Extras.tsx` (613, seven components: natural split), `campus.ts` (630, mostly one
+  `buildCampus` function), `CameraRig.tsx` (509, one component), `scatter.ts`, `ReviewsSection.tsx`, `InfoCard.tsx`,
+  `topoMerge.ts`, `useLocation.ts`, `RoutePanel.tsx`, `routing.ts`, `Markers.tsx`, `Cars.tsx`, `Buildings.tsx`.
+- No `any` and no commented-out code found in `src`, `scripts`, `tests` or `e2e`.
+- `three-stdlib` is imported (types, `CameraRig.tsx`) but not declared in `package.json`: declare it rather than rely
+  on drei's copy.
+- `npm run format` / `prettier --check .` still reports 23 files (mostly generated data JSON and geojson); decide
+  between formatting them and adding them to `.prettierignore` before adding a Prettier step to CI.
+
+### Removal candidates (NOT removed; each needs the triple check before anything is deleted)
+
+| Candidate                                                                                                                  | Why it looks unused                                                                                                            | Caution                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `scripts/bundle-size.cjs`                                                                                                  | No npm script and no reference anywhere in the repo.                                                                           | May be run by hand to measure the bundle (README quotes bundle sizes).                  |
+| `scripts/fetch-context-roads.ts`                                                                                           | No npm script; mentioned only in `docs/known-issues.md`.                                                                       | It produced `public/data/context-roads.json`; it is the only way to refresh that file.  |
+| npm scripts `topo`, `toposection` (and `scripts/topo-*.ts`, `scripts/toposection-*.ts`)                                    | They read `/reference`, which is git-ignored, so they cannot run on a fresh clone.                                             | They work on the owner's machine; the reports in `docs/` come from them.                |
+| `scripts/.toposection-candidates.json`, `docs/.topo-fit.json`, `docs/.toposection-fit.json`, `docs/.topo-merge-stats.json` | Generated intermediate outputs.                                                                                                | All are read by scripts (`topo-compare`, `toposection-compare`, `audit`, `topo-merge`). |
+| `docs/compare/**` before/after screenshots                                                                                 | Large and regenerated by the e2e and screenshot scripts.                                                                       | Docs are on the never-delete list; consider `.gitignore` for regenerated ones instead.  |
+| Local untracked outputs: `test-results/`, `tsconfig.tsbuildinfo`, `.next/dev/`                                             | Build and test outputs.                                                                                                        | Already git-ignored; safe to clear locally, nothing in git.                             |
+| npm dependencies                                                                                                           | None found unused: every runtime dependency is imported; `postprocessing` is a required peer of `@react-three/postprocessing`. | n/a                                                                                     |
 
 ## Built (Master Prompt, phases 1 to 8)
 

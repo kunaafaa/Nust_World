@@ -163,6 +163,19 @@ Theme tokens live in `src/scene/theme.ts` (the brief says `/lib/theme.ts`; that 
 8. `GLOBAL_OFFSET` exists in `src/lib/config.ts` and is **off**. Turn it on only if `npm run control-points` reports a systematic shift above 3 m.
 9. The old `nust.geojson` / `nust-extras.geojson` and their fetch scripts are gone; `refresh-data` replaces them (smaller bounding box so it does not pull in neighbouring sectors).
 
+## Security
+
+- **Headers:** a per-request nonce Content-Security-Policy (`src/proxy.ts`, built in `src/lib/security/headers.ts`),
+  HSTS, nosniff, a strict referrer policy, a Permissions-Policy that only allows geolocation, and COOP. The e2e suite
+  fails on any CSP violation (`e2e/fixtures.ts`).
+- **URL parameters** are parsed in one place (`src/lib/urlParams.ts`) against allow-lists and ranges. The developer
+  tools (`?debug`, `?simulate`, `?perf`, `?shots`, `?reviews=memory`, `?topo=off`, `?edge=off`) only work while
+  `NEXT_PUBLIC_DEV_TOOLS` is on (the default for now; set it to `0` in production when field testing is over).
+- **Location never leaves the device** (checked by `e2e/privacy.spec.ts`). Analytics URLs keep only `?place=`.
+- **Secrets:** only public `NEXT_PUBLIC_*` values, never the Supabase `service_role` key. `npm run check-secrets` scans
+  tracked files and the browser bundle; CI runs it.
+- Threat model and findings: `docs/SECURITY_REVIEW.md`. Reporting a vulnerability: `SECURITY.md`.
+
 ## Known issues
 
 - Bundle: ~568 KB gzip JavaScript (first load; the reviews and Supabase code is a separate ~80 KB gzip set of chunks loaded only when reviews are on) + 95 KB gzip data. Fine on Wi-Fi; on slow 4G the first load can exceed 3 s. Repeat visits are instant (service worker). Splitting three.js postprocessing out of the first load is the next win.

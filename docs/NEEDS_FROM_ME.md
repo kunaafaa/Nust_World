@@ -2,6 +2,15 @@
 
 Things only you can do (accounts, keys, decisions). Everything else is done. Newest first.
 
+## 2. Turn off the developer tools when field testing is over
+
+`?debug`, `?simulate`, `?perf`, `?shots`, `?reviews=memory`, `?topo=off` and `?edge=off` work for anyone while
+`NEXT_PUBLIC_DEV_TOOLS` is on (the default). When you no longer test on campus with the live site, add
+`NEXT_PUBLIC_DEV_TOOLS=0` in Vercel and redeploy. See `docs/SECURITY_REVIEW.md` finding 2.
+
+Also: enable GitHub private vulnerability reporting (repository Settings → Security) so `SECURITY.md` works, and add
+a security contact email to `SECURITY.md` when you have one.
+
 ## 1. Switch on reviews and food ratings (optional, whenever you are ready)
 
 The feature is built and tested but **off**: cards show "Reviews coming soon". To turn it on, follow
