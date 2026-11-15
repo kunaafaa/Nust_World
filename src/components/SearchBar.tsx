@@ -4,19 +4,14 @@ import { track } from '@vercel/analytics';
 import { usePlaces } from '@/hooks/usePlaces';
 import { CAT_COLOR, CAT_LABEL } from '@/lib/colors';
 import { haptic } from '@/lib/haptics';
+import { readIdList, writeJson } from '@/lib/storage';
 import type { Place } from '@/lib/types';
 import { useApp } from '@/store/useApp';
 
 const RECENT_KEY = 'nw-recent';
 const ROW = 52;
 
-function loadRecent(): string[] {
-  try {
-    return JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]');
-  } catch {
-    return [];
-  }
-}
+const loadRecent = () => readIdList(RECENT_KEY, 6);
 
 /** Visual viewport box, so the panel sits above the on-screen keyboard while the map behind does not move. */
 function useVisualViewport() {
@@ -84,11 +79,7 @@ export function SearchOverlay({
 
   const pick = (p: Place) => {
     const next = [p.id, ...recent.filter((x) => x !== p.id)].slice(0, 6);
-    try {
-      localStorage.setItem(RECENT_KEY, JSON.stringify(next));
-    } catch {
-      /* ignore */
-    }
+    writeJson(RECENT_KEY, next);
     if (q.trim()) track('search', { q: p.shortName });
     haptic(12);
     (document.activeElement as HTMLElement | null)?.blur();

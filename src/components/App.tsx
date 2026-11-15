@@ -33,6 +33,10 @@ import { SearchBar } from './SearchBar';
 import { StatusChips, useNavAutoRecentre } from './StatusChips';
 import { camState } from '@/scene/camState';
 import { navRuntime } from '@/lib/navRuntime';
+import { CAT_LABEL } from '@/lib/colors';
+import { readIdList } from '@/lib/storage';
+import type { Category } from '@/lib/types';
+import { urlParams } from '@/lib/urlParams';
 
 const CampusScene = dynamic(() => import('@/scene/CampusScene'), { ssr: false });
 
@@ -54,7 +58,7 @@ export default function App() {
   // Reads browser-only capabilities after mount so server and client markup match (hydration-safe).
   useEffect(
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    () => setGl(hasWebGL() && new URLSearchParams(location.search).get('flat') !== '1'),
+    () => setGl(hasWebGL() && !urlParams().flat),
     [],
   );
   useRouter();
@@ -63,7 +67,7 @@ export default function App() {
   const nav = useApp((s) => s.nav);
   // ?simulate (tests and field checks only): expose the camera snapshot and the navigation runtime read-only.
   useEffect(() => {
-    if (!new URLSearchParams(location.search).has('simulate')) return;
+    if (urlParams().simulate === null) return;
     Object.assign(window as unknown as Record<string, unknown>, {
       __nwCam: camState,
       __nwNav: navRuntime,
@@ -71,25 +75,20 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const debug = params.get('debug') === '1';
-    const low = params.get('low') === '1';
-    if (params.get('perf') === '1') useApp.setState({ perfOn: true });
+    const params = urlParams();
+    const { debug, low } = params;
+    if (params.perf) useApp.setState({ perfOn: true });
     useApp.setState({
       debug,
       progress: 0.1,
       ...(low ? { quality: 'low' as const, effectiveLow: true } : {}),
     });
-    try {
-      useApp.setState({
-        visited: JSON.parse(localStorage.getItem('nw-visited') ?? '[]'),
-        found: JSON.parse(localStorage.getItem('nw-found') ?? '[]'),
-      });
-    } catch {
-      /* ignore */
-    }
+    useApp.setState({
+      visited: readIdList('nw-visited').filter((c): c is Category => c in CAT_LABEL),
+      found: readIdList('nw-found'),
+    });
     (async () => {
-      const topoOff = params.get('topo') === 'off';
+      const { topoOff } = params;
       const [osm, merge, trees, terrain, bnd, ctx] = await Promise.all([
         getJson('/data/nust-full.geojson'),
         topoOff ? undefined : getJson<TopoMergeFile>('/data/topo-merge.json'),
@@ -107,12 +106,12 @@ export default function App() {
       // Hostels without an OSM outline are drawn from a template footprint (data/hostel-placement.ts).
       const merged = { ...applyHostelPlacement(topo), topoReport: topo.topoReport };
       // Production edge: clip to the campus boundary (+30 m), clean polygons, and add the faded road context ring.
-      const ring = bnd && params.get('edge') !== 'off' ? parseBoundary(bnd) : null; // ?edge=off = old hard-cut look, for comparison
+      const ring = bnd && !params.edgeOff ? parseBoundary(bnd) : null; // ?edge=off = old hard-cut look, for comparison
       const { data: clipped } = applyBoundary(merged, ring);
       const campus = Object.assign(clipped, { topoReport: merged.topoReport });
       useApp.setState({ contextRoads: ctx && ring ? parseContext(ctx) : [] });
       useApp.setState({ terrain: terrain ? new Terrain(terrain) : null });
-      if (terrain && params.get('terrain') === '1') setTerrainOn(true); // shareable: ?terrain=1
+      if (terrain && params.terrain) setTerrainOn(true); // shareable: ?terrain=1
       if (campus.topoReport) {
         useApp.setState({ topoReport: campus.topoReport });
         console.info('[NUST World] topo merge', campus.topoReport);
@@ -124,7 +123,7 @@ export default function App() {
       );
       if (debug)
         console.info('[NUST World] footprints without landmark:', r.footprintsWithoutLandmark);
-      const place = params.get('place');
+      const { place } = params;
       let seen = false;
       try {
         seen = sessionStorage.getItem('nw-title') === '1';
@@ -133,12 +132,7 @@ export default function App() {
       }
       // Deep links, ?debug and screenshots skip the title; otherwise it plays once per session.
       const skipTitle =
-        seen ||
-        !!place ||
-        params.has('from') ||
-        params.has('to') ||
-        debug ||
-        params.has('simulate');
+        seen || !!place || !!params.from || !!params.to || debug || params.simulate !== null;
       useApp.setState({ data: campus, progress: 1, phase: skipTitle ? 'explore' : 'title' });
       if (place && campus.places.some((p) => p.id === place))
         setTimeout(() => useApp.getState().select(place), 600);

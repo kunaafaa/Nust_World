@@ -11,6 +11,7 @@ import { groundY } from '@/lib/terrain';
 import { damp, isNavigating } from '@/lib/navMachine';
 import { navDispatch } from '@/lib/navController';
 import { navRuntime } from '@/lib/navRuntime';
+import { urlParams } from '@/lib/urlParams';
 import { useApp } from '@/store/useApp';
 import { camState } from './camState';
 
@@ -164,7 +165,7 @@ export function CameraRig() {
         RECENTRE_S,
       );
     };
-    if (useApp.getState().debug || new URLSearchParams(location.search).has('shots')) {
+    if (useApp.getState().debug || urlParams().shots) {
       // Debug-only handle for scripted screenshots: __nwFly(x, z, distance, polar, azimuth)
       (window as unknown as { __nwFly?: unknown }).__nwFly = (
         x: number,

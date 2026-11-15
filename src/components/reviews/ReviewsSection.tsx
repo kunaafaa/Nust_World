@@ -17,7 +17,6 @@ import { ensureReviewAuth, useReviewAuth } from '@/lib/reviews/useReviewAuth';
 import { SignIn } from './SignIn';
 import { StarInput, Stars, useReviewVars } from './Stars';
 
-const NAME_KEY = 'nw-review-name';
 const SHOWN = 5;
 
 function subscribeOnline(cb: () => void) {
@@ -37,19 +36,11 @@ function useOnline() {
   );
 }
 
-function readName(): string {
-  try {
-    return localStorage.getItem(NAME_KEY) ?? '';
-  } catch {
-    return '';
-  }
-}
+// The display name is remembered for this page session only (memory, not localStorage): it is personal data.
+let lastName = '';
+const readName = () => lastName;
 function saveName(n: string) {
-  try {
-    localStorage.setItem(NAME_KEY, n);
-  } catch {
-    /* ignore */
-  }
+  lastName = n;
 }
 
 const fmtDate = (iso: string) =>

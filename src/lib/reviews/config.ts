@@ -3,6 +3,7 @@
  * Each process.env.NEXT_PUBLIC_* is written out in full so Next can inline it into the client bundle.
  * Only the anon key is ever used: the service-role key must never be set in this app.
  */
+import { parseUrlParams } from '@/lib/urlParams';
 
 const flag = (v: string | undefined) => v === '1' || v === 'true';
 
@@ -34,18 +35,20 @@ export function emailDomain(email: string): string {
 
 export function isAllowedEmail(email: string, domains: readonly string[]): boolean {
   const e = email.trim().toLowerCase();
+  if (e.length > 254) return false;
   if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(e)) return false;
   return domains.includes(emailDomain(e));
 }
 
 /**
  * Which backend the card uses:
- * - 'memory': `?reviews=memory` in the URL (tests and demos; nothing leaves the browser)
+ * - 'memory': `?reviews=memory` in the URL (tests and demos; nothing leaves the browser). A developer tool: only
+ *   while NEXT_PUBLIC_DEV_TOOLS is on.
  * - 'supabase': reviews switched on and both Supabase variables set
  * - 'off': show "Reviews coming soon"
  */
 export function reviewsMode(search: string): 'memory' | 'supabase' | 'off' {
-  if (new URLSearchParams(search).get('reviews') === 'memory') return 'memory';
+  if (parseUrlParams(search).reviewsMemory) return 'memory';
   if (REVIEWS_ENABLED && SUPABASE_URL && SUPABASE_ANON_KEY) return 'supabase';
   return 'off';
 }

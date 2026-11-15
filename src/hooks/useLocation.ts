@@ -22,6 +22,7 @@ import {
 import { navDispatch } from '@/lib/navController';
 import { navRuntime } from '@/lib/navRuntime';
 import type { RouteResult } from '@/lib/routing';
+import { urlParams } from '@/lib/urlParams';
 import { cameraCommands } from '@/scene/CameraRig';
 import { useApp } from '@/store/useApp';
 import type { Vec2 } from '@/lib/types';
@@ -215,7 +216,7 @@ function stopOrientation() {
 
 function startWatch() {
   if (watchId != null || simTimer) return;
-  const sim = new URLSearchParams(location.search).get('simulate');
+  const sim = urlParams().simulate;
   if (sim) return startSimulation(sim);
   if (!navigator.geolocation) {
     locationProblem('Location off, tap to enable');
@@ -249,7 +250,7 @@ function locationProblem(text: string) {
  */
 function startSimulation(name: string) {
   const d = st().data;
-  const q = new URLSearchParams(location.search);
+  const q = urlParams();
   const gates = d?.places.filter((p) => p.category === 'gate') ?? [];
   const num = name.match(/gate(\d+)/i)?.[1];
   const g =
@@ -259,9 +260,7 @@ function startSimulation(name: string) {
       )) ||
     gates[0];
   if (!g) return;
-  const walk = q.get('walk') === '1';
-  const speed = Number(q.get('walkSpeed') ?? 1.4) || 1.4;
-  const hz = Math.min(10, Math.max(1, Number(q.get('simHz') ?? 1) || 1));
+  const { walk, walkSpeed: speed, simHz: hz } = q;
   const sim = { offset: 0, d: 0, route: null as RouteResult | null, cum: [] as number[] };
   (window as unknown as { __nwSim?: unknown }).__nwSim = {
     offset: (m: number) => {
