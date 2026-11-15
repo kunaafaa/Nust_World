@@ -1,7 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { guestNote, REVIEW_LIMITS, type Summary } from '@/lib/reviews/types';
+import { foodPillLabel, foodPillText, guestNote, type Summary } from '@/lib/reviews/types';
 import type { MenuItem } from '@/lib/menu';
 import type { FoodRatings } from './useFoodRatings';
 
@@ -10,28 +10,32 @@ const GuestForm = dynamic(() => import('./GuestForm').then((m) => m.GuestForm), 
 import { StarInput, useReviewVars } from './Stars';
 
 /**
- * "★ 4.7 (3)": only from REVIEW_LIMITS.foodMinCount ratings, so one opinion never looks like a verdict.
- * With guest ratings in the average: "★ 4.7 (3, 1 guest)".
+ * Everyone's average, from the first rating: "★ 4.2 (12)", and "★ 4.2 (12) · 1 guest" when guests are included.
+ * The same for every viewer, whether or not they rated.
  */
 export function FoodPill({ s }: { s: Summary | undefined }) {
-  if (!s || s.count < REVIEW_LIMITS.foodMinCount) return null;
-  const g = s.guestCount;
+  if (!s || s.count < 1) return null;
+  const { avg, count, guests } = foodPillText(s);
   return (
     <span
       className="rv-pill"
-      title={g ? guestNote(g, 'rating') : undefined}
-      aria-label={`Rated ${s.avg.toFixed(1)} out of 5 from ${s.count} ratings${g ? `, including ${g} from guests` : ''}`}
+      data-food-avg
+      title={s.guestCount ? guestNote(s.guestCount, 'rating') : undefined}
+      aria-label={foodPillLabel(s)}
     >
-      <span aria-hidden>★</span> {s.avg.toFixed(1)}{' '}
-      <span className="rv-pill-n">
-        ({s.count}
-        {g ? `, ${g} guest` : ''})
+      <span aria-hidden>★</span> {avg}{' '}
+      <span className="rv-pill-n" aria-hidden>
+        {count}
+        {guests}
       </span>
     </span>
   );
 }
 
-/** Pill + "Rate" toggle + inline five-star rater for one menu row. */
+/**
+ * Everyone's average + a smaller "You: 3★" chip (the user's own rating, tap to change) or "Rate" + the inline
+ * five-star rater, for one menu row.
+ */
 export function FoodRatingLine({ item, fr }: { item: MenuItem; fr: FoodRatings }) {
   const vars = useReviewVars();
   const [open, setOpen] = useState(false);
@@ -44,7 +48,7 @@ export function FoodRatingLine({ item, fr }: { item: MenuItem; fr: FoodRatings }
       <div className="rv-row">
         <FoodPill s={fr.summaries[key]} />
         <button
-          className="rv-rate-btn"
+          className={my ? 'rv-rate-btn rv-mine' : 'rv-rate-btn'}
           aria-expanded={open}
           aria-label={
             my ? `Your rating for ${item.name}: ${my} stars. Change it` : `Rate ${item.name}`

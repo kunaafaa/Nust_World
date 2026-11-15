@@ -26,7 +26,7 @@ export const DEMO_SEED: MemorySeed = {
     },
   ],
   food: [
-    // three ratings: shows a pill
+    // three ratings: in "Top rated"
     ...users.slice(0, 3).map((u, i) => ({
       cafeId: 'c1',
       itemKey: 'c1/chicken-tikka-piece',
@@ -39,7 +39,7 @@ export const DEMO_SEED: MemorySeed = {
       userId: u,
       rating: [4, 4, 3, 4][i],
     })),
-    // two ratings: below the threshold, no pill
+    // two ratings: the row shows its average, but not enough for "Top rated"
     ...users.slice(0, 2).map((u) => ({
       cafeId: 'c1',
       itemKey: 'c1/chicken-achari-boti',

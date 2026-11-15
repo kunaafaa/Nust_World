@@ -1,7 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryStore } from '@/lib/reviews/memoryStore';
 import { mapError } from '@/lib/reviews/supabaseStore';
-import { REVIEW_EXCLUDED_CATEGORIES, ReviewError } from '@/lib/reviews/types';
+import {
+  foodPillLabel,
+  foodPillText,
+  REVIEW_EXCLUDED_CATEGORIES,
+  REVIEW_LIMITS,
+  ReviewError,
+  withMyRating,
+} from '@/lib/reviews/types';
+import { topRated } from '@/components/reviews/useFoodRatings';
+import type { MenuItem } from '@/lib/menu';
 
 const DOM = ['seecs.edu.pk'];
 const draft = (
@@ -272,6 +281,20 @@ describe('reviews client cache', () => {
     await expect(c.write(async () => {})).rejects.toMatchObject({ code: 'offline' });
   });
 
+  it('a read that started before a write does not put its old value back in the cache', async () => {
+    const c = await fresh();
+    let release!: (v: string) => void;
+    const slow = c.cachedRead('food:c9:sum', () => new Promise<string>((r) => (release = r)));
+    await Promise.resolve(); // let the read start
+    await new Promise((r) => setTimeout(r, 0));
+    await c.write(async () => {}, 'food:c9:');
+    release('before the write');
+    expect((await slow)?.value).toBe('before the write');
+    const f = vi.fn(async () => 'after the write');
+    expect((await c.cachedRead('food:c9:sum', f))?.value).toBe('after the write');
+    expect(f).toHaveBeenCalledTimes(1);
+  });
+
   it('a write drops the matching cache entries', async () => {
     const c = await fresh();
     const f = vi.fn(async () => 1);
@@ -279,5 +302,78 @@ describe('reviews client cache', () => {
     await c.write(async () => {}, 'rv:p-1:');
     await c.cachedRead('rv:p-1:sum', f);
     expect(f).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('food rating pill', () => {
+  it('shows the average and count from the first rating', () => {
+    expect(foodPillText({ avg: 3, count: 1, guestCount: 0 })).toEqual({
+      avg: '3.0',
+      count: '(1)',
+      guests: '',
+    });
+    expect(foodPillText({ avg: 4.24, count: 12, guestCount: 0 })).toMatchObject({
+      avg: '4.2',
+      count: '(12)',
+    });
+    expect(foodPillLabel({ avg: 3, count: 1, guestCount: 0 })).toBe(
+      'Rated 3.0 out of 5 from 1 rating',
+    );
+  });
+
+  it('says when guests are in the average', () => {
+    expect(foodPillText({ avg: 3, count: 1, guestCount: 1 }).guests).toBe(' · 1 guest');
+    expect(foodPillText({ avg: 4.2, count: 12, guestCount: 3 }).guests).toBe(' · 3 guests');
+    expect(foodPillLabel({ avg: 4.7, count: 3, guestCount: 1 })).toBe(
+      'Rated 4.7 out of 5 from 3 ratings, including 1 from guests',
+    );
+  });
+
+  it('updates the average locally after the user rates or changes a rating', () => {
+    // first rating of the item
+    expect(withMyRating(undefined, 0, 4, false)).toEqual({ avg: 4, count: 1, guestCount: 0 });
+    // a new rating joins the others (guest: counted as a guest)
+    expect(withMyRating({ avg: 2, count: 2, guestCount: 1 }, 0, 5, true)).toEqual({
+      avg: 3,
+      count: 3,
+      guestCount: 2,
+    });
+    // changing a rating replaces it: count and guest count stay
+    expect(withMyRating({ avg: 3, count: 3, guestCount: 2 }, 5, 2, true)).toEqual({
+      avg: 2,
+      count: 3,
+      guestCount: 2,
+    });
+    // own rating known but the summary not loaded yet: treated as a first rating
+    expect(withMyRating(undefined, 3, 5, false)).toEqual({ avg: 5, count: 1, guestCount: 0 });
+  });
+
+  it('"Top rated" still needs several ratings, though rows show one', () => {
+    const item = (key: string): MenuItem => ({
+      id: key,
+      key,
+      name: key,
+      price: 1,
+      available: true,
+    });
+    const items = [item('c1/a'), item('c1/b')];
+    const top = topRated(items, {
+      'c1/a': { avg: 5, count: 1, guestCount: 0 },
+      'c1/b': { avg: 4, count: REVIEW_LIMITS.topRatedMinCount, guestCount: 0 },
+    });
+    expect(top.map((i) => i.key)).toEqual(['c1/b']);
+  });
+});
+
+describe('MemoryStore food summaries', () => {
+  it('a single rating gives a summary, and a second account adds to it', async () => {
+    const a = await signedIn();
+    await a.rateFood('c2', 'c2/donuts', 3);
+    expect((await a.foodSummaries('c2'))['c2/donuts']).toEqual({ avg: 3, count: 1, guestCount: 0 });
+    await a.signOut();
+    await a.signIn('b@seecs.edu.pk');
+    await a.rateFood('c2', 'c2/donuts', 5);
+    expect((await a.foodSummaries('c2'))['c2/donuts']).toEqual({ avg: 4, count: 2, guestCount: 0 });
+    expect(await a.myFoodRatings('c2')).toEqual({ 'c2/donuts': 5 });
   });
 });

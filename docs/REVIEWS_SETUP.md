@@ -7,8 +7,9 @@ Place cards can show reviews (1 to 5 stars plus optional text) and cafe menus ca
 
 - **Place reviews**: one review per person per place; editable and deletable by its author. Not offered for prayer
   and medical places (`REVIEW_EXCLUDED_CATEGORIES`, enforced again in the database through `excluded_places`).
-- **Food ratings**: 1 to 5 stars per menu item. A rating pill (`★ 4.7 (3)`) appears only from 3 ratings. A
-  "Top rated" chip leads the menu's category chips once any item qualifies.
+- **Food ratings**: 1 to 5 stars per menu item. Every row shows everyone's average from the first rating
+  (`★ 4.7 (3)`, or `★ 4.7 (3) · 1 guest` with guest ratings in it) and, once you have rated, a smaller `You: 4★`
+  chip. A "Top rated" chip leads the menu's category chips once any item has 3 ratings (`topRatedMinCount`).
 - **Guests** (`003_guest_reviews.sql`): "Continue as guest" asks for a display name (2 to 20 characters, the same
   text rules, and nothing that looks official such as "NUST …", "admin" or "moderator") and a Cloudflare Turnstile
   captcha, then creates a Supabase **anonymous user** and saves the name in `profiles`. A guest's reviews always

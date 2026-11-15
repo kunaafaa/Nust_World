@@ -11,8 +11,11 @@ export const REVIEW_LIMITS = {
   /** guest display names (public.profiles) */
   guestNameMax: 20,
   reasonMax: 200,
-  /** a food rating pill only appears from this many ratings */
-  foodMinCount: 3,
+  /**
+   * A dish joins the "Top rated" list only from this many ratings, so one opinion never puts it at the top.
+   * Menu rows show the average from the first rating.
+   */
+  topRatedMinCount: 3,
   /** summaries and lists are re-fetched after this long */
   cacheMs: 5 * 60_000,
 } as const;
@@ -38,6 +41,45 @@ export interface Summary {
   count: number;
   /** how many of `count` came from guests */
   guestCount: number;
+}
+
+/**
+ * The summary after the signed-in user's rating for one item goes from `prev` (0 = none) to `next`, worked out
+ * locally so the row updates at once; the fresh summary from the server replaces it a moment later.
+ */
+export function withMyRating(
+  s: Summary | undefined,
+  prev: number,
+  next: number,
+  guest: boolean,
+): Summary {
+  const count = s?.count ?? 0;
+  const total = (s?.avg ?? 0) * count;
+  const had = prev > 0 && count > 0;
+  const n = had ? count : count + 1;
+  return {
+    avg: Math.round((((had ? total - prev : total) + next) / n) * 100) / 100,
+    count: n,
+    guestCount: (s?.guestCount ?? 0) + (!had && guest ? 1 : 0),
+  };
+}
+
+/** Parts of the food pill "★ 4.2 (12) · 1 guest": the average, "(count)" and the guest note ('' without guests). */
+export function foodPillText(s: Summary) {
+  const g = s.guestCount;
+  return {
+    avg: s.avg.toFixed(1),
+    count: `(${s.count})`,
+    guests: g ? ` · ${g} guest${g === 1 ? '' : 's'}` : '',
+  };
+}
+
+/** Screen-reader text for the food pill. */
+export function foodPillLabel(s: Summary) {
+  const g = s.guestCount;
+  return `Rated ${s.avg.toFixed(1)} out of 5 from ${s.count} rating${s.count === 1 ? '' : 's'}${
+    g ? `, including ${g} from guests` : ''
+  }`;
 }
 
 /** Averages count guests too, and always say so when any are included. '' when none are. */

@@ -50,6 +50,8 @@ interface Entry {
 const LS_KEY = 'nw-reviews-cache';
 const LS_MAX = 60;
 const mem = new Map<string, Entry>();
+/** Bumped by every invalidate(): a fetch that started before a write must not put its older value back. */
+let generation = 0;
 
 function readLs(): Record<string, Entry> {
   try {
@@ -98,11 +100,14 @@ export async function cachedRead<T>(
     if (hit) return { value: hit.value as T, stale: true };
     throw new ReviewError('Offline: reviews will load when you are back online.', 'offline');
   }
+  const gen = generation;
   try {
     const value = await fetcher(store);
-    const e = { at: now, value };
-    mem.set(key, e);
-    if (persist) writeLs(key, e);
+    if (gen === generation) {
+      const e = { at: now, value };
+      mem.set(key, e);
+      if (persist) writeLs(key, e);
+    }
     return { value, stale: false };
   } catch (err) {
     if (hit) return { value: hit.value as T, stale: true };
@@ -112,6 +117,7 @@ export async function cachedRead<T>(
 
 /** Drop cached values whose key starts with one of the prefixes (after a write). */
 export function invalidate(...prefixes: string[]) {
+  generation++;
   for (const k of [...mem.keys()]) if (prefixes.some((p) => k.startsWith(p))) mem.delete(k);
   try {
     const all = readLs();

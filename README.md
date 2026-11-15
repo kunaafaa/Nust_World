@@ -122,7 +122,8 @@ Every item also has a stable `key` (`<cafeId>/<slug>`) for food ratings, kept in
 - **Off:** place cards say "Reviews coming soon", and none of the review code or Supabase code is downloaded.
 - **On** (Supabase, anon key only):
   - Places get 1–5 star reviews with optional text. Prayer and medical places are excluded.
-  - Menu items get star ratings: a pill appears from 3 ratings, plus a "Top rated" chip.
+  - Menu items get star ratings: each row shows the average from the first rating, plus a "Top rated" chip
+    (from 3 ratings).
   - Sign-in is by magic link to a university email address.
 - **Enforced in the database**, by row-level security and triggers in `supabase/migrations/001_reviews.sql`:
   - The text checks refuse links, emails, phone numbers and blocked terms.

@@ -157,7 +157,9 @@ for (const vp of SIZES) {
       expect(over).toBeLessThanOrEqual(1);
     });
 
-    test('food ratings: pill from 3 ratings, Top rated chip, inline rater', async ({ page }) => {
+    test('food ratings: average from the first rating, Top rated chip, inline rater', async ({
+      page,
+    }) => {
       await openCard(page, C1);
       await openFull(page);
       const sheet = page.locator(SHEET);
@@ -167,11 +169,18 @@ for (const vp of SIZES) {
         'Chicken Tikka Piece',
         'Chicken Tikka Boti',
       ]);
-      // two ratings only: no pill yet
+      // two ratings: the row shows the average (not enough for Top rated); signed out, no "You" chip
       const achari = sheet.locator('[data-cat="BBQ"] .menu-row', {
         hasText: 'Chicken Achari Boti',
       });
-      await expect(achari.locator('.rv-pill')).toHaveCount(0);
+      await expect(achari.locator('.rv-pill')).toHaveText('★ 2.0 (2) · 1 guest');
+      await expect(achari.locator('.rv-mine')).toHaveCount(0);
+      // no ratings at all: just "Rate"
+      const unrated = sheet.locator('[data-cat="BBQ"] .menu-row').filter({
+        has: page.getByRole('button', { name: /^Rate / }),
+        hasNot: page.locator('.rv-pill'),
+      });
+      await expect(unrated.first().locator('.rv-rate-btn')).toHaveText('Rate');
 
       // guest ratings are counted and said so (demo user B is a guest)
       await expect(
@@ -191,7 +200,15 @@ for (const vp of SIZES) {
       await expect(
         achari.getByRole('button', { name: /Your rating for Chicken Achari Boti: 5 stars/ }),
       ).toBeVisible();
+      // after rating: everyone's average (refreshed at once) AND the user's own chip, side by side
       await expect(achari.getByLabel('Rated 3.0 out of 5 from 3 ratings')).toBeVisible();
+      await expect(achari.locator('.rv-pill')).toHaveText('★ 3.0 (3) · 1 guest');
+      await expect(achari.locator('.rv-mine')).toHaveText('You: 5★');
+      // changing the rating updates the average too
+      await achari.locator('.rv-mine').click();
+      await achari.getByRole('radio', { name: '2 stars' }).click();
+      await expect(achari.locator('.rv-pill')).toHaveText('★ 2.0 (3) · 1 guest');
+      await expect(achari.locator('.rv-mine')).toHaveText('You: 2★');
       await expect(top.locator('.menu-name')).toHaveText([
         'Chicken Tikka Piece',
         'Chicken Tikka Boti',
@@ -244,6 +261,17 @@ test.describe('guests', () => {
     await achari.getByRole('button', { name: 'Rate Chicken Achari Boti' }).click();
     await achari.getByRole('radio', { name: '4 stars' }).click();
     await expect(achari.getByText('Thanks for rating')).toBeVisible();
+    // the average stays, now counting this guest too, next to the guest's own rating
+    await expect(achari.locator('.rv-pill')).toHaveText('★ 2.7 (3) · 2 guests');
+    await expect(achari.locator('.rv-mine')).toHaveText('You: 4★');
+    // phone layout: average + own chip on one line, nothing overflowing the row
+    const [pill, you] = await Promise.all([
+      achari.locator('.rv-pill').boundingBox(),
+      achari.locator('.rv-mine').boundingBox(),
+    ]);
+    expect(Math.abs(pill!.y + pill!.height / 2 - (you!.y + you!.height / 2))).toBeLessThan(2);
+    expect(await achari.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(1);
+    await expect(achari.locator('.rv-food')).toHaveScreenshot('food-row-rated.png');
 
     // upgrade: verify a university email, same account, the review now shows NUST
     await rv.scrollIntoViewIfNeeded();
