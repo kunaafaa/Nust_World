@@ -3,6 +3,7 @@
  * supabase/migrations/001_reviews.sql (the database still enforces them; this just stops oversized or malformed
  * requests from leaving the browser).
  */
+import { guestNameViolation, VIOLATION_MESSAGE } from './textCheck';
 import { REVIEW_LIMITS, ReviewError, type ReviewDraft } from './types';
 
 const PLACE = /^[a-z0-9][a-z0-9-]{0,79}$/;
@@ -26,6 +27,19 @@ export function checkDraft(d: ReviewDraft): ReviewDraft {
   )
     throw bad();
   return { placeId: d.placeId, rating: d.rating, displayName, body };
+}
+
+/** Guest display name: 2 to 20 characters and the guest name rules. Throws a message that is safe to show. */
+export function checkGuestName(name: string): string {
+  const n = name.trim();
+  if (n.length < REVIEW_LIMITS.nameMin || n.length > REVIEW_LIMITS.guestNameMax)
+    throw new ReviewError(
+      `Pick a name of ${REVIEW_LIMITS.nameMin} to ${REVIEW_LIMITS.guestNameMax} characters.`,
+      'invalid',
+    );
+  const v = guestNameViolation(n);
+  if (v) throw new ReviewError(VIOLATION_MESSAGE[v], 'text');
+  return n;
 }
 
 export function checkReport(id: string, reason: string): string {

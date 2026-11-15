@@ -8,6 +8,8 @@ export const REVIEW_LIMITS = {
   bodyMax: 500,
   nameMin: 2,
   nameMax: 40,
+  /** guest display names (public.profiles) */
+  guestNameMax: 20,
   reasonMax: 200,
   /** a food rating pill only appears from this many ratings */
   foodMinCount: 3,
@@ -16,7 +18,7 @@ export const REVIEW_LIMITS = {
 } as const;
 
 export const REVIEW_POLICY =
-  'Reviews are about places and food only. Do not name or describe people, and leave out links, emails and phone numbers. We store your user id, the display name you choose and what you write, nothing else. You can delete all of it at any time.';
+  'Reviews are about places and food only. Do not name or describe people, and leave out links, emails and phone numbers. We store your user id, the display name you choose and what you write, nothing else. You can delete all of it at any time. Averages include guest reviews and ratings; "NUST" marks a verified university email.';
 
 export interface Review {
   id: string;
@@ -27,16 +29,29 @@ export interface Review {
   createdAt: string;
   /** written by the signed-in user */
   mine: boolean;
+  /** from the database (auth.users), never from the client: verified university account, guest, or unknown */
+  author: 'nust' | 'guest' | null;
 }
 
 export interface Summary {
   avg: number;
   count: number;
+  /** how many of `count` came from guests */
+  guestCount: number;
+}
+
+/** Averages count guests too, and always say so when any are included. '' when none are. */
+export function guestNote(guestCount: number, noun: 'review' | 'rating') {
+  if (!guestCount) return '';
+  return `Includes ${guestCount} guest ${noun}${guestCount === 1 ? '' : 's'} (not verified)`;
 }
 
 export interface ReviewUser {
   id: string;
+  /** '' for guests */
   email: string;
+  /** anonymous (guest) account */
+  guest: boolean;
 }
 
 export interface ReviewDraft {
@@ -52,8 +67,16 @@ export interface ReviewStore {
   /** current user, or null when signed out */
   user(): Promise<ReviewUser | null>;
   onAuthChange(cb: (u: ReviewUser | null) => void): () => void;
-  /** send a magic link; resolves when the email is on its way */
-  signIn(email: string): Promise<void>;
+  /**
+   * Send a magic link; resolves when the email is on its way. For a guest this links the email to the same
+   * account instead (an upgrade: their reviews keep going and get the NUST label once the email is confirmed).
+   * `captchaToken`: Turnstile token, required by Supabase once captcha protection is on.
+   */
+  signIn(email: string, captchaToken?: string): Promise<void>;
+  /** Create an anonymous (guest) account and give it a display name. Already a guest: just sets the name. */
+  signInAsGuest(displayName: string, captchaToken?: string): Promise<void>;
+  /** The guest's display name (public.profiles), or null. */
+  guestName(): Promise<string | null>;
   signOut(): Promise<void>;
 
   placeSummary(placeId: string): Promise<Summary | null>;

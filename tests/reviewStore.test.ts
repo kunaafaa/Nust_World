@@ -37,7 +37,7 @@ describe('MemoryStore follows the database rules', () => {
     const list = await s.placeReviews('concordia-1-6900');
     expect(list).toHaveLength(1);
     expect(list[0]).toMatchObject({ rating: 2, body: 'Changed', mine: true });
-    expect(await s.placeSummary('concordia-1-6900')).toEqual({ avg: 2, count: 1 });
+    expect(await s.placeSummary('concordia-1-6900')).toEqual({ avg: 2, count: 1, guestCount: 0 });
   });
 
   it('refuses links, phones, blocked words and bad lengths', async () => {
@@ -104,7 +104,9 @@ describe('MemoryStore follows the database rules', () => {
     const s = await signedIn();
     await s.rateFood('c1', 'c1/chai', 4);
     await s.rateFood('c1', 'c1/chai', 5);
-    expect(await s.foodSummaries('c1')).toEqual({ 'c1/chai': { avg: 5, count: 1 } });
+    expect(await s.foodSummaries('c1')).toEqual({
+      'c1/chai': { avg: 5, count: 1, guestCount: 0 },
+    });
     expect(await s.myFoodRatings('c1')).toEqual({ 'c1/chai': 5 });
     await expect(s.rateFood('c1', 'c2/chai', 4)).rejects.toMatchObject({ code: 'invalid' });
   });
@@ -123,6 +125,90 @@ describe('MemoryStore follows the database rules', () => {
     const left = await s.placeReviews('p-1');
     expect(left.map((r) => r.displayName)).toEqual(['Other']);
     expect(await s.foodSummaries('c1')).toEqual({});
+  });
+});
+
+describe('MemoryStore guests', () => {
+  const guest = async (opts: Partial<ConstructorParameters<typeof MemoryStore>[0]> = {}) => {
+    const s = new MemoryStore({ domains: DOM, ...opts });
+    await s.signInAsGuest('Guest Ali');
+    return s;
+  };
+
+  it('name rules: 2 to 20 characters, text rules, nothing official-looking', async () => {
+    const s = new MemoryStore({ domains: DOM });
+    for (const bad of [
+      'x',
+      'abcdefghijklmnopqrstu',
+      'NUST Official',
+      'adm1n',
+      'me@gmail.com',
+      'bit.ly/x',
+    ])
+      await expect(s.signInAsGuest(bad)).rejects.toBeInstanceOf(ReviewError);
+    expect(await s.user()).toBeNull();
+    await s.signInAsGuest('  Guest Ali ');
+    expect(await s.user()).toMatchObject({ guest: true, email: '' });
+    expect(await s.guestName()).toBe('Guest Ali');
+  });
+
+  it('posts under the profile name, labelled guest; averages count it and say so', async () => {
+    const s = await guest({
+      seed: {
+        reviews: [{ placeId: 'p-1', userId: 'u', displayName: 'Student', rating: 2, body: '' }],
+      },
+    });
+    await s.saveReview(draft({ placeId: 'p-1', displayName: 'Pretend Student', rating: 4 }));
+    const list = await s.placeReviews('p-1');
+    expect(list.map((r) => [r.displayName, r.author])).toEqual(
+      expect.arrayContaining([
+        ['Guest Ali', 'guest'],
+        ['Student', 'nust'],
+      ]),
+    );
+    expect(await s.placeSummary('p-1')).toEqual({ avg: 3, count: 2, guestCount: 1 });
+    await s.rateFood('c1', 'c1/chai', 5);
+    expect(await s.foodSummaries('c1')).toEqual({ 'c1/chai': { avg: 5, count: 1, guestCount: 1 } });
+  });
+
+  it('stricter write limit: 5 an hour (the name counts as one)', async () => {
+    const s = await guest();
+    for (let i = 1; i <= 4; i++) await s.rateFood('c1', `c1/item-${i}`, 3);
+    await expect(s.rateFood('c1', 'c1/item-5', 3)).rejects.toMatchObject({ code: 'rate' });
+  });
+
+  it('guest reports weigh half toward hiding', async () => {
+    const s = new MemoryStore({
+      domains: DOM,
+      seed: {
+        reviews: [{ placeId: 'p-1', userId: 'u', displayName: 'Student', rating: 2, body: '' }],
+      },
+    });
+    const id = (await s.placeReviews('p-1'))[0].id;
+    for (let i = 1; i <= 6; i++) {
+      await s.signOut();
+      await s.signInAsGuest(`Guest ${String.fromCharCode(64 + i)}`);
+      await s.reportReview(id, '');
+      expect((await s.placeReviews('p-1')).length).toBe(i < 6 ? 1 : 0);
+    }
+  });
+
+  it('upgrading keeps the account: earlier reviews get the NUST label', async () => {
+    const s = await guest();
+    await s.saveReview(draft({ placeId: 'p-1' }));
+    await s.signIn('a@seecs.edu.pk');
+    expect(await s.user()).toMatchObject({ guest: false, email: 'a@seecs.edu.pk' });
+    const [r] = await s.placeReviews('p-1');
+    expect([r.mine, r.author]).toEqual([true, 'nust']);
+  });
+
+  it('delete my data removes the name too', async () => {
+    const s = await guest();
+    await s.saveReview(draft({ placeId: 'p-1' }));
+    await s.deleteMyData();
+    expect(await s.guestName()).toBeNull();
+    expect(await s.placeReviews('p-1')).toEqual([]);
+    await expect(s.saveReview(draft({ placeId: 'p-1' }))).rejects.toMatchObject({ code: 'domain' });
   });
 });
 

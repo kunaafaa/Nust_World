@@ -42,10 +42,27 @@ export function textViolation(t: string | null | undefined): TextViolation | nul
   return null;
 }
 
-export const VIOLATION_MESSAGE: Record<TextViolation, string> = {
+/** Guest names must not pass as official (client copy of private.name_violation() in 003_guest_reviews.sql). */
+const RESERVED = / (nust[a-z]*|admins?|administrators?|moderators?|officials?|verified|staff) /;
+
+export function guestNameViolation(
+  t: string | null | undefined,
+): TextViolation | 'reserved' | null {
+  const v = textViolation(t);
+  if (v) return v;
+  const w = (t ?? '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[0134578@$!]/g, (c) => LEET[c]);
+  return RESERVED.test(` ${w.replace(/[^a-z]+/g, ' ').trim()} `) ? 'reserved' : null;
+}
+
+export const VIOLATION_MESSAGE: Record<TextViolation | 'reserved', string> = {
   control: 'Please remove the hidden or control characters.',
   email: 'Please leave out email addresses.',
   link: 'Please leave out links and web addresses.',
   phone: 'Please leave out phone numbers.',
   blocked: 'Please keep it friendly: that wording is not allowed.',
+  reserved:
+    'Guest names cannot look official (NUST, admin, moderator…). Verify your NUST email for a badge.',
 };

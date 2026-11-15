@@ -7,6 +7,8 @@ import type { MemorySeed } from './memoryStore';
 const users = ['demo-a', 'demo-b', 'demo-c', 'demo-d'];
 
 export const DEMO_SEED: MemorySeed = {
+  // B and D are guests: shows the "Guest" label and the "includes guest ratings" note
+  guests: [users[1], users[3]],
   reviews: [
     {
       placeId: 'concordia-1-6900',

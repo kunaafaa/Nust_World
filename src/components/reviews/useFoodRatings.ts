@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { reviewsMode } from '@/lib/reviews/config';
 import { REVIEW_LIMITS, ReviewError, type Summary } from '@/lib/reviews/types';
-import { ensureReviewAuth, useReviewAuth } from '@/lib/reviews/useReviewAuth';
+import { canWrite, ensureReviewAuth, useReviewAuth } from '@/lib/reviews/useReviewAuth';
 import type { MenuItem } from '@/lib/menu';
 
 export interface FoodRatings {
   enabled: boolean;
+  /** can rate: a university account, or a guest with a name */
   signedIn: boolean;
   summaries: Record<string, Summary>;
   mine: Record<string, number>;
@@ -28,6 +29,7 @@ export function useFoodRatings(cafeId: string | undefined): FoodRatings {
   const [mine, setMine] = useState<Record<string, number>>({});
   const [tick, setTick] = useState(0);
   const user = useReviewAuth((s) => s.user);
+  const writer = useReviewAuth(canWrite);
 
   useEffect(() => {
     const on = !!cafeId && reviewsMode(location.search) !== 'off';
@@ -93,7 +95,7 @@ export function useFoodRatings(cafeId: string | undefined): FoodRatings {
   );
 
   if (!enabled) return NONE;
-  return { enabled, signedIn: !!user, summaries, mine, rate };
+  return { enabled, signedIn: writer, summaries, mine, rate };
 }
 
 /** Rated items (enough ratings to show a pill), best first. */

@@ -7,13 +7,20 @@ import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { cachedRead, write } from '@/lib/reviews/client';
 import { textViolation, VIOLATION_MESSAGE } from '@/lib/reviews/textCheck';
 import {
+  guestNote,
   REVIEW_LIMITS,
   REVIEW_POLICY,
   ReviewError,
   type Review,
   type Summary,
 } from '@/lib/reviews/types';
-import { ensureReviewAuth, useReviewAuth } from '@/lib/reviews/useReviewAuth';
+import {
+  canWrite,
+  ensureReviewAuth,
+  setGuestName,
+  useReviewAuth,
+} from '@/lib/reviews/useReviewAuth';
+import { GuestForm } from './GuestForm';
 import { SignIn } from './SignIn';
 import { StarInput, Stars, useReviewVars } from './Stars';
 
@@ -60,17 +67,38 @@ interface Data {
   stale: boolean;
 }
 
+/** "NUST" (verified university email) or "Guest". Comes from the database, never from what the client sends. */
+export function AuthorBadge({ author }: { author: Review['author'] }) {
+  if (author === 'nust')
+    return (
+      <span className="rv-badge rv-badge-nust" title="Verified NUST email">
+        NUST
+      </span>
+    );
+  if (author === 'guest')
+    return (
+      <span className="rv-badge rv-badge-guest" title="Guest: not verified">
+        Guest
+      </span>
+    );
+  return null;
+}
+
 function Editor({
   placeId,
   existing,
+  guestName,
   onDone,
 }: {
   placeId: string;
   existing: Review | null;
+  /** set for guests: their reviews always carry this profile name */
+  guestName: string | null;
   onDone: (msg: string) => void;
 }) {
   const [rating, setRating] = useState(existing?.rating ?? 0);
-  const [name, setName] = useState(existing?.displayName ?? readName());
+  const [typed, setName] = useState(existing?.displayName ?? readName());
+  const name = guestName ?? typed;
   const [body, setBody] = useState(existing?.body ?? '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -89,7 +117,7 @@ function Editor({
         (s) => s.saveReview({ placeId, displayName: name, rating, body }),
         `rv:${placeId}:`,
       );
-      saveName(name.trim());
+      if (!guestName) saveName(name.trim());
       onDone(existing ? 'Review updated' : 'Thanks, your review is up');
     } catch (err) {
       setError(errText(err));
@@ -101,16 +129,22 @@ function Editor({
   return (
     <form className="rv-editor" onSubmit={submit} aria-label="Write a review">
       <StarInput value={rating} onChange={setRating} label="Your rating" disabled={busy} />
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        maxLength={REVIEW_LIMITS.nameMax}
-        placeholder="Display name (shown with your review)"
-        aria-label="Display name"
-        className="rv-input"
-        autoComplete="nickname"
-        data-nodrag
-      />
+      {guestName ? (
+        <p className="rv-note">
+          Posting as <span className="rv-name">{guestName}</span> <AuthorBadge author="guest" />
+        </p>
+      ) : (
+        <input
+          value={typed}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={REVIEW_LIMITS.nameMax}
+          placeholder="Display name (shown with your review)"
+          aria-label="Display name"
+          className="rv-input"
+          autoComplete="nickname"
+          data-nodrag
+        />
+      )}
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
@@ -170,7 +204,10 @@ function Item({
   return (
     <li className="rv-item" data-review={r.id}>
       <div className="rv-row rv-between">
-        <span className="rv-name">{r.displayName}</span>
+        <span className="rv-row rv-who">
+          <span className="rv-name">{r.displayName}</span>
+          <AuthorBadge author={r.author} />
+        </span>
         <span className="rv-date">{fmtDate(r.createdAt)}</span>
       </div>
       <Stars value={r.rating} />
@@ -247,20 +284,43 @@ function Item({
   );
 }
 
-function Account({ email, onChanged }: { email: string; onChanged: (msg: string) => void }) {
+async function signOut() {
+  const { getStore } = await import('@/lib/reviews/client');
+  await (await getStore())?.signOut();
+}
+
+function Account({
+  email,
+  guest,
+  guestName,
+  onChanged,
+}: {
+  email: string;
+  guest: boolean;
+  guestName: string | null;
+  onChanged: (msg: string) => void;
+}) {
   const [confirm, setConfirm] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const [error, setError] = useState('');
   return (
     <div className="rv-account">
       <p className="rv-note">
-        Signed in as {email} ·{' '}
-        <button
-          className="rv-link"
-          onClick={async () => {
-            const { getStore } = await import('@/lib/reviews/client');
-            await (await getStore())?.signOut();
-          }}
-        >
+        {guest ? (
+          <>
+            {guestName ? (
+              <>
+                Posting as {guestName} <AuthorBadge author="guest" />
+              </>
+            ) : (
+              'Guest'
+            )}
+          </>
+        ) : (
+          <>Signed in as {email}</>
+        )}{' '}
+        ·{' '}
+        <button className="rv-link" onClick={() => (guest ? setLeaving(true) : void signOut())}>
           Sign out
         </button>{' '}
         ·{' '}
@@ -268,6 +328,23 @@ function Account({ email, onChanged }: { email: string; onChanged: (msg: string)
           Delete my data
         </button>
       </p>
+      {leaving && (
+        <div className="rv-row rv-actions">
+          <span className="rv-note">
+            A guest account cannot be signed back into: you will no longer be able to edit or delete
+            what you posted. Sign out anyway?
+          </span>
+          <button className="rv-btn" onClick={() => void signOut()}>
+            Sign out
+          </button>
+          <button className="rv-btn" onClick={() => setLeaving(false)}>
+            Stay
+          </button>
+        </div>
+      )}
+      {guest && (
+        <SignIn prompt="Want the NUST badge? Verify your university email: your reviews stay yours." />
+      )}
       {confirm && (
         <div className="rv-row rv-actions">
           <span className="rv-note">Delete every review and rating you have made?</span>
@@ -277,6 +354,7 @@ function Account({ email, onChanged }: { email: string; onChanged: (msg: string)
               setError('');
               try {
                 await write((s) => s.deleteMyData(), 'rv:', 'food:');
+                if (guest) setGuestName(null); // the profile (guest name) went too
                 setConfirm(false);
                 onChanged('Your reviews and ratings were deleted');
               } catch (err) {
@@ -302,7 +380,8 @@ function Account({ email, onChanged }: { email: string; onChanged: (msg: string)
 
 export default function ReviewsSection({ placeId }: { placeId: string }) {
   const vars = useReviewVars();
-  const { user, ready } = useReviewAuth();
+  const { user, ready, guestName } = useReviewAuth();
+  const writer = canWrite({ user, guestName });
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);
@@ -364,6 +443,9 @@ export default function ReviewsSection({ placeId }: { placeId: string }) {
           data && <span className="rv-note">No reviews yet</span>
         )}
       </div>
+      {!!data?.summary?.guestCount && (
+        <p className="rv-fine rv-guest-note">{guestNote(data.summary.guestCount, 'review')}</p>
+      )}
       {!data && !error && <div className="menu-skel rv-skel" aria-label="Loading reviews" />}
       {error && <p className="rv-note">{error}</p>}
       {offline && data && <p className="rv-note">Offline: showing saved reviews, read-only.</p>}
@@ -379,7 +461,7 @@ export default function ReviewsSection({ placeId }: { placeId: string }) {
             <Item
               key={r.id}
               r={r}
-              signedIn={!!user && !offline}
+              signedIn={writer && !offline}
               onEdit={() => setEditing(true)}
               onChanged={changed}
             />
@@ -392,16 +474,28 @@ export default function ReviewsSection({ placeId }: { placeId: string }) {
         </button>
       )}
 
-      {ready && !offline && user && !editing && (
+      {ready && !offline && writer && !editing && (
         <button className="rv-btn rv-btn-main rv-write" onClick={() => setEditing(true)}>
           {mine ? 'Edit your review' : 'Write a review'}
         </button>
       )}
-      {user && editing && <Editor placeId={placeId} existing={mine} onDone={changed} />}
-      {ready && !offline && !user && (
-        <SignIn prompt="Sign in with your university email to review and rate." />
+      {writer && editing && (
+        <Editor
+          placeId={placeId}
+          existing={mine}
+          guestName={user?.guest ? guestName : null}
+          onDone={changed}
+        />
       )}
-      {user && <Account email={user.email} onChanged={changed} />}
+      {ready && !offline && !writer && (
+        <div className="rv-join">
+          <GuestForm />
+          {!user && <SignIn prompt="Or sign in with your university email for a NUST badge." />}
+        </div>
+      )}
+      {user && (
+        <Account email={user.email} guest={user.guest} guestName={guestName} onChanged={changed} />
+      )}
       <p className="rv-policy">{REVIEW_POLICY}</p>
     </section>
   );

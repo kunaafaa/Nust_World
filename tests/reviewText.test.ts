@@ -2,12 +2,17 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { BLOCKED_TERMS } from '@/lib/reviews/blockedTerms';
-import { textViolation } from '@/lib/reviews/textCheck';
+import { guestNameViolation, textViolation } from '@/lib/reviews/textCheck';
 import { isAllowedEmail, parseDomains } from '@/lib/reviews/config';
 
 const root = path.resolve(__dirname, '..');
 const cases = (
   JSON.parse(readFileSync(path.join(root, 'supabase/tests/text-cases.json'), 'utf8')) as {
+    cases: [string, string | null][];
+  }
+).cases;
+const guestCases = (
+  JSON.parse(readFileSync(path.join(root, 'supabase/tests/guest-name-cases.json'), 'utf8')) as {
     cases: [string, string | null][];
   }
 ).cases;
@@ -27,6 +32,12 @@ describe('review text check (client copy)', () => {
 
   it('every blocked term is caught on its own', () => {
     for (const t of BLOCKED_TERMS) expect(textViolation(`well ${t} then`)).toBe('blocked');
+  });
+});
+
+describe('guest name check (client copy)', () => {
+  it.each(guestCases)('%j -> %s', (name, want) => {
+    expect(guestNameViolation(name)).toBe(want);
   });
 });
 

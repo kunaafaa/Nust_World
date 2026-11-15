@@ -1,0 +1,25 @@
+{
+  "about": "Guest display names: [name, expected violation or null]. Run against private.name_violation() (tests/reviewsDb.test.ts) and guestNameViolation() (tests/reviewText.test.ts).",
+  "cases": [
+    ["Guest Ali", null],
+    ["Night owl", null],
+    ["Hunain Ustad", null],
+    ["Mustafa", null],
+    ["Adminah", null],
+    ["Administrator", "reserved"],
+    ["NUST Official", "reserved"],
+    ["nust", "reserved"],
+    ["The NUSTian", "reserved"],
+    ["n.u.s.t", null],
+    ["NU5T fan", "reserved"],
+    ["Admin", "reserved"],
+    ["adm1n", "reserved"],
+    ["Site Moderator", "reserved"],
+    ["Verified Student", "reserved"],
+    ["Staff", "reserved"],
+    ["me@gmail.com", "email"],
+    ["bit.ly/x", "link"],
+    ["0300 1234567", "phone"],
+    ["Sh1t", "blocked"]
+  ]
+}

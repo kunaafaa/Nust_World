@@ -494,8 +494,49 @@ a:focus-visible {
 }
 .rv-editor,
 .rv-signin,
-.rv-account {
+.rv-account,
+.rv-guest {
   margin-top: 10px;
+}
+.rv-guest-compact {
+  margin-top: 4px;
+}
+.rv-account .rv-signin {
+  margin-top: 4px;
+}
+/* small print: guest notes, "includes guest ratings" */
+.rv-fine {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.rv-who {
+  gap: 6px;
+  min-width: 0;
+}
+/* "NUST" (verified university email) and "Guest" labels: colours from the theme only */
+.rv-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+.rv-badge-nust {
+  border-color: color-mix(in srgb, var(--r-star) 70%, transparent);
+  color: var(--r-star);
+}
+.rv-captcha {
+  margin-top: 8px;
+  max-width: 100%;
+  overflow: hidden;
 }
 .rv-editor .rv-row {
   margin-top: 6px;

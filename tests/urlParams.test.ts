@@ -83,6 +83,17 @@ describe('security headers', () => {
     expect(p).toContain("object-src 'none'");
     expect(p).toContain('upgrade-insecure-requests');
   });
+  it('allows the Turnstile captcha only when it is configured', () => {
+    const off = contentSecurityPolicy({ nonce: 'n', dev: false });
+    expect(off).not.toContain('challenges.cloudflare.com');
+    expect(off).not.toContain('frame-src');
+    const on = contentSecurityPolicy({ nonce: 'n', dev: false, turnstile: true });
+    expect(on).toContain(
+      "script-src 'self' 'nonce-n' 'strict-dynamic' https://challenges.cloudflare.com",
+    );
+    expect(on).toContain("frame-src 'self' https://challenges.cloudflare.com");
+    expect(on).toContain("frame-ancestors 'none'");
+  });
   it('allows eval only in development', () => {
     expect(contentSecurityPolicy({ nonce: 'n', dev: true })).toContain("'unsafe-eval'");
   });

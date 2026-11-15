@@ -12,6 +12,7 @@ export function proxy(request: NextRequest) {
     nonce,
     dev: process.env.NODE_ENV === 'development',
     supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    turnstile: !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   });
   const headers = new Headers(request.headers);
   headers.set('x-nonce', nonce);

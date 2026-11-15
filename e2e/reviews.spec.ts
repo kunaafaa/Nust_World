@@ -167,16 +167,20 @@ for (const vp of SIZES) {
         'Chicken Tikka Piece',
         'Chicken Tikka Boti',
       ]);
-      await expect(top.getByLabel('Rated 4.7 out of 5 from 3 ratings')).toBeVisible();
       // two ratings only: no pill yet
       const achari = sheet.locator('[data-cat="BBQ"] .menu-row', {
         hasText: 'Chicken Achari Boti',
       });
       await expect(achari.locator('.rv-pill')).toHaveCount(0);
 
-      // signed out: the rater points to sign in
+      // guest ratings are counted and said so (demo user B is a guest)
+      await expect(
+        top.getByLabel('Rated 4.7 out of 5 from 3 ratings, including 1 from guests'),
+      ).toBeVisible();
+      // signed out: the rater offers "Continue as guest" and the NUST email
       await achari.getByRole('button', { name: 'Rate Chicken Achari Boti' }).click();
-      await expect(achari.getByRole('button', { name: 'Sign in under Reviews' })).toBeVisible();
+      await expect(achari.getByRole('button', { name: 'Continue as guest' })).toBeVisible();
+      await expect(achari.getByRole('button', { name: 'use your NUST email' })).toBeVisible();
 
       await signIn(page);
       await achari.scrollIntoViewIfNeeded();
@@ -196,6 +200,60 @@ for (const vp of SIZES) {
     });
   });
 }
+
+test.describe('guests', () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+
+  test('continue as guest: name rules, Guest label, note on averages, rate a dish, upgrade', async ({
+    page,
+  }) => {
+    await openCard(page, C1);
+    await openFull(page);
+    const rv = await reviews(page);
+    // labels come from the store: demo A is a university account, demo B a guest
+    await expect(
+      rv.locator('[data-review]', { hasText: 'Demo reviewer A' }).getByText('NUST'),
+    ).toBeVisible();
+    await expect(
+      rv.locator('[data-review]', { hasText: 'Demo reviewer B' }).getByText('Guest'),
+    ).toBeVisible();
+    await expect(rv.getByText('Includes 1 guest review (not verified)')).toBeVisible();
+
+    const guest = rv.locator('[data-reviews-guest]');
+    await guest.getByLabel('Guest display name').fill('NUST Admin');
+    await expect(guest.getByRole('alert')).toHaveText(/cannot look official/);
+    await guest.getByLabel('Guest display name').fill('Chai lover');
+    await guest.getByRole('button', { name: 'Continue as guest' }).click();
+    await expect(rv.getByText('Posting as Chai lover')).toBeVisible();
+
+    await rv.getByRole('button', { name: 'Write a review' }).click();
+    // a guest posts under their guest name: no name field
+    await expect(rv.getByLabel('Display name', { exact: true })).toHaveCount(0);
+    await rv.getByRole('radio', { name: '5 stars' }).click();
+    await rv.getByRole('button', { name: 'Post review' }).click();
+    await expect(rv.getByText('4.7 · 3 reviews')).toBeVisible();
+    await expect(rv.getByText('Includes 2 guest reviews (not verified)')).toBeVisible();
+    const mine = rv.locator('[data-review]', { hasText: 'Chai lover' });
+    await expect(mine.getByText('Guest')).toBeVisible();
+
+    // the same guest can rate a dish
+    const achari = page.locator(SHEET).locator('[data-cat="BBQ"] .menu-row', {
+      hasText: 'Chicken Achari Boti',
+    });
+    await achari.scrollIntoViewIfNeeded();
+    await achari.getByRole('button', { name: 'Rate Chicken Achari Boti' }).click();
+    await achari.getByRole('radio', { name: '4 stars' }).click();
+    await expect(achari.getByText('Thanks for rating')).toBeVisible();
+
+    // upgrade: verify a university email, same account, the review now shows NUST
+    await rv.scrollIntoViewIfNeeded();
+    await rv.getByLabel('University email').fill('me@seecs.edu.pk');
+    await rv.getByRole('button', { name: 'Send link' }).click();
+    await expect(rv.getByText('Signed in as me@seecs.edu.pk')).toBeVisible();
+    await expect(mine.getByText('NUST')).toBeVisible();
+    await expect(rv.getByRole('button', { name: 'Edit your review' })).toBeVisible();
+  });
+});
 
 test.describe('offline', () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });

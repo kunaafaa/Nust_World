@@ -63,3 +63,15 @@ it; do not edit history.
   `NEXT_PUBLIC_DEV_TOOLS` is on, which is the default during field testing.
 - **Why:** the owner tests on real phones on campus with the production build.
 - **Consequences:** set `NEXT_PUBLIC_DEV_TOOLS=0` in Vercel once field testing is over (`docs/NEEDS_FROM_ME.md`).
+
+## D8. Guest reviews: anonymous Supabase users behind a captcha
+
+- **Decision:** anyone can review and rate as a guest (Supabase anonymous user, Turnstile captcha, display name in
+  `profiles`); the university email sign-in stays as an upgrade that links to the same account. The NUST / Guest
+  label is read from `auth.users` when reviews are read, never stored from the client. Guests get 5 writes an hour
+  and 3 reports a day, and a guest report counts as half toward auto-hide. Guest names cannot look official.
+- **Why:** most visitors will not sign in with a university email just to rate a dish, but unverified accounts
+  must not be able to pass as NUST, outvote the limits, or hide verified reviews with a handful of captchas.
+- **Consequences:** averages mix guests and verified users and always say how many guests are included. With
+  captcha on in Supabase, every sign-in needs a token, so `NEXT_PUBLIC_TURNSTILE_SITE_KEY` must be deployed first.
+  The CSP allows `https://challenges.cloudflare.com` (script and frame) only when that key is set.

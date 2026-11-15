@@ -10,6 +10,11 @@ const flag = (v: string | undefined) => v === '1' || v === 'true';
 export const REVIEWS_ENABLED = flag(process.env.NEXT_PUBLIC_REVIEWS_ENABLED);
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+/**
+ * Cloudflare Turnstile *site* key (public). When set, guest and email sign-in show the captcha and pass its token
+ * to Supabase, which checks it with the secret key stored in Supabase Auth settings (never in this app).
+ */
+export const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 /** Lower-case email domains allowed to post. Must match the allowed_domains table (the database decides). */
 export function parseDomains(v: string | undefined): string[] {

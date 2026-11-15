@@ -20,7 +20,12 @@ export interface CspOptions {
   dev: boolean;
   /** NEXT_PUBLIC_SUPABASE_URL, allowed in connect-src when it is a valid https URL */
   supabaseUrl?: string;
+  /** NEXT_PUBLIC_TURNSTILE_SITE_KEY is set: allow the Cloudflare Turnstile captcha (its script and iframe) */
+  turnstile?: boolean;
 }
+
+/** Cloudflare Turnstile serves its script and its challenge iframe from here. */
+export const TURNSTILE_ORIGIN = 'https://challenges.cloudflare.com';
 
 /**
  * The page's policy.
@@ -29,8 +34,15 @@ export interface CspOptions {
  * - style-src 'unsafe-inline' is required: React renders style="" attributes (sheet heights, label positions) and
  *   framer-motion animates inline styles. A nonce cannot cover style attributes.
  * - worker-src blob: covers the routing worker in dev; production loads it from /_next/static.
+ * - Turnstile (only when configured): its script is added by our own nonce'd code, so 'strict-dynamic' allows it
+ *   (the host entry is for browsers without 'strict-dynamic'); its challenge runs in an iframe (frame-src).
  */
-export function contentSecurityPolicy({ nonce, dev, supabaseUrl }: CspOptions): string {
+export function contentSecurityPolicy({
+  nonce,
+  dev,
+  supabaseUrl,
+  turnstile = false,
+}: CspOptions): string {
   const supabase = httpsOrigin(supabaseUrl);
   const directives: Record<string, string[]> = {
     'default-src': ["'self'"],
@@ -38,8 +50,11 @@ export function contentSecurityPolicy({ nonce, dev, supabaseUrl }: CspOptions): 
       "'self'",
       `'nonce-${nonce}'`,
       "'strict-dynamic'",
+      ...(turnstile ? [TURNSTILE_ORIGIN] : []),
       ...(dev ? ["'unsafe-eval'"] : []),
     ],
+    // without Turnstile, frames fall back to default-src 'self' as before
+    ...(turnstile ? { 'frame-src': ["'self'", TURNSTILE_ORIGIN] } : {}),
     'style-src': ["'self'", "'unsafe-inline'"],
     'img-src': ["'self'", 'data:', 'blob:'],
     'font-src': ["'self'"],

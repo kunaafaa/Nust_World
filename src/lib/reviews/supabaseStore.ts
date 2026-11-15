@@ -1,12 +1,12 @@
 /**
  * ReviewStore on Supabase, anon key only. Loaded with a dynamic import, so @supabase/supabase-js is fetched only
- * when a card with reviews opens. Every rule lives in the database (supabase/migrations/001_reviews.sql);
+ * when a card with reviews opens. Every rule lives in the database (supabase/migrations/*.sql);
  * this file just maps its errors to friendly messages.
  */
 import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
 import { ALLOWED_EMAIL_DOMAINS, isAllowedEmail, SUPABASE_ANON_KEY, SUPABASE_URL } from './config';
 import { VIOLATION_MESSAGE, type TextViolation } from './textCheck';
-import { checkDraft, checkFood, checkPlace, checkReport } from './validate';
+import { checkDraft, checkFood, checkGuestName, checkPlace, checkReport } from './validate';
 import {
   ReviewError,
   type Review,
@@ -33,14 +33,31 @@ export function mapError(e: PgError | null | undefined): ReviewError {
   if (/own review/.test(msg))
     return new ReviewError('You cannot report your own review.', 'invalid');
   if (e?.code === '42501')
-    return new ReviewError('Only university email accounts can post.', 'domain');
+    return new ReviewError(
+      'Continue as a guest or sign in with your university email to post.',
+      'domain',
+    );
   if (e?.code === '23514' || e?.code === '22001')
     return new ReviewError('That does not look right.', 'invalid');
   return new ReviewError('Could not reach reviews right now. Try again later.', 'server');
 }
 
 const toUser = (u: User | null | undefined): ReviewUser | null =>
-  u ? { id: u.id, email: u.email ?? '' } : null;
+  u ? { id: u.id, email: u.email ?? '', guest: u.is_anonymous === true } : null;
+
+const summary = (r: { avg: unknown; count: unknown; guest_count?: unknown }): Summary => ({
+  avg: Number(r.avg),
+  count: Number(r.count),
+  guestCount: Number(r.guest_count ?? 0),
+});
+
+const authError = (e: { message?: string }, what: string) =>
+  new ReviewError(
+    /captcha/i.test(e.message ?? '')
+      ? 'The captcha check failed or expired. Try again.'
+      : `Could not ${what}. Try again later.`,
+    'auth',
+  );
 
 export class SupabaseStore implements ReviewStore {
   readonly kind = 'supabase' as const;
@@ -65,17 +82,56 @@ export class SupabaseStore implements ReviewStore {
     const { data } = this.sb.auth.onAuthStateChange((_e, s) => cb(toUser(s?.user)));
     return () => data.subscription.unsubscribe();
   }
-  async signIn(email: string) {
+  async signIn(email: string, captchaToken?: string) {
     if (!isAllowedEmail(email, ALLOWED_EMAIL_DOMAINS))
       throw new ReviewError('Use your university email address.', 'domain');
+    const e = email.trim().toLowerCase();
     // come back to the same place card after following the link
     const back = new URL(location.href);
     back.hash = '';
+    if ((await this.user())?.guest) {
+      // Upgrade: link the email to this guest account, so its reviews and ratings stay with it.
+      const { error } = await this.sb.auth.updateUser(
+        { email: e },
+        { emailRedirectTo: back.toString() },
+      );
+      if (error?.code === 'email_exists')
+        throw new ReviewError(
+          'That email already has an account. Sign out of the guest account first to use it (your guest reviews stay as guest reviews; "Delete my data" removes them).',
+          'auth',
+        );
+      if (error) throw authError(error, 'send the confirmation link');
+      return;
+    }
     const { error } = await this.sb.auth.signInWithOtp({
-      email: email.trim().toLowerCase(),
-      options: { emailRedirectTo: back.toString(), shouldCreateUser: true },
+      email: e,
+      options: { emailRedirectTo: back.toString(), shouldCreateUser: true, captchaToken },
     });
-    if (error) throw new ReviewError('Could not send the sign-in link. Try again later.', 'auth');
+    if (error) throw authError(error, 'send the sign-in link');
+  }
+  async signInAsGuest(displayName: string, captchaToken?: string) {
+    const name = checkGuestName(displayName);
+    const me = await this.user();
+    if (me && !me.guest) throw new ReviewError('You are already signed in.', 'auth');
+    if (!me) {
+      const { error } = await this.sb.auth.signInAnonymously({ options: { captchaToken } });
+      if (error) throw authError(error, 'start a guest session');
+    }
+    const { data: own, error: readErr } = await this.sb
+      .from('profiles')
+      .select('user_id')
+      .maybeSingle();
+    if (readErr) throw mapError(readErr);
+    const { error } = own
+      ? await this.sb.from('profiles').update({ display_name: name }).eq('user_id', own.user_id)
+      : await this.sb.from('profiles').insert({ display_name: name });
+    if (error) throw mapError(error);
+  }
+  async guestName() {
+    if (!(await this.user())?.guest) return null;
+    const { data, error } = await this.sb.from('profiles').select('display_name').maybeSingle();
+    if (error) throw mapError(error);
+    return data ? String(data.display_name) : null;
   }
   async signOut() {
     await this.sb.auth.signOut();
@@ -91,17 +147,17 @@ export class SupabaseStore implements ReviewStore {
     checkPlace(placeId);
     const { data, error } = await this.sb
       .from('place_rating_summary')
-      .select('avg,count')
+      .select('avg,count,guest_count')
       .eq('place_id', placeId)
       .maybeSingle();
     if (error) throw mapError(error);
-    return data ? { avg: Number(data.avg), count: Number(data.count) } : null;
+    return data ? summary(data) : null;
   }
   async placeReviews(placeId: string): Promise<Review[]> {
     checkPlace(placeId);
     const { data, error } = await this.sb
       .from('public_reviews')
-      .select('id,place_id,display_name,rating,body,created_at,mine')
+      .select('id,place_id,display_name,rating,body,created_at,mine,author')
       .eq('place_id', placeId)
       .order('created_at', { ascending: false })
       .limit(50);
@@ -114,6 +170,7 @@ export class SupabaseStore implements ReviewStore {
       body: String(r.body ?? ''),
       createdAt: String(r.created_at),
       mine: r.mine === true,
+      author: r.author === 'nust' || r.author === 'guest' ? r.author : null,
     }));
   }
   async saveReview(draft: ReviewDraft) {
@@ -145,12 +202,11 @@ export class SupabaseStore implements ReviewStore {
   async foodSummaries(cafeId: string) {
     const { data, error } = await this.sb
       .from('food_rating_summary')
-      .select('item_key,avg,count')
+      .select('item_key,avg,count,guest_count')
       .eq('cafe_id', cafeId);
     if (error) throw mapError(error);
     const out: Record<string, Summary> = {};
-    for (const r of data ?? [])
-      out[String(r.item_key)] = { avg: Number(r.avg), count: Number(r.count) };
+    for (const r of data ?? []) out[String(r.item_key)] = summary(r);
     return out;
   }
   async myFoodRatings(cafeId: string) {
