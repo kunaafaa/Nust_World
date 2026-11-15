@@ -14,6 +14,11 @@ import {
 import type { MenuState } from '@/hooks/useMenu';
 import { MENU_THEME } from '@/scene/theme';
 import { useApp } from '@/store/useApp';
+import { FoodRatingLine } from './reviews/FoodRating';
+import { topRated, useFoodRatings, type FoodRatings } from './reviews/useFoodRatings';
+
+/** Pseudo-category of the best-rated items, shown first when there are any. */
+export const TOP_RATED = 'Top rated';
 
 /** Height (px) of the sticky chip bar; category headers stick right below it. Keep in sync with .menu-chips in globals.css. */
 const CHIP_H = 52;
@@ -44,7 +49,7 @@ export function MenuPill({ state }: { state: MenuState }) {
   );
 }
 
-function Row({ item }: { item: MenuItem }) {
+function Row({ item, fr }: { item: MenuItem; fr: FoodRatings }) {
   const hasVariants = !!item.variants?.length;
   return (
     <li className={`menu-row ${item.available ? '' : 'menu-row-off'}`}>
@@ -62,6 +67,7 @@ function Row({ item }: { item: MenuItem }) {
             ))}
           </p>
         )}
+        <FoodRatingLine item={item} fr={fr} />
       </div>
       {!hasVariants && <span className="menu-price">{formatPrice(item.price)}</span>}
     </li>
@@ -96,12 +102,27 @@ function Loaded({ menu }: { menu: Menu }) {
   // short screens: keep the half-height sheet for chips + rows; the search box joins at full height
   const roomy = snap === 'full' || window.innerHeight >= 700;
   const searchable = count > SEARCH_FROM && (roomy || query !== '');
-  const cats = useMemo(() => filterMenu(menu.categories, query), [menu, query]);
-
+  const fr = useFoodRatings(menu.cafeId);
+  const cats = useMemo(() => {
+    const found = filterMenu(menu.categories, query);
+    const top = topRated(
+      found.flatMap((c) => c.items),
+      fr.summaries,
+    );
+    return top.length ? [{ name: TOP_RATED, items: top }, ...found] : found;
+  }, [menu, query, fr.summaries]);
   const scroller = useCallback(
     () => root.current?.closest<HTMLElement>('[data-sheet-body]') ?? null,
     [],
   );
+
+  // ratings arrive after the menu: if "Top rated" lands in front while nothing was scrolled, highlight it
+  const hasTop = cats[0]?.name === TOP_RATED;
+  useEffect(() => {
+    if (hasTop && !scroller()?.scrollTop)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActive((a) => (a === menu.categories[0]?.name ? TOP_RATED : a));
+  }, [hasTop, menu, scroller]);
 
   // Highlight the chip of the category currently under the sticky bar.
   useEffect(() => {
@@ -206,7 +227,7 @@ function Loaded({ menu }: { menu: Menu }) {
             <h3 className="menu-cat">{c.name}</h3>
             <ul>
               {c.items.map((i) => (
-                <Row key={`${c.name}-${i.id}`} item={i} />
+                <Row key={`${c.name}-${i.id}`} item={i} fr={fr} />
               ))}
             </ul>
           </div>

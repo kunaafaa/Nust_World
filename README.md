@@ -115,6 +115,26 @@ Tap a cafe on the map and its menu appears inside the place card: "Menu · N ite
 
 Source caveats (details in `docs/menu-notes.md`): the site has no descriptions, variants, tags or availability, so every item is `available: true`; category names are copied exactly as stored (for example `RollParatha`); `updatedAt` is when the script last ran.
 
+Every item also has a stable `key` (`<cafeId>/<slug>`) for food ratings, kept in `data/menus/item-keys.json` by `npm run menus` (`-- --keys-only` works offline).
+
+## Reviews and food ratings (off until you set them up)
+
+- **Off:** place cards say "Reviews coming soon", and none of the review code or Supabase code is downloaded.
+- **On** (Supabase, anon key only):
+  - Places get 1–5 star reviews with optional text. Prayer and medical places are excluded.
+  - Menu items get star ratings: a pill appears from 3 ratings, plus a "Top rated" chip.
+  - Sign-in is by magic link to a university email address.
+- **Enforced in the database**, by row-level security and triggers in `supabase/migrations/001_reviews.sql`:
+  - The text checks refuse links, emails, phone numbers and blocked terms.
+  - Rate limits: 10 writes an hour and 20 reports a day. A review hides automatically after 3 reports.
+  - "Delete my data" removes everything a person wrote.
+- **Setup:** `docs/REVIEWS_SETUP.md`.
+- **Try it with no backend:** add `?reviews=memory` to the URL.
+- **Tests:**
+  - `tests/reviewsDb.test.ts` runs the migration and `supabase/tests/rls.sql` in pglite.
+  - `tests/reviewText.test.ts`, `tests/reviewStore.test.ts` and `tests/itemKeys.test.ts` are the unit tests.
+  - `e2e/reviews.spec.ts` covers 360x640, 390x844 and 844x390.
+
 ## Razi and Rehmat hostels
 
 |                    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
@@ -145,7 +165,7 @@ Theme tokens live in `src/scene/theme.ts` (the brief says `/lib/theme.ts`; that 
 
 ## Known issues
 
-- Bundle: ~556 KB gzip JavaScript + 95 KB gzip data. Fine on Wi-Fi; on slow 4G the first load can exceed 3 s. Repeat visits are instant (service worker). Splitting three.js postprocessing out of the first load is the next win.
+- Bundle: ~568 KB gzip JavaScript (first load; the reviews and Supabase code is a separate ~80 KB gzip set of chunks loaded only when reviews are on) + 95 KB gzip data. Fine on Wi-Fi; on slow 4G the first load can exceed 3 s. Repeat visits are instant (service worker). Splitting three.js postprocessing out of the first load is the next win.
 - `THREE.Clock` deprecation warning comes from React Three Fiber itself; nothing in this repo uses it. No console errors.
 - I verified rendering in headless Chrome with software GL (no GPU), so **real frame rates on a phone are not measured**. Use `?debug=1` on your phone to read FPS and draw calls, and the Graphics switch in Settings if it struggles.
 - Live location was tested with `?simulate=gate1` (full pipeline), not with a real GPS. There is no gate named "Gate 1" in the data, so the simulator falls back to the first gate found (currently Gate no. 2). See `docs/field-test.md`.
@@ -160,6 +180,7 @@ Theme tokens live in `src/scene/theme.ts` (the brief says `/lib/theme.ts`; that 
 5. **Hostel outlines to draw in OSM** (Razi Hostel and the others in `docs/needs-osm-outline.md`), then `npm run refresh-data -- --apply`.
 6. The nine missing features in `docs/feature-check.md`: map them in OSM or add entries to `landmarks.ts`.
 7. A real feedback address or form for `NEXT_PUBLIC_FEEDBACK_URL`.
+8. To switch on reviews: a Supabase project and the allowed email domains (`docs/NEEDS_FROM_ME.md`).
 
 ## Code map
 

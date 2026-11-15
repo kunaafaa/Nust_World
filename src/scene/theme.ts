@@ -84,6 +84,14 @@ export const MENU_THEME = {
   durPulse: '1600ms',
 } as const;
 
+/** Reviews and food ratings on the place card: stars share the menu accent; errors get their own red. */
+export const REVIEW_THEME = {
+  star: MENU_THEME.accent,
+  starDay: MENU_THEME.accentDay,
+  error: '#fca5a5',
+  errorDay: '#b91c1c',
+} as const;
+
 /** Production edge: marsh style, campus border glow, context-ring roads. All colours live here (locked Night Outline look). */
 export const EDGE = {
   marsh: '#1e4a52',

@@ -21,6 +21,7 @@ desktop.ini
 node_modules/
 .next/
 .env*
+!.env.example
 reference/
 *.zip
 

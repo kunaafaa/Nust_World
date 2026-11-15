@@ -345,3 +345,205 @@ a:focus-visible {
     opacity: 0.7;
   }
 }
+
+/* Reviews and food ratings. Colours: --r-star / --r-error from REVIEW_THEME (scene/theme.ts), the rest are the
+   card's own --ink / --ink-soft / --glass-* tokens. */
+.rv {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--glass-border);
+}
+.rv-soon {
+  margin-top: 14px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-style: italic;
+}
+.rv-skel {
+  height: 44px;
+  border-radius: 14px;
+}
+.rv-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.rv-between {
+  justify-content: space-between;
+}
+.rv-title {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
+}
+.rv-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+.rv-stars {
+  display: inline-flex;
+  gap: 1px;
+}
+.rv-star-on {
+  fill: var(--r-star);
+}
+.rv-star-off {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.5;
+}
+.rv-list {
+  margin-top: 6px;
+}
+.rv-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.rv-name {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.rv-date,
+.rv-count {
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.rv-body {
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.rv-note,
+.rv-policy {
+  margin-top: 6px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.rv-policy {
+  font-size: 13px;
+  line-height: 1.4;
+}
+.rv-error {
+  margin-top: 6px;
+  color: var(--r-error);
+  font-size: 14px;
+  font-weight: 600;
+}
+.rv-actions {
+  margin-top: 4px;
+}
+.rv-link {
+  min-height: 44px;
+  padding: 0 2px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rv-btn {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 12px;
+  background: var(--glass);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+.rv-btn-main {
+  border-color: color-mix(in srgb, var(--r-star) 70%, transparent);
+}
+.rv-btn:disabled {
+  opacity: 0.55;
+}
+.rv-write {
+  margin-top: 10px;
+  width: 100%;
+}
+.rv-input {
+  flex: 1 1 180px;
+  min-width: 0;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 12px;
+  background: var(--glass-solid);
+  color: var(--ink);
+  font-size: 16px; /* 16 px: no zoom-on-focus on iOS */
+  width: 100%;
+}
+.rv-row > .rv-input {
+  width: auto;
+}
+.rv-textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+.rv-editor,
+.rv-signin,
+.rv-account {
+  margin-top: 10px;
+}
+.rv-editor .rv-row {
+  margin-top: 6px;
+}
+.rv-star-input {
+  display: flex;
+  gap: 0;
+}
+.rv-star-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+.rv-food {
+  margin-top: 4px;
+}
+.rv-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1.5px solid color-mix(in srgb, var(--r-star) 70%, transparent);
+  border-radius: 999px;
+  color: var(--r-star);
+  font-size: 14px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.rv-pill-n {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.rv-rate-btn {
+  position: relative;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+}
+/* 44 px hit area around the small pill-shaped button */
+.rv-rate-btn::after {
+  content: '';
+  position: absolute;
+  inset: -8px -4px;
+}

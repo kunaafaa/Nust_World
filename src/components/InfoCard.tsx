@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { track } from '@vercel/analytics';
+import { reviewsMode } from '@/lib/reviews/config';
+import { REVIEW_EXCLUDED_CATEGORIES } from '@/lib/reviews/types';
 import { landmarks } from '@/data/landmarks';
 import { PHOTOS } from '@/data/photos';
 import { startDirections } from '@/lib/navController';
@@ -15,6 +18,24 @@ import { MenuPill, MenuSection, useMenuVars } from './MenuSection';
 
 const COMING = 'Info coming soon';
 const REPORT_EMAIL = process.env.NEXT_PUBLIC_REPORT_EMAIL ?? '';
+
+// Reviews (and the Supabase client behind them) load only when a reviewable card opens.
+const ReviewsSection = dynamic(() => import('./reviews/ReviewsSection'), {
+  ssr: false,
+  loading: () => <div className="menu-skel rv-skel mt-4" aria-label="Loading reviews" />,
+});
+
+/** Reviews block: nothing for prayer / medical places, "coming soon" while the feature is off. */
+function Reviews({ place }: { place: Place }) {
+  const [mode, setMode] = useState<'memory' | 'supabase' | 'off' | null>(null);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMode(reviewsMode(location.search));
+  }, []);
+  if (!mode || REVIEW_EXCLUDED_CATEGORIES.includes(place.category)) return null;
+  if (mode === 'off') return <p className="rv-soon">Reviews coming soon</p>;
+  return <ReviewsSection key={place.id} placeId={place.id} />;
+}
 
 /** The landmarks.ts entry for a place, ready to paste back after editing. */
 export function landmarkJson(p: Place): string {
@@ -280,6 +301,8 @@ export function InfoCard() {
           Report a mistake
         </button>
       </div>
+
+      <Reviews place={q} />
 
       {near.length > 0 && (
         <div className="mt-3">

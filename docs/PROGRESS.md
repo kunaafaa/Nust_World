@@ -9,13 +9,24 @@ Last updated 2026-11-15.
 | 0A Navigation mode               | **Done**         | 021cd1e   | Gate green: lint, typecheck, 117 unit, build, 51/51 e2e (nav spec 27/27 over 3 repeats).                |
 | 4 Clean perf comparison          | **Done** (early) | c53d5cc   | Ran outside OneDrive, 3 alternating runs per build. Temp worktrees removed. `docs/perf/nav-after.md`.   |
 | 0A+ Camera gesture fixes         | **Done**         | 73cc409   | Found by the e2e suite: pinch dropped after a flight, late first-fix recentre, slow flights at low fps. |
-| 0B Razi/Rehmat reuse Ghazali     | **Done**         | (next)    | `data/hostel-placement.ts`; Rehmat = Ghazali 1, Razi 1 = Ghazali 2; 127 unit, 56/56 e2e.                |
-| 1 Reviews and food ratings       | Next             |           |                                                                                                         |
-| 2 Security hardening             | Not started      |           |                                                                                                         |
+| 0B Razi/Rehmat reuse Ghazali     | **Done**         | 74dd737   | `data/hostel-placement.ts`; Rehmat = Ghazali 1, Razi 1 = Ghazali 2; 127 unit, 56/56 e2e.                |
+| 1 Reviews and food ratings       | **Done**         | 4 commits | Off by default. 177 unit (RLS in pglite), 65/65 e2e. Setup: `docs/REVIEWS_SETUP.md`. First load +2 KB.  |
+| 2 Security hardening             | Next             |           |                                                                                                         |
 | 3 Cleanup and readability        | Not started      |           |                                                                                                         |
 | Final gate + OVERNIGHT_REPORT.md | Not started      |           |                                                                                                         |
 
-Blockers: none yet. Things that need the owner go in `docs/NEEDS_FROM_ME.md`.
+Blockers: none. Things that need the owner are in `docs/NEEDS_FROM_ME.md` (Supabase project and allowed email
+domains, for reviews).
+
+Notes for Phase 2:
+
+- `?reviews=memory` (demo store) still works in production. Put it behind `NEXT_PUBLIC_DEV_TOOLS` along with
+  `?debug=1` and the others.
+- Magic-link sign-in returns with `?code=` in the URL. The URL allow-list must keep it.
+- The CSP must allow `connect-src` to the Supabase URL when it is set.
+
+Notes for Phase 3: `e2e/reviews.spec.ts` and `e2e/menu.spec.ts` both define `settle()` and the sheet-snap helpers;
+move them into one shared e2e helper.
 
 ## Built (Master Prompt, phases 1 to 8)
 
