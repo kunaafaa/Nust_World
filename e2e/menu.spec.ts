@@ -149,17 +149,17 @@ test.describe('visual regression (390x844)', () => {
       await page.addStyleTag({
         content: '*{caret-color:transparent!important} canvas{visibility:hidden!important}',
       });
-      await page.waitForTimeout(300);
-      // wait until the sheet has stopped moving (under load its spring can still be settling here)
-      let box = (await page.locator(SHEET).boundingBox())!;
-      for (let i = 0; i < 20; i++) {
-        await page.waitForTimeout(150);
-        const next = (await page.locator(SHEET).boundingBox())!;
-        const still = next.y === box.y && next.height === box.height;
-        box = next;
-        if (still) break;
-      }
+      // Wait until the sheet sits exactly at its snap height. "Two equal readings" is not enough: under a loaded
+      // software-GL runner no frame may render between readings while the spring's tail is still running.
       const vp = page.viewportSize()!;
+      const want = snap === 'peek' ? 96 : snapHeight(vp, snap); // peek: BottomSheet's default 96 px, no safe area
+      await expect
+        .poll(async () => vp.height - (await page.locator(SHEET).boundingBox())!.y, {
+          timeout: 10_000,
+        })
+        .toBeCloseTo(want, 0);
+      await page.waitForTimeout(150);
+      const box = (await page.locator(SHEET).boundingBox())!;
       const y = Math.max(0, Math.round(box.y));
       await expect(page).toHaveScreenshot(`menu-${snap}.png`, {
         clip: { x: 0, y, width: vp.width, height: vp.height - y },
