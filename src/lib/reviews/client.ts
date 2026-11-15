@@ -36,6 +36,7 @@ export function getStore(): Promise<ReviewStore | null> {
 export function resetReviewsClient() {
   storePromise = null;
   mem.clear();
+  writeTimes = [];
 }
 
 export const isOffline = () => typeof navigator !== 'undefined' && navigator.onLine === false;
@@ -126,10 +127,30 @@ export function invalidate(...prefixes: string[]) {
   }
 }
 
-/** Run a write: refused offline; on success the given cache prefixes are dropped. */
+// ---------------------------------------------------------------------------------------------- writes
+
+/** Client-side write budget (the database has its own, stricter per-hour limit). */
+export const CLIENT_WRITE_LIMIT = { max: 8, windowMs: 60_000 } as const;
+let writeTimes: number[] = [];
+
+/** True if one more write fits in the budget (and records it). */
+export function takeWriteSlot(now = Date.now()): boolean {
+  writeTimes = writeTimes.filter((t) => now - t < CLIENT_WRITE_LIMIT.windowMs);
+  if (writeTimes.length >= CLIENT_WRITE_LIMIT.max) return false;
+  writeTimes.push(now);
+  return true;
+}
+/** Test hook. */
+export function resetWriteSlots() {
+  writeTimes = [];
+}
+
+/** Run a write: refused offline or when over the client budget; on success the given cache prefixes are dropped. */
 export async function write(fn: (s: ReviewStore) => Promise<void>, ...prefixes: string[]) {
   if (isOffline())
     throw new ReviewError('You are offline. Reviews are read-only until you reconnect.', 'offline');
+  if (!takeWriteSlot())
+    throw new ReviewError('Too many changes in a short time. Try again in a minute.', 'rate');
   const store = await getStore();
   if (!store) throw new ReviewError('Reviews are not available.', 'server');
   await fn(store);

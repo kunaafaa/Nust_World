@@ -6,6 +6,7 @@
 import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
 import { ALLOWED_EMAIL_DOMAINS, isAllowedEmail, SUPABASE_ANON_KEY, SUPABASE_URL } from './config';
 import { VIOLATION_MESSAGE, type TextViolation } from './textCheck';
+import { checkDraft, checkFood, checkPlace, checkReport } from './validate';
 import {
   ReviewError,
   type Review,
@@ -87,6 +88,7 @@ export class SupabaseStore implements ReviewStore {
   }
 
   async placeSummary(placeId: string): Promise<Summary | null> {
+    checkPlace(placeId);
     const { data, error } = await this.sb
       .from('place_rating_summary')
       .select('avg,count')
@@ -96,6 +98,7 @@ export class SupabaseStore implements ReviewStore {
     return data ? { avg: Number(data.avg), count: Number(data.count) } : null;
   }
   async placeReviews(placeId: string): Promise<Review[]> {
+    checkPlace(placeId);
     const { data, error } = await this.sb
       .from('public_reviews')
       .select('id,place_id,display_name,rating,body,created_at,mine')
@@ -113,9 +116,10 @@ export class SupabaseStore implements ReviewStore {
       mine: r.mine === true,
     }));
   }
-  async saveReview(d: ReviewDraft) {
+  async saveReview(draft: ReviewDraft) {
+    const d = checkDraft(draft);
     await this.uid();
-    const row = { display_name: d.displayName.trim(), rating: d.rating, body: d.body.trim() };
+    const row = { display_name: d.displayName, rating: d.rating, body: d.body };
     const { data: own } = await this.sb
       .from('reviews')
       .select('id')
@@ -131,11 +135,10 @@ export class SupabaseStore implements ReviewStore {
     const { error } = await this.sb.from('reviews').delete().eq('id', id);
     if (error) throw mapError(error);
   }
-  async reportReview(id: string, reason: string) {
+  async reportReview(id: string, why: string) {
+    const reason = checkReport(id, why);
     await this.uid();
-    const { error } = await this.sb
-      .from('review_reports')
-      .insert({ review_id: id, reason: reason.trim() });
+    const { error } = await this.sb.from('review_reports').insert({ review_id: id, reason });
     if (error && error.code !== '23505') throw mapError(error); // 23505: already reported, fine
   }
 
@@ -162,6 +165,7 @@ export class SupabaseStore implements ReviewStore {
     return out;
   }
   async rateFood(cafeId: string, itemKey: string, rating: number) {
+    checkFood(cafeId, itemKey, rating);
     await this.uid();
     const { data: own } = await this.sb
       .from('food_ratings')

@@ -15,6 +15,7 @@ import { useApp } from '@/store/useApp';
 import { useMenu } from '@/hooks/useMenu';
 import { BottomSheet } from './BottomSheet';
 import { MenuPill, MenuSection, useMenuVars } from './MenuSection';
+import { QuietBoundary } from './QuietBoundary';
 
 const COMING = 'Info coming soon';
 const REPORT_EMAIL = process.env.NEXT_PUBLIC_REPORT_EMAIL ?? '';
@@ -34,7 +35,14 @@ function Reviews({ place }: { place: Place }) {
   }, []);
   if (!mode || REVIEW_EXCLUDED_CATEGORIES.includes(place.category)) return null;
   if (mode === 'off') return <p className="rv-soon">Reviews coming soon</p>;
-  return <ReviewsSection key={place.id} placeId={place.id} />;
+  return (
+    <QuietBoundary
+      key={place.id}
+      fallback={<p className="rv-soon">Reviews are unavailable right now</p>}
+    >
+      <ReviewsSection placeId={place.id} />
+    </QuietBoundary>
+  );
 }
 
 /** The landmarks.ts entry for a place, ready to paste back after editing. */

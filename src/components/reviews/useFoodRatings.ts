@@ -1,6 +1,6 @@
 'use client';
 /** Food ratings for one cafe menu: public summaries, the user's own ratings and a rate() action. */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { reviewsMode } from '@/lib/reviews/config';
 import { REVIEW_LIMITS, ReviewError, type Summary } from '@/lib/reviews/types';
 import { ensureReviewAuth, useReviewAuth } from '@/lib/reviews/useReviewAuth';
@@ -60,17 +60,33 @@ export function useFoodRatings(cafeId: string | undefined): FoodRatings {
     };
   }, [enabled, cafeId, user, tick]);
 
+  // Item key -> the rating wanted while a write for it is in flight. Rapid taps on the same item collapse into one
+  // follow-up write with the last value instead of one request per tap.
+  const inflight = useRef(new Map<string, number>());
   const rate = useCallback(
     async (key: string, n: number) => {
       if (!cafeId) return null;
+      const pending = inflight.current;
+      if (pending.has(key)) {
+        pending.set(key, n);
+        return null;
+      }
+      pending.set(key, n);
       const { write } = await import('@/lib/reviews/client');
       try {
-        await write((s) => s.rateFood(cafeId, key, n), `food:${cafeId}:`);
-        setMine((m) => ({ ...m, [key]: n }));
+        let sent: number;
+        do {
+          sent = pending.get(key)!;
+          const value = sent;
+          await write((s) => s.rateFood(cafeId, key, value), `food:${cafeId}:`);
+        } while (pending.get(key) !== sent);
+        setMine((m) => ({ ...m, [key]: sent }));
         setTick((t) => t + 1);
         return null;
       } catch (err) {
         return err instanceof ReviewError ? err.message : 'Could not save the rating.';
+      } finally {
+        pending.delete(key);
       }
     },
     [cafeId],

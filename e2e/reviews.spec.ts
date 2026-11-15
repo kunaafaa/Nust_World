@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 /**
  * Reviews and food ratings, driven through the in-memory store (`?reviews=memory`): nothing is sent anywhere.
@@ -211,5 +211,33 @@ test.describe('offline', () => {
     await expect(rv.getByText('4.5 · 2 reviews')).toBeVisible();
     await context.setOffline(false);
     await expect(rv.getByRole('button', { name: 'Write a review' })).toBeVisible();
+  });
+});
+
+test.describe('failure', () => {
+  // page.route cannot see requests the service worker answers, so keep it out of this test.
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, serviceWorkers: 'block' });
+
+  test('a reviews block that fails to load never breaks the map or the card', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto('/?reviews=memory');
+    await page.getByRole('button', { name: 'Search NUST' }).click({ timeout: 40_000 });
+    // From now on every new script chunk fails, so the reviews block cannot load.
+    await page.route('**/_next/static/chunks/**', (r) => r.abort());
+    await page.getByRole('combobox', { name: 'Search places' }).fill('concordia 1');
+    const option = page.getByRole('option').first();
+    await expect(option).toBeVisible({ timeout: 30_000 });
+    await option.click();
+    const sheet = page.locator(SHEET);
+    await expect(sheet).toHaveAttribute('aria-hidden', 'false', { timeout: 30_000 });
+    await expect(sheet.getByText('Reviews are unavailable right now')).toBeAttached({
+      timeout: 15_000,
+    });
+    // the card and the map still work
+    await expect(sheet.getByRole('button', { name: /^Navigate to / })).toBeVisible();
+    await expect(page.locator('canvas').first()).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Search NUST' })).toBeVisible();
+    expect(errors.filter((e) => !/chunk|Failed to fetch|Loading/i.test(e))).toEqual([]);
   });
 });
